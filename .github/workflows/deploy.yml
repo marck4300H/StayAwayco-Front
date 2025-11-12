@@ -3,8 +3,11 @@ name: Deploy Vite app to GitHub Pages
 on:
   push:
     branches:
-      - master  # o "main", según el nombre de tu rama principal
-  workflow_dispatch:  # permite ejecutarlo manualmente desde GitHub
+      - master  # o "master", asegúrate de usar el nombre correcto
+  workflow_dispatch:
+
+permissions:
+  contents: write  # ✅ permite a Actions hacer push al branch gh-pages
 
 jobs:
   build-and-deploy:
@@ -20,7 +23,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci  # más rápido y seguro que npm install
 
       - name: Build project
         run: npm run build
@@ -29,4 +32,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_branch: gh-pages   # ✅ branch donde se subirá el build
+          publish_dir: ./dist        # ✅ carpeta generada por Vite
