@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
-import AdminLogin from "./pages/AdminLogin";
+import AdminLogin from "../pages/adminLogin";
 import AdminDashboard from "../pages/AdminDashboard";
 
 export default function AppRoutes() {
