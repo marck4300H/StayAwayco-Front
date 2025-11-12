@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Importa useNavigate
 import { loginAdmin } from "../api"; // asegúrate de que apunte correctamente a tu función API
 
 export default function AdminLogin() {
@@ -6,6 +7,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // ✅ Hook de navegación
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function AdminLogin() {
 
         // Redirigir al dashboard después de 1 segundo
         setTimeout(() => {
-          window.location.href = "/admin/dashboard";
+          navigate("/admin/dashboard"); // ✅ Redirección segura
         }, 1000);
       } else {
         setMessage(response.message || "Credenciales incorrectas ❌");
