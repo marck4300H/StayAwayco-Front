@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 
 export default function Home() {
   const [rifas, setRifas] = useState([]);
@@ -125,18 +127,19 @@ export default function Home() {
         <p>
           © {new Date().getFullYear()} StayAwayCo — Todos los derechos reservados
         </p>
-        <a
-          href="/admin/login"
-          style={{
-            color: "#0077b6",
-            textDecoration: "none",
-            fontWeight: "bold",
-            display: "block",
-            marginTop: "10px",
-          }}
-        >
-          Panel de administrador →
-        </a>
+        <Link
+            to="/admin/login"
+            style={{
+                color: "#0077b6",
+                textDecoration: "none",
+                fontWeight: "bold",
+                display: "block",
+                marginTop: "10px",
+            }}
+            >
+            Panel de administrador →
+            </Link>
+
       </footer>
     </div>
   );
