@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from "../api";
 
 export default function EliminarRifa() {
   const [rifas, setRifas] = useState([]);
@@ -12,7 +13,7 @@ export default function EliminarRifa() {
   }, []);
 
   const fetchRifas = async () => {
-    const res = await fetch("https://api.stayaway.com.co/api/rifas/listar");
+    const res = await fetch(`${API_URL}/rifas/listar`);
     const data = await res.json();
     if (data.success) setRifas(data.rifas);
   };
@@ -23,7 +24,7 @@ export default function EliminarRifa() {
     setMessage("");
 
     try {
-      const res = await fetch(`https://api.stayaway.com.co/api/rifas/eliminar/${id}`, {
+      const res = await fetch(`${API_URL}/rifas/eliminar/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

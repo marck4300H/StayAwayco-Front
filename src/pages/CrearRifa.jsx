@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { API_URL } from "../api";
+
 
 export default function CrearRifa() {
   const [titulo, setTitulo] = useState("");
@@ -23,7 +25,7 @@ export default function CrearRifa() {
       formData.append("descripcion", descripcion);
       formData.append("imagen", imagen);
 
-      const res = await fetch("https://api.stayaway.com.co/api/rifas/crear", {
+      const res = await fetch(`${API_URL}/rifas/crear`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
