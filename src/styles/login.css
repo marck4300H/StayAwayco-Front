@@ -1,0 +1,101 @@
+/* Contenedor principal */
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(300deg, #0f172a, #1e293b);
+}
+
+/* Tarjeta del formulario */
+.login-card {
+  width: 350px;
+  padding: 30px;
+  border-radius: 15px;
+  background: linear-gradient(300deg, #0f172a, #1e293b);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border: 2px solid #00c2ff20;
+}
+
+/* Título */
+.login-title {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #00c2ff;
+  font-weight: bold;
+}
+
+/* Formularios */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Grupo de campos */
+.login-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-field label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #ffffff; /* AHORA EN BLANCO */
+  font-weight: 500;
+}
+
+.login-field input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #00c2ff50;
+  font-size: 15px;
+  transition: 0.3s ease;
+  background-color: #fff;
+}
+
+.login-field input:focus {
+  border-color: #00c2ff;
+  box-shadow: 0 0 4px #00c2ff80;
+  outline: none;
+}
+
+/* Botón */
+.login-button {
+  padding: 12px;
+  background-color: #00c2ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #009ac7;
+  transform: translateY(-2px);
+}
+
+/* Texto inferior */
+.login-register-text {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.login-register-link {
+  color: #00c2ff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.login-register-link:hover {
+  text-decoration: underline;
+  color: #009ac7;
+}

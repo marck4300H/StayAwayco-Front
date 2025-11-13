@@ -6,12 +6,16 @@ import AdminDashboard from "../pages/AdminDashboard";
 import CrearRifa from "../pages/CrearRifa";
 import EditarRifa from "../pages/EditarRifa";
 import EliminarRifa from "../pages/EliminarRifa";
+import Login from "../pages/login";
 
 export default function AppRoutes() {
   return (
     <Routes>
       {/* Página principal */}
       <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      
+      
 
       {/* Rutas del administrador */}
       <Route path="/admin/login" element={<AdminLogin />} />

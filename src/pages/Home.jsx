@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../api";
+import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import "../styles/home.css";
 
 export default function Home() {
   const [rifas, setRifas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRifas = async () => {
@@ -26,163 +30,81 @@ export default function Home() {
   }, []);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg, #0f172a, #1e293b)",
-        fontFamily: "Poppins, sans-serif",
-        padding: "40px 20px",
-        color: "#e2e8f0",
-      }}
-    >
-      <header style={{ textAlign: "center", marginBottom: "50px" }}>
-        <h1
-          style={{
-            fontSize: "2.8rem",
-            color: "#00c2ff",
-            marginBottom: "10px",
-            fontWeight: "700",
-          }}
-        >
-          🎟️ StayAwayCo
-        </h1>
-        <p style={{ fontSize: "1.1rem", color: "#94a3b8" }}>
-          Participa en rifas exclusivas y gana premios únicos.
+    <div className="home-container">
+      {/* NAVBAR */}
+      <nav className="navbar">
+        {/* Logo */}
+        <div className="logo-container">
+          <img src="/logo.png" alt="Logo" className="logo-img" />
+          <h2 className="logo-title">StayAwayCo</h2>
+        </div>
+
+        {/* Links */}
+        <div className="nav-links">
+          <button className="link-btn" onClick={() => navigate("/login")}>
+            Login
+          </button>
+
+          <Link to="/registro" className="btn-register">
+            Registro
+          </Link>
+
+          <FaShoppingCart className="cart-icon" size={22} />
+        </div>
+
+        {/* Ícono móvil */}
+        <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </div>
+
+        {/* Menú móvil */}
+        {menuOpen && (
+          <div className="mobile-menu">
+            <Link to="/login" className="mobile-link">Login</Link>
+
+            <Link to="/registro" className="mobile-btn-register">
+              Registro
+            </Link>
+
+            <FaShoppingCart size={20} className="mobile-cart" />
+          </div>
+        )}
+      </nav>
+
+      {/* HEADER */}
+      <header className="header">
+        <h1 className="header-title">🎟️ Trata De Esclavas</h1>
+        <p className="header-subtitle">
+          Participa en rifas exclusivas y ganate una exclava de nuestro catalogo.
         </p>
       </header>
 
-      {loading && (
-        <p
-          style={{
-            textAlign: "center",
-            color: "#00c2ff",
-            fontWeight: "bold",
-          }}
-        >
-          Cargando rifas...
-        </p>
-      )}
-
-      {error && (
-        <p
-          style={{
-            textAlign: "center",
-            color: "#f87171",
-            fontWeight: "bold",
-          }}
-        >
-          {error}
-        </p>
-      )}
-
+      {/* ESTADOS */}
+      {loading && <p className="loading-text">Cargando rifas...</p>}
+      {error && <p className="error-text">{error}</p>}
       {!loading && !error && rifas.length === 0 && (
-        <p style={{ textAlign: "center", color: "#94a3b8" }}>
-          No hay rifas disponibles por el momento.
-        </p>
+        <p className="no-rifas">No hay rifas disponibles por el momento.</p>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "30px",
-          justifyContent: "center",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
+      {/* CARDS */}
+      <div className="rifas-grid">
         {rifas.map((rifa) => (
-          <div
-            key={rifa.id}
-            style={{
-              background: "#1e293b",
-              borderRadius: "15px",
-              boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
-              overflow: "hidden",
-              border: "1px solid #334155",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-6px)";
-              e.currentTarget.style.boxShadow =
-                "0 8px 25px rgba(0,194,255,0.25)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 4px 15px rgba(0,0,0,0.4)";
-            }}
-          >
-            <img
-              src={rifa.imagen_url}
-              alt={rifa.titulo}
-              style={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-                borderBottom: "3px solid #00c2ff",
-              }}
-            />
-            <div style={{ padding: "18px" }}>
-              <h3
-                style={{
-                  color: "#ffffff",
-                  marginBottom: "10px",
-                  fontWeight: "600",
-                  fontSize: "1.2rem",
-                }}
-              >
-                {rifa.titulo}
-              </h3>
-              <p style={{ color: "#cbd5e1", fontSize: "0.95rem" }}>
-                {rifa.descripcion}
-              </p>
-              <button
-                style={{
-                  marginTop: "15px",
-                  width: "100%",
-                  background: "#00c2ff",
-                  color: "#0f172a",
-                  fontWeight: "600",
-                  padding: "10px 0",
-                  borderRadius: "10px",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "background 0.2s ease",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#38e1ff")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "#00c2ff")
-                }
-              >
-                Ver más
-              </button>
+          <div key={rifa.id} className="rifa-card">
+            <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
+
+            <div className="rifa-content">
+              <h3 className="rifa-title">{rifa.titulo}</h3>
+              <p className="rifa-desc">{rifa.descripcion}</p>
+              <button className="rifa-btn">Ver más</button>
             </div>
           </div>
         ))}
       </div>
 
-      <footer
-        style={{
-          textAlign: "center",
-          marginTop: "60px",
-          color: "#94a3b8",
-          fontSize: "0.9rem",
-        }}
-      >
+      {/* FOOTER */}
+      <footer className="footer">
         <p>© {new Date().getFullYear()} StayAwayCo — Todos los derechos reservados</p>
-        <Link
-          to="/admin/login"
-          style={{
-            color: "#00c2ff",
-            textDecoration: "none",
-            fontWeight: "600",
-            display: "block",
-            marginTop: "10px",
-          }}
-        >
+        <Link to="/admin/login" className="admin-link">
           Panel de administrador →
         </Link>
       </footer>
