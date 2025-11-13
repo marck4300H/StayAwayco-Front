@@ -23,7 +23,7 @@ export default function AppRoutes() {
       </Route>
 
       {/* Redirección por defecto */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
     </Routes>
   );
 }
