@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../api";
 
 
 export default function Home() {
@@ -11,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRifas = async () => {
       try {
-        const res = await fetch("https://api.stayaway.com.co/api/rifas/listar");
+        const res = await fetch(`${API_URL}/rifas/listar`);
         if (!res.ok) throw new Error("Error al obtener las rifas");
         const data = await res.json();
         if (data.success) {

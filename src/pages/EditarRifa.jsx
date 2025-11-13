@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from "../api";
 
 export default function EditarRifa() {
   const [rifas, setRifas] = useState([]);
@@ -12,7 +13,7 @@ export default function EditarRifa() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("https://api.stayaway.com.co/api/rifas/listar")
+    fetch(`${API_URL}/rifas/listar`)
       .then(res => res.json())
       .then(data => {
         if (data.success) setRifas(data.rifas);
@@ -39,7 +40,7 @@ export default function EditarRifa() {
       formData.append("descripcion", descripcion);
       if (imagen) formData.append("imagen", imagen);
 
-      const res = await fetch(`https://api.stayaway.com.co/api/rifas/editar/${selectedRifa.id}`, {
+      const res = await fetch(`${API_URL}/rifas/editar/${selectedRifa.id}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
