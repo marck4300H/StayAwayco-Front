@@ -6,6 +6,7 @@ export default function EditarRifa() {
   const [selectedRifa, setSelectedRifa] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [cantidadNumeros, setCantidadNumeros] = useState(0);
   const [imagen, setImagen] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,8 +15,8 @@ export default function EditarRifa() {
 
   useEffect(() => {
     fetch(`${API_URL}/rifas/listar`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success) setRifas(data.rifas);
       });
   }, []);
@@ -24,6 +25,7 @@ export default function EditarRifa() {
     setSelectedRifa(rifa);
     setTitulo(rifa.titulo);
     setDescripcion(rifa.descripcion);
+    setCantidadNumeros(rifa.cantidad_numeros || 0);
     setImagen(null);
     setMessage("");
   };
@@ -38,6 +40,7 @@ export default function EditarRifa() {
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("descripcion", descripcion);
+      formData.append("cantidad_numeros", cantidadNumeros); // ← 🔥 ahora se envía
       if (imagen) formData.append("imagen", imagen);
 
       const res = await fetch(`${API_URL}/rifas/editar/${selectedRifa.id}`, {
@@ -65,7 +68,7 @@ export default function EditarRifa() {
     <div style={containerStyle}>
       <div style={sidebarStyle}>
         <h2 style={{ color: "#fff", marginBottom: "20px" }}>Rifas disponibles</h2>
-        {rifas.map(rifa => (
+        {rifas.map((rifa) => (
           <div
             key={rifa.id}
             style={{
@@ -89,6 +92,7 @@ export default function EditarRifa() {
           <>
             <h1 style={{ color: "#2f3640" }}>✏️ Editar Rifa</h1>
             <form onSubmit={handleSubmit}>
+              <label style={labelStyle}>Título</label>
               <input
                 type="text"
                 value={titulo}
@@ -96,18 +100,36 @@ export default function EditarRifa() {
                 required
                 style={inputStyle}
               />
+
+              <label style={labelStyle}>Descripción</label>
               <textarea
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 required
                 style={{ ...inputStyle, height: "120px", resize: "none" }}
               />
+
+              <label style={labelStyle}>Cantidad de Números</label>
+              <input
+                type="number"
+                value={cantidadNumeros}
+                readOnly
+                style={{
+                  ...inputStyle,
+                  backgroundColor: "#eaeaea",
+                  color: "#555",
+                  cursor: "not-allowed",
+                }}
+              />
+
+              <label style={labelStyle}>Imagen (opcional)</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImagen(e.target.files[0])}
                 style={{ ...inputStyle, padding: "8px" }}
               />
+
               <button
                 type="submit"
                 disabled={loading}
@@ -116,17 +138,24 @@ export default function EditarRifa() {
                 {loading ? "Editando..." : "Editar Rifa"}
               </button>
             </form>
+
             {message && (
-              <p style={{
-                marginTop: 20,
-                color: message.includes("✅") ? "#27ae60" : "#c0392b",
-                fontWeight: "bold",
-                fontSize: "16px"
-              }}>{message}</p>
+              <p
+                style={{
+                  marginTop: 20,
+                  color: message.includes("✅") ? "#27ae60" : "#c0392b",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                }}
+              >
+                {message}
+              </p>
             )}
           </>
         ) : (
-          <p style={{ color: "#2f3640", fontSize: "16px" }}>Selecciona una rifa para editar.</p>
+          <p style={{ color: "#2f3640", fontSize: "16px" }}>
+            Selecciona una rifa para editar.
+          </p>
         )}
       </div>
     </div>
@@ -173,4 +202,11 @@ const buttonStyle = {
   fontWeight: "bold",
   width: "100%",
   marginTop: "10px",
+};
+
+const labelStyle = {
+  color: "#2f3640",
+  fontWeight: "bold",
+  marginTop: "10px",
+  display: "block",
 };
