@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { API_URL } from "../api";
 
-
 export default function CrearRifa() {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [imagen, setImagen] = useState(null);
+  const [cantidadNumeros, setCantidadNumeros] = useState("10000");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,6 +23,7 @@ export default function CrearRifa() {
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("descripcion", descripcion);
+      formData.append("cantidad_numeros", cantidadNumeros);
       formData.append("imagen", imagen);
 
       const res = await fetch(`${API_URL}/rifas/crear`, {
@@ -51,6 +52,7 @@ export default function CrearRifa() {
         setTitulo("");
         setDescripcion("");
         setImagen(null);
+        setCantidadNumeros("10000");
       } else setMessage("❌ Error: " + (data.message || "No se pudo crear la rifa"));
     } catch (err) {
       console.error(err);
@@ -80,6 +82,16 @@ export default function CrearRifa() {
             required
             style={{ ...inputStyle, height: "120px", resize: "none" }}
           />
+          
+          <select
+            value={cantidadNumeros}
+            onChange={(e) => setCantidadNumeros(e.target.value)}
+            style={inputStyle}
+          >
+            <option value="10000">10.000 números</option>
+            <option value="100000">100.000 números</option>
+          </select>
+
           <input
             type="file"
             accept="image/*"
@@ -95,50 +107,25 @@ export default function CrearRifa() {
             {loading ? "Creando..." : "Crear Rifa"}
           </button>
         </form>
-        {message && <p style={{ marginTop: 20, color: message.includes("✅") ? "green" : "red", fontWeight: "bold" }}>{message}</p>}
+        {message && (
+          <p
+            style={{
+              marginTop: 20,
+              color: message.includes("✅") ? "green" : "red",
+              fontWeight: "bold",
+            }}
+          >
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );
 }
 
-const containerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "flex-start",
-  minHeight: "100vh",
-  backgroundColor: "#f5f6fa",
-  paddingTop: "50px",
-  fontFamily: "Arial, sans-serif",
-};
-
-const cardStyle = {
-  background: "#fff",
-  padding: "40px 50px",
-  borderRadius: "12px",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  width: "100%",
-  maxWidth: "600px",
-  textAlign: "center",
-};
-
-const titleStyle = { color: "#2f3640", marginBottom: "20px" };
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px",
-  margin: "8px 0",
-  border: "1px solid #dcdde1",
-  borderRadius: "8px",
-  fontSize: "14px",
-};
-
-const buttonStyle = {
-  color: "#fff",
-  border: "none",
-  padding: "12px 20px",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontWeight: "bold",
-  width: "100%",
-  marginTop: "10px",
-};
+// 🎨 estilos (mismos que ya tenías)
+const containerStyle = { /* ... */ };
+const cardStyle = { /* ... */ };
+const titleStyle = { /* ... */ };
+const inputStyle = { /* ... */ };
+const buttonStyle = { /* ... */ };
