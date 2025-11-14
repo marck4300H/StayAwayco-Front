@@ -127,3 +127,15 @@
     width: 100%;
   }
 }
+.cantidad-section small {
+  color: #c8a951;
+  font-weight: 600;
+}
+
+.cantidad-section input:invalid {
+  border-color: #e74c3c;
+}
+
+.cantidad-section input:valid {
+  border-color: #27ae60;
+}
