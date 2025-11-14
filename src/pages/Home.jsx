@@ -84,7 +84,7 @@ export default function Home() {
       {/* HEADER */}
       <header className="header">
         <link rel="icon" href="../../public/SA.png" type="image/png"></link>
-        <h1 className="header-title">🎟️ Adquiere tus tickets</h1>
+        <h1 className="header-title">🎟️ Adquiere tus tickets Pablo</h1>
         <p className="header-subtitle">
           Participa en nuestros eventos invirtiendo en los tickets y podrias ser el proximo dueño de una moto de alto CC.
         </p>
