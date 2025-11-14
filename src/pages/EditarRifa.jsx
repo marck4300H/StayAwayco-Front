@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../api";
+import "../styles/admin.css";
 
 export default function EditarRifa() {
   const [rifas, setRifas] = useState([]);
@@ -14,12 +15,23 @@ export default function EditarRifa() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch(`${API_URL}/rifas/listar`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) setRifas(data.rifas);
-      });
+    fetchRifas();
   }, []);
+
+  const fetchRifas = async () => {
+    try {
+      const res = await fetch(`${API_URL}/rifas/`);
+      const data = await res.json();
+      if (data.success) {
+        setRifas(data.rifas);
+      } else {
+        setMessage("❌ Error al cargar las rifas");
+      }
+    } catch (err) {
+      console.error("Error cargando rifas:", err);
+      setMessage("❌ Error de conexión al cargar rifas");
+    }
+  };
 
   const handleSelect = (rifa) => {
     setSelectedRifa(rifa);
@@ -40,19 +52,34 @@ export default function EditarRifa() {
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("descripcion", descripcion);
-      formData.append("cantidad_numeros", cantidadNumeros); // ← 🔥 ahora se envía
-      if (imagen) formData.append("imagen", imagen);
+      formData.append("cantidad_numeros", cantidadNumeros.toString());
+      
+      if (imagen) {
+        formData.append("imagen", imagen);
+      }
 
       const res = await fetch(`${API_URL}/rifas/editar/${selectedRifa.id}`, {
         method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          Authorization: `Bearer ${token}` 
+        },
         body: formData,
       });
 
       const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(`❌ ${data.message || `Error ${res.status}`}`);
+        if (res.status === 401) {
+          localStorage.removeItem("token");
+        }
+        return;
+      }
+
       if (data.success) {
         setMessage("✅ Rifa editada con éxito");
         setSelectedRifa(data.rifa);
+        fetchRifas(); // Actualizar la lista
       } else {
         setMessage("❌ " + (data.message || "Error al editar rifa"));
       }
@@ -65,148 +92,86 @@ export default function EditarRifa() {
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={sidebarStyle}>
-        <h2 style={{ color: "#fff", marginBottom: "20px" }}>Rifas disponibles</h2>
+    <div className="admin-sidebar-layout">
+      <div className="admin-sidebar">
+        <h2 className="admin-sidebar-title">Rifas Disponibles</h2>
         {rifas.map((rifa) => (
           <div
             key={rifa.id}
-            style={{
-              padding: "10px",
-              marginBottom: "8px",
-              cursor: "pointer",
-              backgroundColor: selectedRifa?.id === rifa.id ? "#1e90ff" : "#2f3640",
-              color: "#fff",
-              borderRadius: "6px",
-              fontWeight: "bold",
-            }}
+            className={`admin-rifa-item ${selectedRifa?.id === rifa.id ? 'selected' : ''}`}
             onClick={() => handleSelect(rifa)}
           >
-            {rifa.titulo}
+            <div className="admin-rifa-title">{rifa.titulo}</div>
+            <div className="admin-rifa-stats">
+              <span>🎯 {rifa.cantidad_numeros} nums</span>
+              <span>💰 {rifa.vendidos} vendidos</span>
+              <span>📊 {rifa.porcentaje}%</span>
+            </div>
           </div>
         ))}
       </div>
 
-      <div style={formContainerStyle}>
+      <div className="admin-main-content">
         {selectedRifa ? (
           <>
-            <h1 style={{ color: "#2f3640" }}>✏️ Editar Rifa</h1>
-            <form onSubmit={handleSubmit}>
-              <label style={labelStyle}>Título</label>
+            <h1 className="admin-form-title">✏️ Editar Rifa</h1>
+            <form onSubmit={handleSubmit} className="admin-form">
+              <label className="admin-label">Título</label>
               <input
                 type="text"
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 required
-                style={inputStyle}
+                className="admin-input"
               />
 
-              <label style={labelStyle}>Descripción</label>
+              <label className="admin-label">Descripción</label>
               <textarea
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
                 required
-                style={{ ...inputStyle, height: "120px", resize: "none" }}
+                className="admin-input admin-textarea"
               />
 
-              <label style={labelStyle}>Cantidad de Números</label>
+              <label className="admin-label">Cantidad de Números (solo lectura)</label>
               <input
                 type="number"
                 value={cantidadNumeros}
                 readOnly
-                style={{
-                  ...inputStyle,
-                  backgroundColor: "#eaeaea",
-                  color: "#555",
-                  cursor: "not-allowed",
-                }}
+                className="admin-input"
+                style={{ backgroundColor: '#f8f9fa', color: '#6c757d', cursor: 'not-allowed' }}
               />
 
-              <label style={labelStyle}>Imagen (opcional)</label>
+              <label className="admin-label">Nueva Imagen (opcional)</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImagen(e.target.files[0])}
-                style={{ ...inputStyle, padding: "8px" }}
+                className="admin-input admin-file-input"
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                style={{ ...buttonStyle, backgroundColor: loading ? "#aaa" : "#1e90ff" }}
+                className="admin-button"
               >
-                {loading ? "Editando..." : "Editar Rifa"}
+                {loading ? "🔄 Editando..." : "💾 Guardar Cambios"}
               </button>
             </form>
 
             {message && (
-              <p
-                style={{
-                  marginTop: 20,
-                  color: message.includes("✅") ? "#27ae60" : "#c0392b",
-                  fontWeight: "bold",
-                  fontSize: "16px",
-                }}
-              >
+              <div className={`admin-message ${message.includes("✅") ? "success" : "error"}`}>
                 {message}
-              </p>
+              </div>
             )}
           </>
         ) : (
-          <p style={{ color: "#2f3640", fontSize: "16px" }}>
-            Selecciona una rifa para editar.
-          </p>
+          <div className="admin-placeholder">
+            <h2>Selecciona una rifa para editar</h2>
+            <p>Elige una rifa del panel lateral para comenzar a editarla</p>
+          </div>
         )}
       </div>
     </div>
   );
 }
-
-const containerStyle = {
-  display: "flex",
-  minHeight: "100vh",
-  backgroundColor: "#f0f2f5",
-  fontFamily: "Arial, sans-serif",
-};
-
-const sidebarStyle = {
-  width: "250px",
-  backgroundColor: "#2f3640",
-  padding: "20px",
-  boxShadow: "2px 0 6px rgba(0,0,0,0.1)",
-};
-
-const formContainerStyle = {
-  flex: 1,
-  padding: "40px",
-  display: "flex",
-  flexDirection: "column",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px",
-  margin: "8px 0",
-  border: "1px solid #ccc",
-  borderRadius: "8px",
-  fontSize: "16px",
-  color: "#2f3640",
-};
-
-const buttonStyle = {
-  color: "#fff",
-  border: "none",
-  padding: "12px 20px",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontWeight: "bold",
-  width: "100%",
-  marginTop: "10px",
-};
-
-const labelStyle = {
-  color: "#2f3640",
-  fontWeight: "bold",
-  marginTop: "10px",
-  display: "block",
-};

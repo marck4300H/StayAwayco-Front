@@ -8,7 +8,7 @@ export default function Comprar() {
   const location = useLocation();
   const rifa = location.state?.rifa;
 
-  const [cantidad, setCantidad] = useState(5);
+  const [cantidad, setCantidad] = useState(5); // ✅ Valor por defecto 5
   const [numerosComprados, setNumerosComprados] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,10 +17,18 @@ export default function Comprar() {
 
   const handleCantidadChange = (e) => {
     const value = parseInt(e.target.value);
-    if (!isNaN(value) && value > 0) setCantidad(value);
+    // ✅ Validar que sea al menos 5
+    if (!isNaN(value) && value >= 5) {
+      setCantidad(value);
+    } else if (value < 5) {
+      setError("La cantidad mínima es 5 números.");
+    }
   };
 
-  const handlePaqueteClick = (valor) => setCantidad(valor);
+  const handlePaqueteClick = (valor) => {
+    setCantidad(valor);
+    setError(""); // Limpiar error al seleccionar paquete
+  };
 
   const handleComprar = async () => {
     setError("");
@@ -30,16 +38,25 @@ export default function Comprar() {
     const token = localStorage.getItem("token");
     if (!token) {
       setError("Debes iniciar sesión para comprar números.");
+      navigate("/login");
       return;
     }
 
-    if (cantidad < 1) {
-      setError("Debes comprar al menos 1 número.");
+    // ✅ Validación en frontend también
+    if (cantidad < 5) {
+      setError("La cantidad mínima es 5 números.");
+      return;
+    }
+
+    if (cantidad > (rifa.disponibles || 0)) {
+      setError(`Solo hay ${rifa.disponibles} números disponibles.`);
       return;
     }
 
     try {
       setLoading(true);
+
+      console.log("🔐 Token enviado:", token ? "Sí" : "No");
 
       const res = await fetch(`${API_URL}/comprar/crear/${rifa.id}`, {
         method: "POST",
@@ -50,14 +67,30 @@ export default function Comprar() {
         body: JSON.stringify({ cantidad }),
       });
 
+      console.log("📤 Respuesta del servidor:", res.status);
+
+      if (!res.ok) {
+        // Si es error 401, redirigir al login
+        if (res.status === 401) {
+          localStorage.removeItem("token");
+          setError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+          navigate("/login");
+          return;
+        }
+        
+        const errorData = await res.json();
+        setError(errorData.message || "Ocurrió un error en la compra.");
+        return;
+      }
+
       const data = await res.json();
 
-      if (!res.ok || data.success === false) {
-        setError(data.message || "Ocurrió un error en la compra.");
-      } else {
+      if (data.success) {
         setNumerosComprados(data.numeros || []);
         setSuccess(data.message || "¡Compra exitosa! Se te han asignado números aleatorios.");
         setError("");
+      } else {
+        setError(data.message || "Ocurrió un error en la compra.");
       }
     } catch (err) {
       console.error("Error en compra:", err);
@@ -79,7 +112,7 @@ export default function Comprar() {
   return (
     <div className="comprar-container">
       <h1>Comprar Números de Rifa</h1>
-      <p>La cantidad mínima recomendada a comprar es 5 números.</p>
+      <p>La cantidad <strong>mínima</strong> a comprar es <strong>5 números</strong>.</p>
       <p><strong>🎲 Los números se asignan aleatoriamente</strong></p>
 
       {error && <div className="error-message">{error}</div>}
@@ -100,12 +133,12 @@ export default function Comprar() {
 
         <div className="compra-section">
           <div className="cantidad-section">
-            <label>Cantidad de números:</label>
+            <label>Cantidad de números <small>(mínimo 5)</small>:</label>
             <input
               type="number"
               value={cantidad}
               onChange={handleCantidadChange}
-              min="1"
+              min="5"
               max={rifa.disponibles || 100}
               disabled={loading}
             />
@@ -131,7 +164,7 @@ export default function Comprar() {
             <button 
               className="btn-comprar" 
               onClick={handleComprar} 
-              disabled={loading || cantidad > (rifa.disponibles || 0)}
+              disabled={loading || cantidad < 5 || cantidad > (rifa.disponibles || 0)}
             >
               {loading ? "Procesando..." : `Comprar ${cantidad} números`}
             </button>
