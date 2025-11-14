@@ -55,7 +55,6 @@ export default function Home() {
       {/* NAVBAR */}
       <nav className="navbar">
         <div className="logo-container">
-          <img src="/logo.png" alt="Logo" className="logo-img" />
           <h2 className="logo-title">StayAwayCo</h2>
         </div>
 

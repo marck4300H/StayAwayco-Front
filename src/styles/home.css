@@ -1,6 +1,6 @@
 /* CONTENEDOR GENERAL */
 .home-container {
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   background: linear-gradient(300deg, #0f172a, #1e293b);
   font-family: Poppins, sans-serif;
