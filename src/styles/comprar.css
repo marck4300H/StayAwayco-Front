@@ -1,0 +1,129 @@
+/* CONTENEDOR GENERAL */
+.comprar-container {
+  min-height: 100%;
+  width: 100vw;
+  background: #ffffff;
+  font-family: Poppins, sans-serif;
+  padding: 20px;
+  color: #1a1a1a;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* TÍTULO */
+.comprar-container h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  color: #c8a951;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.comprar-container p {
+  text-align: center;
+  color: #666666;
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+/* SECCIÓN CANTIDAD */
+.cantidad-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cantidad-section label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cantidad-section input[type="number"] {
+  width: 120px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #c8a951;
+  text-align: center;
+  outline: none;
+  transition: 0.2s;
+}
+
+.cantidad-section input[type="number"]:focus {
+  border-color: #dfc77a;
+  box-shadow: 0 0 5px rgba(200, 168, 81, 0.5);
+}
+
+/* SECCIÓN PAQUETES */
+.paquetes-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.paquetes-section p {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.paquete-btn {
+  background: #c8a951;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  margin: 5px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.paquete-btn:hover {
+  background: #dfc77a;
+}
+
+/* SECCIÓN ACCIONES */
+.acciones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.btn-comprar,
+.btn-cancel {
+  background: #c8a951;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-comprar:disabled {
+  background: #e0d7b5;
+  cursor: not-allowed;
+  color: #ffffff;
+}
+
+.btn-comprar:hover:enabled {
+  background: #dfc77a;
+}
+
+.btn-cancel:hover {
+  background: #dfc77a;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .acciones {
+    flex-direction: column;
+  }
+
+  .btn-comprar,
+  .btn-cancel {
+    width: 100%;
+  }
+}

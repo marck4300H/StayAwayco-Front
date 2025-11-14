@@ -10,6 +10,7 @@ import Login from "../pages/login";
 import Registro from "../pages/registro";
 import Perfil from "../pages/perfil";
 import EditarPerfil from "../pages/EditarPerfil";
+import Comprar from "../pages/Comprar";
 
 export default function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ export default function AppRoutes() {
       <Route path="/registro" element={<Registro />} />
       <Route path="perfil" element={<Perfil />} />
       <Route path="editarPerfil" element={<EditarPerfil />} />
+      <Route path="comprar" element={<Comprar />} />
       
       
 

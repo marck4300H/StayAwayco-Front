@@ -15,21 +15,17 @@ export default function Home() {
   useEffect(() => {
     const fetchRifas = async () => {
       try {
-        // Primero obtener todas las rifas
         const res = await fetch(`${API_URL}/rifas/listar`);
         if (!res.ok) throw new Error("Error al obtener las rifas");
         const data = await res.json();
         if (!data.success) throw new Error("No se pudieron cargar las rifas.");
 
-        // Para cada rifa, obtener porcentaje/vendidos
         const rifasConEstado = await Promise.all(
           data.rifas.map(async (rifa) => {
             try {
               const resEstado = await fetch(`${API_URL}/rifas/${rifa.id}`);
               if (!resEstado.ok) throw new Error("Error al obtener estado de rifa");
               const estado = await resEstado.json();
-
-              // Combinar datos de la rifa con su estado
               return { ...rifa, ...estado };
             } catch (err) {
               console.error("❌ Error obteniendo estado de rifa:", err);
@@ -86,7 +82,7 @@ export default function Home() {
         <link rel="icon" href="../../public/SA.png" type="image/png"></link>
         <h1 className="header-title">🎟️ Adquiere tus tickets Pablo</h1>
         <p className="header-subtitle">
-          Participa en nuestros eventos invirtiendo en los tickets y podrias ser el proximo dueño de una moto de alto CC.
+          Participa en nuestros eventos invirtiendo en los tickets y podrías ser el próximo dueño de una moto de alto CC.
         </p>
       </header>
 
@@ -106,14 +102,16 @@ export default function Home() {
               <h3 className="rifa-title">{rifa.titulo}</h3>
               <p className="rifa-desc">{rifa.descripcion}</p>
 
-              {/* Mostrar porcentaje solo si existe */}
               {typeof rifa.porcentaje === "number" && (
-                <>
-                  <ProgressBar porcentaje={rifa.porcentaje} />
-                </>
+                <ProgressBar porcentaje={rifa.porcentaje} />
               )}
 
-              <button className="rifa-btn">Ver más</button>
+              <button
+                className="rifa-btn"
+                onClick={() => navigate("/comprar", { state: { rifa } })}
+              >
+                Comprar
+              </button>
             </div>
           </div>
         ))}
@@ -122,12 +120,8 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="footer">
         <p>© {new Date().getFullYear()} StayAwayCo — Todos los derechos reservados</p>
-        <Link to="/admin/login" className="admin-link">
-          Panel de administrador →
-        </Link>
-        <Link to="/perfil" className="admin-link">
-          Perfil →
-        </Link>
+        <Link to="/admin/login" className="admin-link">Panel de administrador →</Link>
+        <Link to="/perfil" className="admin-link">Perfil →</Link>
       </footer>
     </div>
   );
