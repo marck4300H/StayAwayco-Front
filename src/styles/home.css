@@ -191,7 +191,7 @@
 
 .rifa-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 25px rgba(200,169,81,0.25);
+  box-shadow: 0 8px 25px rgba(200, 168, 81, 0.879);
 }
 
 .rifa-img {
