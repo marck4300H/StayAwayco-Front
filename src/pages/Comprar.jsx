@@ -41,7 +41,6 @@ export default function Comprar() {
     try {
       setLoading(true);
 
-      // ✅ RUTA CORREGIDA: /api/comprar/crear/:rifaId
       const res = await fetch(`${API_URL}/comprar/crear/${rifa.id}`, {
         method: "POST",
         headers: {
@@ -57,7 +56,7 @@ export default function Comprar() {
         setError(data.message || "Ocurrió un error en la compra.");
       } else {
         setNumerosComprados(data.numeros || []);
-        setSuccess(data.message || "¡Compra exitosa!");
+        setSuccess(data.message || "¡Compra exitosa! Se te han asignado números aleatorios.");
         setError("");
       }
     } catch (err) {
@@ -81,10 +80,11 @@ export default function Comprar() {
     <div className="comprar-container">
       <h1>Comprar Números de Rifa</h1>
       <p>La cantidad mínima recomendada a comprar es 5 números.</p>
+      <p><strong>🎲 Los números se asignan aleatoriamente</strong></p>
 
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
-      {loading && <div className="loading-message">Procesando compra...</div>}
+      {loading && <div className="loading-message">Procesando compra y asignando números aleatorios...</div>}
 
       <div className="comprar-layout">
         <div className="rifa-info">
@@ -142,8 +142,8 @@ export default function Comprar() {
 
           {numerosComprados.length > 0 && (
             <div className="numeros-resultado">
-              <h3>🎉 ¡Números comprados exitosamente!</h3>
-              <p><strong>Tus números:</strong></p>
+              <h3>🎉 ¡Compra Exitosa!</h3>
+              <p><strong>Se te han asignado {numerosComprados.length} números aleatorios:</strong></p>
               <div className="numeros-grid">
                 {numerosComprados.map((numero, index) => (
                   <span key={index} className="numero-comprado">
@@ -151,6 +151,9 @@ export default function Comprar() {
                   </span>
                 ))}
               </div>
+              <p className="info-aleatorio">
+                <small>💡 Los números se asignan aleatoriamente del total disponible</small>
+              </p>
             </div>
           )}
         </div>

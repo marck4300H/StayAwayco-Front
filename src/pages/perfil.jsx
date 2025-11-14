@@ -36,7 +36,7 @@ const Perfil = () => {
 
         setUsuario(data.usuario);
 
-        // ✅ Obtener números comprados - RUTA CORREGIDA: /api/comprar
+        // ✅ Obtener números comprados
         const numerosRes = await fetch(
           `${API_URL}/comprar/usuario/${data.usuario.numero_documento}`,
           {
@@ -51,7 +51,6 @@ const Perfil = () => {
         // ✅ Verificar si la respuesta es exitosa
         if (!numerosRes.ok) {
           console.error(`❌ Error en compras: ${numerosRes.status} ${numerosRes.statusText}`);
-          // Si hay error, establecer números vacíos pero continuar
           setNumerosPorRifa({});
           setCargando(false);
           return;
@@ -69,7 +68,7 @@ const Perfil = () => {
           return;
         }
 
-        // ✅ AGRUPAR NÚMEROS POR RIFA CON MEJOR FORMATO
+        // ✅ AGRUPAR NÚMEROS POR RIFA - CORREGIDO
         const agrupado = {};
 
         (numerosData.numeros || []).forEach((item) => {
@@ -77,14 +76,27 @@ const Perfil = () => {
           
           if (!agrupado[rifaNombre]) {
             agrupado[rifaNombre] = {
-              rifa_id: item.rifa_id,
               numeros: []
             };
           }
-          agrupado[rifaNombre].numeros.push(item.numero);
+          // ✅ Asegurar que el número se guarde correctamente
+          agrupado[rifaNombre].numeros.push(Number(item.numero));
         });
 
-        console.log("📊 Números agrupados por rifa:", agrupado);
+        // ✅ ORDENAR LOS NÚMEROS DENTRO DE CADA RIFA
+        Object.keys(agrupado).forEach(rifaNombre => {
+          agrupado[rifaNombre].numeros.sort((a, b) => a - b);
+        });
+
+        console.log("📊 Números agrupados por rifa:", {
+          totalRifas: Object.keys(agrupado).length,
+          detalles: Object.entries(agrupado).map(([rifa, datos]) => ({
+            rifa,
+            cantidadNumeros: datos.numeros.length,
+            primerosNumeros: datos.numeros.slice(0, 10) // Mostrar primeros 10 para el log
+          }))
+        });
+
         setNumerosPorRifa(agrupado);
         setCargando(false);
       } catch (error) {
@@ -122,6 +134,16 @@ const Perfil = () => {
       console.error("Error al eliminar usuario:", error);
       alert("Error de conexión al eliminar cuenta");
     }
+  };
+
+  // ✅ FUNCIÓN PARA FORMATEAR NÚMEROS
+  const formatearNumero = (numero) => {
+    // Para rifas de 10,000 números (0-9999)
+    if (numero >= 0 && numero <= 9999) {
+      return numero.toString().padStart(4, '0');
+    }
+    // Para rifas de 100,000 números (0-99999)
+    return numero.toString().padStart(5, '0');
   };
 
   if (cargando) return <div className="perfil-cargando">Cargando perfil...</div>;
@@ -162,7 +184,7 @@ const Perfil = () => {
               <div className="numeros-grid">
                 {datosRifa.numeros.map((numero, i) => (
                   <div key={i} className="numero-item">
-                    #{numero}
+                    #{formatearNumero(numero)}
                   </div>
                 ))}
               </div>
