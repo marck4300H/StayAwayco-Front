@@ -84,9 +84,9 @@ export default function Home() {
       {/* HEADER */}
       <header className="header">
         <link rel="icon" href="../../public/SA.png" type="image/png"></link>
-        <h1 className="header-title">🎟️ Trata De Esclavas</h1>
+        <h1 className="header-title">🎟️ Adquiere tus tickets</h1>
         <p className="header-subtitle">
-          Participa en rifas exclusivas y ganate una exclava de nuestro catalogo.
+          Participa en nuestros eventos invirtiendo en los tickets y podrias ser el proximo dueño de una moto de alto CC.
         </p>
       </header>
 
@@ -109,12 +109,6 @@ export default function Home() {
               {/* Mostrar porcentaje solo si existe */}
               {typeof rifa.porcentaje === "number" && (
                 <>
-                  <p className="porcentaje-text">
-                    Vendidos: {rifa.vendidos ?? 0} / {rifa.cantidad_numeros}  
-                    <span style={{ color: "#16a34a", fontWeight: "bold", marginLeft: "5px" }}>
-                      ({rifa.porcentaje.toFixed(2)}%)
-                    </span>
-                  </p>
                   <ProgressBar porcentaje={rifa.porcentaje} />
                 </>
               )}
@@ -130,6 +124,9 @@ export default function Home() {
         <p>© {new Date().getFullYear()} StayAwayCo — Todos los derechos reservados</p>
         <Link to="/admin/login" className="admin-link">
           Panel de administrador →
+        </Link>
+        <Link to="/perfil" className="admin-link">
+          Perfil →
         </Link>
       </footer>
     </div>
