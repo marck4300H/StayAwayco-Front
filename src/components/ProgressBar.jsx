@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/components.css/progressbar.css";
+import "../styles/componentscss/progressbar.css";
 
 export default function ProgressBar({ porcentaje = 0, label = "Progreso", showPercentage = true, animated = true }) {
   // Asegurarnos de que el porcentaje esté entre 0 y 100
