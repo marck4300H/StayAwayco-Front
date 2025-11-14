@@ -84,6 +84,7 @@ export default function Home() {
 
       {/* HEADER */}
       <header className="header">
+        <link rel="icon" href="../../public/SA.png" type="image/png"></link>
         <h1 className="header-title">🎟️ Trata De Esclavas</h1>
         <p className="header-subtitle">
           Participa en rifas exclusivas y ganate una exclava de nuestro catalogo.

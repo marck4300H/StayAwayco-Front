@@ -7,6 +7,7 @@ import CrearRifa from "../pages/CrearRifa";
 import EditarRifa from "../pages/EditarRifa";
 import EliminarRifa from "../pages/EliminarRifa";
 import Login from "../pages/login";
+import Registro from "../pages/registro";
 
 export default function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
       {/* Página principal */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/registro" element={<Registro />} />
       
       
 
