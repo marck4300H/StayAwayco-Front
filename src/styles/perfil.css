@@ -1,0 +1,65 @@
+.perfil-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  color: #1a1a1a;
+}
+
+.perfil-titulo {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.perfil-card {
+  background: #ffffff;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.perfil-card h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  border-left: 5px solid #0066ff;
+  padding-left: 10px;
+}
+
+.perfil-card p {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.no-numeros {
+  margin-top: 10px;
+  color: #cc0000;
+  font-weight: bold;
+}
+
+.numeros-grid {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  gap: 10px;
+}
+
+.numero-item {
+  background: #0066ff;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.perfil-cargando,
+.perfil-error {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 20px;
+}
