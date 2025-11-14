@@ -1,0 +1,39 @@
+.editar-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.editar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.editar-form label {
+  font-weight: bold;
+}
+
+.editar-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn-guardar {
+  margin-top: 15px;
+  padding: 12px;
+  background: #1d72f3;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  background: #0f56c1;
+}

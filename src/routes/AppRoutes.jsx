@@ -8,6 +8,8 @@ import EditarRifa from "../pages/EditarRifa";
 import EliminarRifa from "../pages/EliminarRifa";
 import Login from "../pages/login";
 import Registro from "../pages/registro";
+import Perfil from "../pages/perfil";
+import EditarPerfil from "../pages/EditarPerfil";
 
 export default function AppRoutes() {
   return (
@@ -16,6 +18,8 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/registro" element={<Registro />} />
+      <Route path="perfil" element={<Perfil />} />
+      <Route path="editarPerfil" element={<EditarPerfil />} />
       
       
 
