@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import Layout from "../components/Layout";
 import Home from "../pages/Home";
 import AdminLogin from "../pages/adminLogin";
 import AdminDashboard from "../pages/AdminDashboard";
@@ -15,17 +16,17 @@ import Comprar from "../pages/Comprar";
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Página principal */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/registro" element={<Registro />} />
-      <Route path="perfil" element={<Perfil />} />
-      <Route path="editarPerfil" element={<EditarPerfil />} />
-      <Route path="comprar" element={<Comprar />} />
-      
-      
+      {/* ✅ Rutas dentro del Layout (con navbar y footer) */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
+        <Route path="/perfil" element={<Perfil />} />
+        <Route path="/editarPerfil" element={<EditarPerfil />} />
+        <Route path="/comprar" element={<Comprar />} />
+      </Route>
 
-      {/* Rutas del administrador */}
+      {/* ✅ Rutas de administrador (fuera del Layout) */}
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />}>
         {/* Rutas hijas del dashboard */}
@@ -34,8 +35,8 @@ export default function AppRoutes() {
         <Route path="eliminar" element={<EliminarRifa />} />
       </Route>
 
-      {/* Redirección por defecto */}
-      {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+      {/* ✅ Redirección por defecto */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

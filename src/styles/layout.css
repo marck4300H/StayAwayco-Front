@@ -1,0 +1,53 @@
+/* ===== LAYOUT GENERAL ===== */
+.layout-container {
+  min-height: 100vh;
+  width: 100vw;
+  background: #ffffff;
+  font-family: Poppins, sans-serif;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 80px; /* Compensa el navbar fijo */
+  min-height: calc(100vh - 160px); /* Altura mínima menos navbar y footer */
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  padding: 30px 20px;
+  color: #666666;
+  background: #f8f9fa;
+  border-top: 1px solid #e5e5e5;
+}
+
+.footer-links {
+  margin-top: 15px;
+}
+
+.footer-link {
+  background: none;
+  border: none;
+  color: #c8a951;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #dfc77a;
+}
+
+.admin-link {
+  color: #c8a951;
+  font-weight: 600;
+  text-decoration: none;
+  display: block;
+  margin-top: 10px;
+}
