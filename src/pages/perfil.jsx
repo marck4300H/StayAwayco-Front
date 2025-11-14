@@ -68,16 +68,6 @@ const Perfil = () => {
     <div className="perfil-container">
       <h2 className="perfil-titulo">Mi Perfil</h2>
 
-      {/* BOTONES */}
-      <div className="perfil-botones">
-        <button className="btn-editar" onClick={() => navigate("/editarPerfil")}>
-          Editar perfil
-        </button>
-
-        <button className="btn-eliminar" onClick={handleEliminar}>
-          Eliminar cuenta
-        </button>
-      </div>
 
       {/* DATOS DEL USUARIO */}
       <div className="perfil-card">
@@ -90,6 +80,17 @@ const Perfil = () => {
         <p><strong>Dirección:</strong> {usuario.direccion || "No registrada"}</p>
         <p><strong>Ciudad:</strong> {usuario.ciudad || "No registrada"}</p>
         <p><strong>Departamento:</strong> {usuario.departamento || "No registrado"}</p>
+
+              {/* BOTONES */}
+      <div className="perfil-botones">
+        <button className="btn-editar" onClick={() => navigate("/editarPerfil")}>
+          Editar perfil
+        </button>
+
+        <button className="btn-eliminar" onClick={handleEliminar}>
+          Eliminar cuenta
+        </button>
+      </div>
       </div>
 
       {/* NÚMEROS COMPRADOS */}
