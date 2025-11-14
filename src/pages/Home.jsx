@@ -62,9 +62,9 @@ export default function Home() {
           <button className="link-btn" onClick={() => navigate("/login")}>
             Login
           </button>
-          <Link to="/registro" className="btn-register">
+          <button className="btn-register" onClick={() => navigate("/regisrto")}>
             Registro
-          </Link>
+          </button>
           <FaShoppingCart className="cart-icon" size={22} />
         </div>
 

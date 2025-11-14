@@ -74,7 +74,8 @@
 }
 
 .btn-register:hover {
-  background-color: #dfc77a;
+  background-color: #ffffff;
+  color: #c8a951;
 }
 
 .cart-icon {
@@ -195,10 +196,11 @@
 }
 
 .rifa-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-bottom: 3px solid #c8a951;
+ width: 100%;
+  height: 260px; /* puedes ajustarlo */
+  object-fit: contain;
+  object-position: center;
+  background-color: white; /* evita cortes */
 }
 
 .rifa-content {
