@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import Home from "../pages/Home";
-import AdminLogin from "../pages/adminLogin";
 import AdminDashboard from "../pages/AdminDashboard";
 import CrearRifa from "../pages/CrearRifa";
 import EditarRifa from "../pages/EditarRifa";
@@ -27,7 +26,6 @@ export default function AppRoutes() {
       </Route>
 
       {/* ✅ Rutas de administrador (fuera del Layout) */}
-      <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />}>
         {/* Rutas hijas del dashboard */}
         <Route path="crear" element={<CrearRifa />} />
