@@ -5,6 +5,7 @@ import "../styles/perfil.css";
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState(null);
+  const [numerosPorRifa, setNumerosPorRifa] = useState({});
   const [cargando, setCargando] = useState(true);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -12,67 +13,126 @@ const Perfil = () => {
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
+        // ✅ Obtener datos del usuario
         const res = await fetch(`${API_URL}/usuarios/perfil`, {
           method: "GET",
-          headers: {
+          headers: { 
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
         });
-
+        
+        if (!res.ok) {
+          throw new Error(`Error HTTP en perfil: ${res.status}`);
+        }
+        
         const data = await res.json();
 
-        if (data.success) {
-          setUsuario(data.usuario);
+        if (!data.success) {
+          console.error("Error en respuesta de perfil:", data.message);
+          setCargando(false);
+          return;
         }
 
+        setUsuario(data.usuario);
+
+        // ✅ Obtener números comprados - RUTA CORREGIDA: /api/comprar
+        const numerosRes = await fetch(
+          `${API_URL}/comprar/usuario/${data.usuario.numero_documento}`,
+          {
+            method: "GET",
+            headers: { 
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+          }
+        );
+        
+        // ✅ Verificar si la respuesta es exitosa
+        if (!numerosRes.ok) {
+          console.error(`❌ Error en compras: ${numerosRes.status} ${numerosRes.statusText}`);
+          // Si hay error, establecer números vacíos pero continuar
+          setNumerosPorRifa({});
+          setCargando(false);
+          return;
+        }
+        
+        const numerosData = await numerosRes.json();
+        
+        // ✅ Verificar estructura de respuesta
+        console.log("✅ Datos de compras recibidos:", numerosData);
+
+        if (!numerosData.success) {
+          console.error("Error en datos de compras:", numerosData.message);
+          setNumerosPorRifa({});
+          setCargando(false);
+          return;
+        }
+
+        // ✅ AGRUPAR NÚMEROS POR RIFA CON MEJOR FORMATO
+        const agrupado = {};
+
+        (numerosData.numeros || []).forEach((item) => {
+          const rifaNombre = item.titulo_rifa || "Rifa desconocida";
+          
+          if (!agrupado[rifaNombre]) {
+            agrupado[rifaNombre] = {
+              rifa_id: item.rifa_id,
+              numeros: []
+            };
+          }
+          agrupado[rifaNombre].numeros.push(item.numero);
+        });
+
+        console.log("📊 Números agrupados por rifa:", agrupado);
+        setNumerosPorRifa(agrupado);
         setCargando(false);
       } catch (error) {
-        console.error("Error al cargar perfil:", error);
+        console.error("❌ Error al cargar perfil:", error);
         setCargando(false);
       }
     };
 
-    fetchPerfil();
-  }, []);
+    if (token) {
+      fetchPerfil();
+    } else {
+      setCargando(false);
+      navigate("/login");
+    }
+  }, [token, navigate]);
 
   const handleEliminar = async () => {
-    if (!confirm("¿Seguro que deseas eliminar tu cuenta? Esta acción es irreversible.")) {
-      return;
-    }
-
+    if (!confirm("¿Seguro que deseas eliminar tu cuenta? Esta acción es irreversible.")) return;
     try {
       const res = await fetch(`${API_URL}/usuarios/eliminar`, {
         method: "DELETE",
-        headers: {
+        headers: { 
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
       });
-
       const data = await res.json();
-
       if (data.success) {
         localStorage.removeItem("token");
         navigate("/login");
       } else {
-        alert("Error eliminando tu cuenta.");
+        alert("Error eliminando tu cuenta: " + (data.message || "Error desconocido"));
       }
     } catch (error) {
       console.error("Error al eliminar usuario:", error);
+      alert("Error de conexión al eliminar cuenta");
     }
   };
 
   if (cargando) return <div className="perfil-cargando">Cargando perfil...</div>;
-  if (!usuario) return <div className="perfil-error">Error cargando datos.</div>;
+  if (!usuario) return <div className="perfil-error">Error cargando datos del usuario.</div>;
 
   return (
     <div className="perfil-container">
       <h2 className="perfil-titulo">Mi Perfil</h2>
 
-
-      {/* DATOS DEL USUARIO */}
       <div className="perfil-card">
         <h3>Datos personales</h3>
-
         <p><strong>Nombre:</strong> {usuario.nombres} {usuario.apellidos}</p>
         <p><strong>Documento:</strong> {usuario.tipo_documento} {usuario.numero_documento}</p>
         <p><strong>Correo:</strong> {usuario.correo_electronico}</p>
@@ -81,34 +141,33 @@ const Perfil = () => {
         <p><strong>Ciudad:</strong> {usuario.ciudad || "No registrada"}</p>
         <p><strong>Departamento:</strong> {usuario.departamento || "No registrado"}</p>
 
-              {/* BOTONES */}
-      <div className="perfil-botones">
-        <button className="btn-editar" onClick={() => navigate("/editarPerfil")}>
-          Editar perfil
-        </button>
-
-        <button className="btn-eliminar" onClick={handleEliminar}>
-          Eliminar cuenta
-        </button>
-      </div>
+        <div className="perfil-botones">
+          <button className="btn-editar" onClick={() => navigate("/editarPerfil")}>Editar perfil</button>
+          <button className="btn-eliminar" onClick={handleEliminar}>Eliminar cuenta</button>
+        </div>
       </div>
 
-      {/* NÚMEROS COMPRADOS */}
       <div className="perfil-card">
         <h3>Mis números comprados</h3>
 
-        {usuario.numeros_comprados?.length === 0 && (
+        {Object.keys(numerosPorRifa).length === 0 ? (
           <p className="no-numeros">No has comprado ningún número todavía. ¡Participa en una rifa!</p>
-        )}
-
-        {usuario.numeros_comprados?.length > 0 && (
-          <div className="numeros-grid">
-            {usuario.numeros_comprados.map((num, index) => (
-              <div key={index} className="numero-item">
-                {num}
+        ) : (
+          Object.entries(numerosPorRifa).map(([nombreRifa, datosRifa], index) => (
+            <div key={index} className="rifa-grupo">
+              <h4 className="rifa-nombre">🎯 {nombreRifa}</h4>
+              <p className="rifa-info">
+                <strong>Números comprados: {datosRifa.numeros.length}</strong>
+              </p>
+              <div className="numeros-grid">
+                {datosRifa.numeros.map((numero, i) => (
+                  <div key={i} className="numero-item">
+                    #{numero}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))
         )}
       </div>
     </div>
