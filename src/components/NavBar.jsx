@@ -1,31 +1,48 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaBars, FaTimes, FaUserShield } from "react-icons/fa";
 import "../styles/navbar.css";
-
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userType = localStorage.getItem("userType"); // 'admin' o 'user'
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userType");
     navigate("/");
+  };
+
+  const handleAdminPanel = () => {
+    if (userType === "admin") {
+      navigate("/admin/dashboard");
+    }
   };
 
   return (
     <nav className="navbar">
       <div className="logo-container">
         <h2 className="logo-title">StayAwayCo</h2>
+        {userType === "admin" && (
+          <span className="admin-badge" title="Administrador">
+            <FaUserShield size={16} />
+          </span>
+        )}
       </div>
       
       <div className="nav-links">
         {token ? (
-          // Usuario logueado
+          // Usuario logueado (admin o user)
           <>
+            {userType === "admin" && (
+              <button className="link-btn admin-btn" onClick={handleAdminPanel}>
+                <FaUserShield /> Panel Admin
+              </button>
+            )}
             <button className="link-btn" onClick={() => navigate("/perfil")}>
-              Mi Perfil
+              Mi Perfil {userType === "admin" && "(Admin)"}
             </button>
             <button className="link-btn" onClick={handleLogout}>
               Cerrar Sesión
@@ -47,17 +64,22 @@ const Navbar = () => {
       </div>
 
       {/* Menú móvil */}
-      <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+      <button className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-      </div>
+      </button>
       
       {menuOpen && (
         <div className="mobile-menu">
           {token ? (
             // Usuario logueado (móvil)
             <>
+              {userType === "admin" && (
+                <button className="mobile-link admin-link" onClick={() => { handleAdminPanel(); setMenuOpen(false); }}>
+                  <FaUserShield /> Panel Admin
+                </button>
+              )}
               <button className="mobile-link" onClick={() => { navigate("/perfil"); setMenuOpen(false); }}>
-                Mi Perfil
+                Mi Perfil {userType === "admin" && "(Admin)"}
               </button>
               <button className="mobile-link" onClick={() => { handleLogout(); setMenuOpen(false); }}>
                 Cerrar Sesión

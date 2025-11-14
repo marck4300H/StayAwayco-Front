@@ -13,9 +13,7 @@ const Layout = () => {
       <footer className="footer">
         <p>© {new Date().getFullYear()} StayAwayCo — Todos los derechos reservados</p>
         <div className="footer-links">
-          <button onClick={() => window.location.href = "/admin/login"} className="footer-link">
-            Panel de administrador →
-          </button>
+          
         </div>
       </footer>
     </div>
