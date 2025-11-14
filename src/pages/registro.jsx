@@ -1,44 +1,147 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/registro.css";
+import { API_URL } from "../api";
 
 const Registro = () => {
+  const [formData, setFormData] = useState({
+    numero_documento: "",
+    tipo_documento: "CC", // valor por defecto
+    nombres: "",
+    apellidos: "",
+    correo_electronico: "",
+    telefono: "",
+    direccion: "",
+    ciudad: "",
+    departamento: "",
+    password: "",
+    confirmarPassword: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { password, confirmarPassword } = formData;
+
+    if (password !== confirmarPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/usuarios/registrar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          numero_documento: formData.numero_documento,
+          tipo_documento: formData.tipo_documento,
+          nombres: formData.nombres,
+          apellidos: formData.apellidos,
+          correo_electronico: formData.correo_electronico,
+          telefono: formData.telefono,
+          direccion: formData.direccion,
+          ciudad: formData.ciudad,
+          departamento: formData.departamento,
+          password: formData.password,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Usuario registrado correctamente. Ahora inicia sesión.");
+        setFormData({
+          numero_documento: "",
+          tipo_documento: "CC",
+          nombres: "",
+          apellidos: "",
+          correo_electronico: "",
+          telefono: "",
+          direccion: "",
+          ciudad: "",
+          departamento: "",
+          password: "",
+          confirmarPassword: "",
+        });
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al registrar usuario.");
+    }
+  };
+
   return (
     <div className="register-container">
       <div className="register-card">
         <h2 className="register-title">Crear Cuenta</h2>
+        <form className="register-form" onSubmit={handleSubmit}>
+          <div className="register-field">
+            <label>Número de Documento</label>
+            <input
+              type="text"
+              name="numero_documento"
+              value={formData.numero_documento}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <form className="register-form">
+          <div className="register-field">
+            <label>Tipo de Documento</label>
+            <select
+              name="tipo_documento"
+              value={formData.tipo_documento}
+              onChange={handleChange}
+              required
+            >
+              <option value="CC">Cédula de Ciudadanía (CC)</option>
+              <option value="CE">Cédula de Extranjería (CE)</option>
+              <option value="TI">Tarjeta de Identidad (TI)</option>
+              <option value="PAS">Pasaporte (PAS)</option>
+            </select>
+          </div>
+
           <div className="register-field">
             <label>Nombre</label>
-            <input type="text" placeholder="Ingresa tu nombre" />
+            <input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
           </div>
-
           <div className="register-field">
             <label>Apellido</label>
-            <input type="text" placeholder="Ingresa tu apellido" />
+            <input type="text" name="apellidos" value={formData.apellidos} onChange={handleChange} required />
           </div>
-
           <div className="register-field">
             <label>Correo electrónico</label>
-            <input type="email" placeholder="example@gmail.com" />
+            <input type="email" name="correo_electronico" value={formData.correo_electronico} onChange={handleChange} required />
           </div>
-
+          <div className="register-field">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} required />
+          </div>
+          <div className="register-field">
+            <label>Dirección</label>
+            <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} required />
+          </div>
+          <div className="register-field">
+            <label>Ciudad</label>
+            <input type="text" name="ciudad" value={formData.ciudad} onChange={handleChange} required />
+          </div>
+          <div className="register-field">
+            <label>Departamento</label>
+            <input type="text" name="departamento" value={formData.departamento} onChange={handleChange} required />
+          </div>
           <div className="register-field">
             <label>Contraseña</label>
-            <input type="password" placeholder="********" />
+            <input type="password" name="password" value={formData.password} onChange={handleChange} required />
           </div>
-
           <div className="register-field">
-            <label>Confirmar contraseña</label>
-            <input type="password" placeholder="********" />
+            <label>Confirmar Contraseña</label>
+            <input type="password" name="confirmarPassword" value={formData.confirmarPassword} onChange={handleChange} required />
           </div>
 
-          <button className="register-button">Registrarse</button>
-
-          <p className="register-login-text">
-            ¿Ya tienes una cuenta?{" "}
-            <span className="register-login-link">Iniciar sesión</span>
-          </p>
+          <button className="register-button" type="submit">Registrarse</button>
         </form>
       </div>
     </div>
