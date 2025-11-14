@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../api";
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import "../styles/home.css";
+import ProgressBar from "../components/ProgressBar";
 
 export default function Home() {
   const [rifas, setRifas] = useState([]);
@@ -14,11 +15,30 @@ export default function Home() {
   useEffect(() => {
     const fetchRifas = async () => {
       try {
+        // Primero obtener todas las rifas
         const res = await fetch(`${API_URL}/rifas/listar`);
         if (!res.ok) throw new Error("Error al obtener las rifas");
         const data = await res.json();
-        if (data.success) setRifas(data.rifas);
-        else setError("No se pudieron cargar las rifas.");
+        if (!data.success) throw new Error("No se pudieron cargar las rifas.");
+
+        // Para cada rifa, obtener porcentaje/vendidos
+        const rifasConEstado = await Promise.all(
+          data.rifas.map(async (rifa) => {
+            try {
+              const resEstado = await fetch(`${API_URL}/rifas/${rifa.id}`);
+              if (!resEstado.ok) throw new Error("Error al obtener estado de rifa");
+              const estado = await resEstado.json();
+
+              // Combinar datos de la rifa con su estado
+              return { ...rifa, ...estado };
+            } catch (err) {
+              console.error("❌ Error obteniendo estado de rifa:", err);
+              return { ...rifa, vendidos: 0, porcentaje: 0 };
+            }
+          })
+        );
+
+        setRifas(rifasConEstado);
       } catch (err) {
         console.error("❌ Error al cargar rifas:", err);
         setError("Error de conexión con el servidor.");
@@ -26,6 +46,7 @@ export default function Home() {
         setLoading(false);
       }
     };
+
     fetchRifas();
   }, []);
 
@@ -33,39 +54,29 @@ export default function Home() {
     <div className="home-container">
       {/* NAVBAR */}
       <nav className="navbar">
-        {/* Logo */}
         <div className="logo-container">
           <img src="/logo.png" alt="Logo" className="logo-img" />
           <h2 className="logo-title">StayAwayCo</h2>
         </div>
 
-        {/* Links */}
         <div className="nav-links">
           <button className="link-btn" onClick={() => navigate("/login")}>
             Login
           </button>
-
           <Link to="/registro" className="btn-register">
             Registro
           </Link>
-
           <FaShoppingCart className="cart-icon" size={22} />
         </div>
 
-        {/* Ícono móvil */}
         <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </div>
 
-        {/* Menú móvil */}
         {menuOpen && (
           <div className="mobile-menu">
             <Link to="/login" className="mobile-link">Login</Link>
-
-            <Link to="/registro" className="mobile-btn-register">
-              Registro
-            </Link>
-
+            <Link to="/registro" className="mobile-btn-register">Registro</Link>
             <FaShoppingCart size={20} className="mobile-cart" />
           </div>
         )}
@@ -91,10 +102,23 @@ export default function Home() {
         {rifas.map((rifa) => (
           <div key={rifa.id} className="rifa-card">
             <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
-
             <div className="rifa-content">
               <h3 className="rifa-title">{rifa.titulo}</h3>
               <p className="rifa-desc">{rifa.descripcion}</p>
+
+              {/* Mostrar porcentaje solo si existe */}
+              {typeof rifa.porcentaje === "number" && (
+                <>
+                  <p className="porcentaje-text">
+                    Vendidos: {rifa.vendidos ?? 0} / {rifa.cantidad_numeros}  
+                    <span style={{ color: "#16a34a", fontWeight: "bold", marginLeft: "5px" }}>
+                      ({rifa.porcentaje.toFixed(2)}%)
+                    </span>
+                  </p>
+                  <ProgressBar porcentaje={rifa.porcentaje} />
+                </>
+              )}
+
               <button className="rifa-btn">Ver más</button>
             </div>
           </div>
