@@ -1,24 +1,28 @@
-export default function ProgressBar({ porcentaje }) {
-  if (typeof porcentaje !== "number") return null;
+import React from "react";
+import "../styles/components.css/progressbar.css";
 
-  const value = Math.min(Math.max(porcentaje, 0), 100);
-
+export default function ProgressBar({ porcentaje = 0, label = "Progreso", showPercentage = true, animated = true }) {
+  // Asegurarnos de que el porcentaje esté entre 0 y 100
+  const progressPercentage = Math.min(100, Math.max(0, porcentaje));
+  
   return (
-    <div
-      className="w-full bg-gray-700 rounded-full h-6 mt-2 overflow-hidden"
-      role="progressbar"
-      aria-label="Progreso de la rifa"
-      aria-valuenow={value}
-      aria-valuemin="0"
-      aria-valuemax="100"
-    >
-      <div
-        className="h-full rounded-full transition-all duration-500"
-        style={{
-          width: `${value}%`,
-          backgroundColor: "#16a34a",
-        }}
-      />
+    <div className="progress-container">
+      <div className="progress-header">
+        <span className="progress-label">{label}</span>
+        {showPercentage && (
+          <span className="progress-percentage">{progressPercentage}%</span>
+        )}
+      </div>
+      <div className="progress-bar-background">
+        <div 
+          className={`progress-bar-fill ${animated ? 'animated' : ''}`}
+          style={{ width: `${progressPercentage}%` }}
+        >
+          {showPercentage && progressPercentage >= 30 && (
+            <span className="progress-text">{progressPercentage}%</span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
