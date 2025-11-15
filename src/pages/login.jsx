@@ -141,10 +141,6 @@ const Login = () => {
             Regístrate
           </span>
         </p>
-
-        <div className="login-info">
-          <p><small>💡 El sistema detectará automáticamente si eres administrador o usuario regular.</small></p>
-        </div>
       </div>
     </div>
   );

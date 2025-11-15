@@ -8,9 +8,10 @@ export default function AdminDashboard() {
       {/* Menú lateral */}
       <nav className="admin-nav">
         <h2>Panel Administrador</h2>
-        <Link to="crear" className="admin-nav-link">🎯 Crear Rifa</Link>
-        <Link to="editar" className="admin-nav-link">✏️ Editar Rifa</Link>
-        <Link to="eliminar" className="admin-nav-link">🗑️ Eliminar Rifa</Link>
+        <Link to="menuAdmin" className="admin-nav-link">Inicio</Link>
+        <Link to="crear" className="admin-nav-link">Crear Rifa</Link>
+        <Link to="editar" className="admin-nav-link">Editar Rifa</Link>
+        <Link to="eliminar" className="admin-nav-link">Eliminar Rifa</Link>
       </nav>
 
       {/* Contenido dinámico */}
