@@ -12,6 +12,7 @@ import Perfil from "../pages/perfil";
 import EditarPerfil from "../pages/EditarPerfil";
 import Comprar from "../pages/Comprar";
 import Menu from "../pages/Menu";
+import FormularioPago from "../pages/FormularioPago"
 
 export default function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/editarPerfil" element={<EditarPerfil />} />
         <Route path="/comprar" element={<Comprar />} />
+        <Route path="/formulario-pago" element={<FormularioPago />} />
       </Route>
 
       {/* ✅ Rutas de administrador (fuera del Layout) */}
