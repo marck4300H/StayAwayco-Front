@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo-container">
-        <h2 className="logo-title">StayAwayCo</h2>
+        <h2 onClick={() => navigate("/")} className="logo-title">StayAwayCo</h2>
         {userType === "admin" && (
           <span className="admin-badge" title="Administrador">
             <FaUserShield size={16} />

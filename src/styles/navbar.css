@@ -212,6 +212,8 @@
   
   .logo-title {
     font-size: 1.2rem;
+    background-color: transparent;
+
   }
   
   .admin-badge {
