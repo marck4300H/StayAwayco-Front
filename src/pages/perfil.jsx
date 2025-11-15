@@ -36,9 +36,9 @@ const Perfil = () => {
 
         setUsuario(data.usuario);
 
-        // ✅ Obtener números comprados
+        // ✅ Obtener números comprados - URL ACTUALIZADA
         const numerosRes = await fetch(
-          `${API_URL}/comprar/usuario/${data.usuario.numero_documento}`,
+          `${API_URL}/comprar/usuario`, // ← Cambiado: ya no necesita cédula en URL
           {
             method: "GET",
             headers: { 
@@ -48,7 +48,6 @@ const Perfil = () => {
           }
         );
         
-        // ✅ Verificar si la respuesta es exitosa
         if (!numerosRes.ok) {
           console.error(`❌ Error en compras: ${numerosRes.status} ${numerosRes.statusText}`);
           setNumerosPorRifa({});
@@ -58,7 +57,6 @@ const Perfil = () => {
         
         const numerosData = await numerosRes.json();
         
-        // ✅ Verificar estructura de respuesta
         console.log("✅ Datos de compras recibidos:", numerosData);
 
         if (!numerosData.success) {
@@ -68,7 +66,7 @@ const Perfil = () => {
           return;
         }
 
-        // ✅ AGRUPAR NÚMEROS POR RIFA - CORREGIDO
+        // ✅ AGRUPAR NÚMEROS POR RIFA
         const agrupado = {};
 
         (numerosData.numeros || []).forEach((item) => {
@@ -79,7 +77,6 @@ const Perfil = () => {
               numeros: []
             };
           }
-          // ✅ Asegurar que el número se guarde correctamente
           agrupado[rifaNombre].numeros.push(Number(item.numero));
         });
 
@@ -88,15 +85,7 @@ const Perfil = () => {
           agrupado[rifaNombre].numeros.sort((a, b) => a - b);
         });
 
-        console.log("📊 Números agrupados por rifa:", {
-          totalRifas: Object.keys(agrupado).length,
-          detalles: Object.entries(agrupado).map(([rifa, datos]) => ({
-            rifa,
-            cantidadNumeros: datos.numeros.length,
-            primerosNumeros: datos.numeros.slice(0, 10) // Mostrar primeros 10 para el log
-          }))
-        });
-
+        console.log("📊 Números agrupados por rifa:", agrupado);
         setNumerosPorRifa(agrupado);
         setCargando(false);
       } catch (error) {
@@ -136,13 +125,10 @@ const Perfil = () => {
     }
   };
 
-  // ✅ FUNCIÓN PARA FORMATEAR NÚMEROS
   const formatearNumero = (numero) => {
-    // Para rifas de 10,000 números (0-9999)
     if (numero >= 0 && numero <= 9999) {
       return numero.toString().padStart(4, '0');
     }
-    // Para rifas de 100,000 números (0-99999)
     return numero.toString().padStart(5, '0');
   };
 
