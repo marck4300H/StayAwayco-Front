@@ -141,8 +141,6 @@ const Login = () => {
             Regístrate
           </span>
         </p>
-
-      
       </div>
     </div>
   );

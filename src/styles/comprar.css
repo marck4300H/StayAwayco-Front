@@ -45,6 +45,9 @@
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #c8a951;
+  background-color: #ffffff;
+  
+  color: #1a1a1a;
   text-align: center;
   outline: none;
   transition: 0.2s;
@@ -56,10 +59,29 @@
 }
 
 /* SECCIÓN PAQUETES */
+.ofertas-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Separación entre cards */
+  padding: 20px;
+  flex-wrap: wrap; /* Permite adaptarse en móviles */
+}
+
+.oferta-box {
+  background: #f6f6f2;
+  border-radius: 12px;
+  border: #c8a951 dashed 2px;
+  padding: 20px;
+  width: 30%; /* Cada card ocupa 1/3 del espacio */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
 .paquetes-section {
   text-align: center;
   margin-bottom: 30px;
 }
+
 
 .paquetes-section p {
   font-weight: 600;

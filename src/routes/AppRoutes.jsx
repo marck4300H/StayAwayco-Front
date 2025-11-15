@@ -11,6 +11,7 @@ import Registro from "../pages/registro";
 import Perfil from "../pages/perfil";
 import EditarPerfil from "../pages/EditarPerfil";
 import Comprar from "../pages/Comprar";
+import Menu from "../pages/Menu";
 
 export default function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function AppRoutes() {
       {/* ✅ Rutas de administrador (fuera del Layout) */}
       <Route path="/admin/dashboard" element={<AdminDashboard />}>
         {/* Rutas hijas del dashboard */}
+        <Route path="menu" element={<Menu />} />
         <Route path="crear" element={<CrearRifa />} />
         <Route path="editar" element={<EditarRifa />} />
         <Route path="eliminar" element={<EliminarRifa />} />

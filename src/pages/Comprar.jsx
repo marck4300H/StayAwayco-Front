@@ -142,11 +142,39 @@ export default function Comprar() {
               max={rifa.disponibles || 100}
               disabled={loading}
             />
+          </div >
+
+          <div className="ofertas-container">
+            <div class="oferta-box">
+              <h3>🔥 15 Tickets</h3>
+              <p>Producto destacado</p>
+              <span class="precio">Precio: $15.000</span>
+              <button class="btn-comprar">Seleccionar</button>
+            </div>
+
+            <div class="oferta-box">
+              <h3>🔥 25 Tickets</h3>
+              <p>Producto destacado </p>
+              <span class="precio">Precio: $25.000</span>
+              <button class="btn-comprar">Seleccionar</button>
+            </div>
+
+            <div class="oferta-box">
+              <h3>🔥 35 Tickets</h3>
+              <p>Producto destacado </p>
+              <span class="precio">Precio: $35.000</span>
+              <button class="btn-comprar">Seleccionar</button>
+            </div>
           </div>
 
+
+
           <div className="paquetes-section">
+            
             <p>Paquetes recomendados:</p>
             <div className="paquetes-buttons">
+              
+
               {paquetes.map((p) => (
                 <button
                   key={p}
