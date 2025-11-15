@@ -13,7 +13,13 @@ export default function Comprar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const paquetes = [15, 25, 40];
+
+  // ✅ PAQUETES DINÁMICOS CON PRECIOS CALCULADOS
+  const paquetes = [
+    { cantidad: 15, precio: 15000, destacado: true },
+    { cantidad: 25, precio: 25000, destacado: true },
+    { cantidad: 40, precio: 40000, destacado: true }
+  ];
 
   const handleCantidadChange = (e) => {
     const value = parseInt(e.target.value);
@@ -25,8 +31,8 @@ export default function Comprar() {
     }
   };
 
-  const handlePaqueteClick = (valor) => {
-    setCantidad(valor);
+  const handlePaqueteClick = (cantidadPaquete) => {
+    setCantidad(cantidadPaquete);
     setError(""); // Limpiar error al seleccionar paquete
   };
 
@@ -112,8 +118,6 @@ export default function Comprar() {
   return (
     <div className="comprar-container">
       <h1>Comprar Números de Rifa</h1>
-      <p>La cantidad <strong>mínima</strong> a comprar es <strong>5 números</strong>.</p>
-      <p><strong>🎲 Los números se asignan aleatoriamente</strong></p>
 
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
@@ -124,11 +128,7 @@ export default function Comprar() {
           <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
           <h2 className="rifa-title">{rifa.titulo}</h2>
           <p className="rifa-desc">{rifa.descripcion}</p>
-          <div className="rifa-stats">
-            <p><strong>Números disponibles:</strong> {rifa.disponibles || 0}</p>
-            <p><strong>Números vendidos:</strong> {rifa.vendidos || 0}</p>
-            <p><strong>Total números:</strong> {rifa.cantidad_numeros || 0}</p>
-          </div>
+          
         </div>
 
         <div className="compra-section">
@@ -142,51 +142,33 @@ export default function Comprar() {
               max={rifa.disponibles || 100}
               disabled={loading}
             />
-          </div >
+          </div>
 
+          {/* ✅ OFERTAS DINÁMICAS - REEMPLAZANDO LAS TARJETAS ESTÁTICAS */}
           <div className="ofertas-container">
-            <div class="oferta-box">
-              <h3>🔥 15 Tickets</h3>
-              <p>Producto destacado</p>
-              <span class="precio">Precio: $15.000</span>
-              <button class="btn-comprar">Seleccionar</button>
-            </div>
-
-            <div class="oferta-box">
-              <h3>🔥 25 Tickets</h3>
-              <p>Producto destacado </p>
-              <span class="precio">Precio: $25.000</span>
-              <button class="btn-comprar">Seleccionar</button>
-            </div>
-
-            <div class="oferta-box">
-              <h3>🔥 35 Tickets</h3>
-              <p>Producto destacado </p>
-              <span class="precio">Precio: $35.000</span>
-              <button class="btn-comprar">Seleccionar</button>
-            </div>
-          </div>
-
-
-
-          <div className="paquetes-section">
-            
-            <p>Paquetes recomendados:</p>
-            <div className="paquetes-buttons">
-              
-
-              {paquetes.map((p) => (
-                <button
-                  key={p}
-                  className={`paquete-btn ${cantidad === p ? 'active' : ''}`}
-                  onClick={() => handlePaqueteClick(p)}
-                  disabled={loading}
+            {paquetes.map((paquete, index) => (
+              <div 
+                key={index} 
+                className={`oferta-box ${cantidad === paquete.cantidad ? 'active' : ''} ${
+                  paquete.destacado ? 'destacado' : ''
+                }`}
+              >
+                {paquete.destacado && <div className="badge-destacado">🔥 POPULAR</div>}
+                <h3>{paquete.cantidad} Tickets</h3>
+                <p>{paquete.destacado ? 'Mejor valor' : 'Buena opción'}</p>
+                <span className="precio">Precio: ${paquete.precio.toLocaleString()}</span>
+                <button 
+                  className={`btn-oferta ${cantidad === paquete.cantidad ? 'selected' : ''}`}
+                  onClick={() => handlePaqueteClick(paquete.cantidad)}
+                  disabled={loading || paquete.cantidad > (rifa.disponibles || 0)}
                 >
-                  {p} números
+                  {cantidad === paquete.cantidad ? '✓ Seleccionado' : 'Seleccionar'}
                 </button>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+
+          
 
           <div className="acciones">
             <button 
@@ -194,7 +176,7 @@ export default function Comprar() {
               onClick={handleComprar} 
               disabled={loading || cantidad < 5 || cantidad > (rifa.disponibles || 0)}
             >
-              {loading ? "Procesando..." : `Comprar ${cantidad} números`}
+              {loading ? "Procesando..." : `Comprar ${cantidad} números - $${(cantidad * 1000).toLocaleString()}`}
             </button>
             <button className="btn-cancel" onClick={() => navigate(-1)} disabled={loading}>
               Cancelar
@@ -212,9 +194,7 @@ export default function Comprar() {
                   </span>
                 ))}
               </div>
-              <p className="info-aleatorio">
-                <small>💡 Los números se asignan aleatoriamente del total disponible</small>
-              </p>
+            
             </div>
           )}
         </div>
