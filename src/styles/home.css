@@ -62,6 +62,7 @@
   margin: 0 auto;
 }
 
+/* === CARD CONFIG FLEX PARA ALINEAR BOTÓN ABAJO === */
 .rifa-card {
   background: #ffffff;
   border-radius: 15px;
@@ -69,6 +70,10 @@
   overflow: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.332);
+
+  /* NEW 👇 */
+  display: flex;
+  flex-direction: column;
 }
 
 .rifa-card:hover {
@@ -86,6 +91,25 @@
 
 .rifa-content {
   padding: 18px;
+
+  /* NEW 👇 */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === LIMITE DE TEXTO === */
+.rifa-desc {
+  color: #666666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+
+  /* NEW 👇 máximo 3 líneas */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .rifa-title {
@@ -93,13 +117,6 @@
   font-size: 1.2rem;
   margin-bottom: 10px;
   font-weight: 600;
-}
-
-.rifa-desc {
-  color: #666666;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 15px;
 }
 
 .rifa-stats {
@@ -111,7 +128,9 @@
   font-weight: 500;
 }
 
+/* === BOTÓN SIEMPRE ABAJO === */
 .rifa-btn {
+  margin-top: auto; /* NEW 👈 Mantiene el botón abajo */
   width: 100%;
   background: #c8a951;
   color: #ffffff;
