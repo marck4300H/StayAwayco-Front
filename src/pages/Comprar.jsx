@@ -171,12 +171,15 @@ export default function Comprar() {
           
 
           <div className="acciones">
+            // En Comprar.jsx, cambiar el botón final por:
             <button 
               className="btn-comprar" 
-              onClick={handleComprar} 
+              onClick={() => navigate("/checkout", { 
+                state: { rifa, cantidad } 
+              })}
               disabled={loading || cantidad < 5 || cantidad > (rifa.disponibles || 0)}
             >
-              {loading ? "Procesando..." : `Comprar ${cantidad} números - $${(cantidad * 1000).toLocaleString()}`}
+              {loading ? "Procesando..." : `Continuar al Pago - $${(cantidad * 1000).toLocaleString()}`}
             </button>
             <button className="btn-cancel" onClick={() => navigate(-1)} disabled={loading}>
               Cancelar

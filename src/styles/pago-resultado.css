@@ -1,0 +1,252 @@
+/* pago-resultado.css */
+.pago-resultado {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resultado-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 100%;
+}
+
+/* Estados */
+.resultado-content.success {
+  border-top: 4px solid #2ecc71;
+}
+
+.resultado-content.error {
+  border-top: 4px solid #e74c3c;
+}
+
+.resultado-content.pending {
+  border-top: 4px solid #f39c12;
+}
+
+.resultado-content.loading {
+  border-top: 4px solid #3498db;
+}
+
+/* Iconos */
+.icono-exito,
+.icono-error,
+.icono-pendiente {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.resultado-content h1 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.mensaje-exito,
+.mensaje-error,
+.mensaje-pendiente {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.mensaje-exito {
+  color: #27ae60;
+}
+
+.mensaje-error {
+  color: #c0392b;
+}
+
+.mensaje-pendiente {
+  color: #f39c12;
+}
+
+/* Información de transacción */
+.transaccion-info {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.transaccion-info h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.detalles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.detalle-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.detalle-item:last-child {
+  border-bottom: none;
+}
+
+/* Números asignados */
+.numeros-asignados {
+  background: #e8f5e8;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border: 1px solid #2ecc71;
+}
+
+.numeros-asignados h3 {
+  color: #27ae60;
+  margin-bottom: 1rem;
+}
+
+.numeros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.numero-item {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 2px solid #2ecc71;
+  text-align: center;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+/* Sugerencias y proceso */
+.sugerencias,
+.info-proceso {
+  background: #fff3cd;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border: 1px solid #ffeaa7;
+  text-align: left;
+}
+
+.sugerencias h3,
+.info-proceso h3 {
+  color: #856404;
+  margin-bottom: 1rem;
+}
+
+.sugerencias ul,
+.info-proceso ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sugerencias li,
+.info-proceso li {
+  padding: 0.5rem 0;
+  color: #856404;
+}
+
+/* Acciones */
+.acciones-resultado {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.btn-primario {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primario:hover {
+  background: #2980b9;
+}
+
+.btn-secundario {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-secundario:hover {
+  background: #7f8c8d;
+}
+
+/* Información adicional */
+.info-adicional {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 2rem;
+}
+
+.info-adicional p {
+  margin: 0.5rem 0;
+  color: #1976d2;
+  font-size: 0.9rem;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pago-resultado {
+    padding: 1rem;
+  }
+  
+  .resultado-content {
+    padding: 2rem 1rem;
+  }
+  
+  .detalles-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .acciones-resultado {
+    flex-direction: column;
+  }
+  
+  .numeros-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
+}
