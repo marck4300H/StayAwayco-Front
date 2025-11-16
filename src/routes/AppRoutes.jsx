@@ -12,6 +12,10 @@ import Perfil from "../pages/perfil";
 import EditarPerfil from "../pages/EditarPerfil";
 import Comprar from "../pages/Comprar";
 import Menu from "../pages/Menu";
+import CheckoutMercadoPago from "../pages/CheckoutMercadoPago";
+import PagoExitoso from "../pages/PagoExitoso";
+import PagoFallido from "../pages/PagoFallido";
+import PagoPendiente from "../pages/PagoPendiente";
 
 export default function AppRoutes() {
   return (
@@ -24,6 +28,10 @@ export default function AppRoutes() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/editarPerfil" element={<EditarPerfil />} />
         <Route path="/comprar" element={<Comprar />} />
+        <Route path="/checkout" element={<CheckoutMercadoPago />} />
+        <Route path="/pago-exitoso" element={<PagoExitoso />} />
+        <Route path="/pago-fallido" element={<PagoFallido />} />
+        <Route path="/pago-pendiente" element={<PagoPendiente />} />
       </Route>
 
       {/* ✅ Rutas de administrador (fuera del Layout) */}
