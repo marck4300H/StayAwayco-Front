@@ -8,26 +8,30 @@ export default function Comprar() {
   const location = useLocation();
   const rifa = location.state?.rifa;
 
-  const [cantidad, setCantidad] = useState(5); // ✅ Valor por defecto 5
+  // ✅ USAR CANTIDAD MÍNIMA DINÁMICA DE LA RIFA
+  const [cantidad, setCantidad] = useState(rifa?.cantidad_minima || 5);
   const [numerosComprados, setNumerosComprados] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // ✅ PAQUETES DINÁMICOS CON PRECIOS CALCULADOS
+  // ✅ PAQUETES DINÁMICOS CON PRECIOS CALCULADOS SEGÚN LA RIFA
+  const precioUnitario = rifa?.precio_unitario || 1000;
+  const cantidadMinima = rifa?.cantidad_minima || 5;
+  
   const paquetes = [
-    { cantidad: 15, precio: 15000, destacado: true },
-    { cantidad: 25, precio: 25000, destacado: true },
-    { cantidad: 40, precio: 40000, destacado: true }
+    { cantidad: Math.max(cantidadMinima, 15), precio: Math.max(cantidadMinima, 15) * precioUnitario, destacado: true },
+    { cantidad: Math.max(cantidadMinima, 25), precio: Math.max(cantidadMinima, 25) * precioUnitario, destacado: true },
+    { cantidad: Math.max(cantidadMinima, 40), precio: Math.max(cantidadMinima, 40) * precioUnitario, destacado: true }
   ];
 
   const handleCantidadChange = (e) => {
     const value = parseInt(e.target.value);
-    // ✅ Validar que sea al menos 5
-    if (!isNaN(value) && value >= 5) {
+    // ✅ Validar que sea al menos la cantidad mínima de la rifa
+    if (!isNaN(value) && value >= cantidadMinima) {
       setCantidad(value);
-    } else if (value < 5) {
-      setError("La cantidad mínima es 5 números.");
+    } else if (value < cantidadMinima) {
+      setError(`La cantidad mínima es ${cantidadMinima} números.`);
     }
   };
 
@@ -48,9 +52,9 @@ export default function Comprar() {
       return;
     }
 
-    // ✅ Validación en frontend también
-    if (cantidad < 5) {
-      setError("La cantidad mínima es 5 números.");
+    // ✅ Validación con cantidad mínima dinámica
+    if (cantidad < cantidadMinima) {
+      setError(`La cantidad mínima es ${cantidadMinima} números.`);
       return;
     }
 
@@ -115,6 +119,8 @@ export default function Comprar() {
     );
   }
 
+  const total = cantidad * precioUnitario;
+
   return (
     <div className="comprar-container">
       <h1>Comprar Números de Rifa</h1>
@@ -128,23 +134,26 @@ export default function Comprar() {
           <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
           <h2 className="rifa-title">{rifa.titulo}</h2>
           <p className="rifa-desc">{rifa.descripcion}</p>
-          
+          <div className="rifa-precio-info">
+            <p><strong>Precio unitario:</strong> ${precioUnitario.toLocaleString()}</p>
+            <p><strong>Cantidad mínima:</strong> {cantidadMinima} números</p>
+          </div>
         </div>
 
         <div className="compra-section">
           <div className="cantidad-section">
-            <label>Cantidad de números <small>(mínimo 5)</small>:</label>
+            <label>Cantidad de números <small>(mínimo {cantidadMinima})</small>:</label>
             <input
               type="number"
               value={cantidad}
               onChange={handleCantidadChange}
-              min="5"
+              min={cantidadMinima}
               max={rifa.disponibles || 100}
               disabled={loading}
             />
           </div>
 
-          {/* ✅ OFERTAS DINÁMICAS - REEMPLAZANDO LAS TARJETAS ESTÁTICAS */}
+          {/* ✅ OFERTAS DINÁMICAS CON PRECIOS CALCULADOS */}
           <div className="ofertas-container">
             {paquetes.map((paquete, index) => (
               <div 
@@ -168,18 +177,15 @@ export default function Comprar() {
             ))}
           </div>
 
-          
-
           <div className="acciones">
-            // En Comprar.jsx, cambiar el botón final por:
             <button 
               className="btn-comprar" 
               onClick={() => navigate("/checkout", { 
                 state: { rifa, cantidad } 
               })}
-              disabled={loading || cantidad < 5 || cantidad > (rifa.disponibles || 0)}
+              disabled={loading || cantidad < cantidadMinima || cantidad > (rifa.disponibles || 0)}
             >
-              {loading ? "Procesando..." : `Continuar al Pago - $${(cantidad * 1000).toLocaleString()}`}
+              {loading ? "Procesando..." : `Continuar al Pago - $${total.toLocaleString()}`}
             </button>
             <button className="btn-cancel" onClick={() => navigate(-1)} disabled={loading}>
               Cancelar
@@ -197,7 +203,6 @@ export default function Comprar() {
                   </span>
                 ))}
               </div>
-            
             </div>
           )}
         </div>
