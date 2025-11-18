@@ -36,9 +36,9 @@ const Perfil = () => {
 
         setUsuario(data.usuario);
 
-        // ✅ Obtener números comprados - URL ACTUALIZADA
+        // ✅ ✅ ✅ CORRECCIÓN CRÍTICA: URL ACTUALIZADA
         const numerosRes = await fetch(
-          `${API_URL}/comprar/usuario`, // ← Cambiado: ya no necesita cédula en URL
+          `${API_URL}/usuarios/numeros`, // ← CAMBIADO A NUEVA RUTA
           {
             method: "GET",
             headers: { 
@@ -49,7 +49,7 @@ const Perfil = () => {
         );
         
         if (!numerosRes.ok) {
-          console.error(`❌ Error en compras: ${numerosRes.status} ${numerosRes.statusText}`);
+          console.error(`❌ Error en números: ${numerosRes.status} ${numerosRes.statusText}`);
           setNumerosPorRifa({});
           setCargando(false);
           return;
@@ -57,10 +57,10 @@ const Perfil = () => {
         
         const numerosData = await numerosRes.json();
         
-        console.log("✅ Datos de compras recibidos:", numerosData);
+        console.log("✅ Datos de números recibidos:", numerosData);
 
         if (!numerosData.success) {
-          console.error("Error en datos de compras:", numerosData.message);
+          console.error("Error en datos de números:", numerosData.message);
           setNumerosPorRifa({});
           setCargando(false);
           return;
