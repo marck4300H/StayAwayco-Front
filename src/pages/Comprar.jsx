@@ -10,12 +10,9 @@ export default function Comprar() {
 
   // ✅ USAR CANTIDAD MÍNIMA DINÁMICA DE LA RIFA
   const [cantidad, setCantidad] = useState(rifa?.cantidad_minima || 5);
-  const [numerosComprados, setNumerosComprados] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
-  // ✅ PAQUETES DINÁMICOS CON PRECIOS CALCULADOS SEGÚN LA RIFA
+  // ✅ PRECIO UNITARIO DINÁMICO
   const precioUnitario = rifa?.precio_unitario || 1000;
   const cantidadMinima = rifa?.cantidad_minima || 5;
   
@@ -27,9 +24,9 @@ export default function Comprar() {
 
   const handleCantidadChange = (e) => {
     const value = parseInt(e.target.value);
-    // ✅ Validar que sea al menos la cantidad mínima de la rifa
     if (!isNaN(value) && value >= cantidadMinima) {
       setCantidad(value);
+      setError("");
     } else if (value < cantidadMinima) {
       setError(`La cantidad mínima es ${cantidadMinima} números.`);
     }
@@ -37,13 +34,11 @@ export default function Comprar() {
 
   const handlePaqueteClick = (cantidadPaquete) => {
     setCantidad(cantidadPaquete);
-    setError(""); // Limpiar error al seleccionar paquete
+    setError("");
   };
 
-  const handleComprar = async () => {
+  const handleContinuar = () => {
     setError("");
-    setSuccess("");
-    setNumerosComprados([]);
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -63,51 +58,10 @@ export default function Comprar() {
       return;
     }
 
-    try {
-      setLoading(true);
-
-      console.log("🔐 Token enviado:", token ? "Sí" : "No");
-
-      const res = await fetch(`${API_URL}/comprar/crear/${rifa.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ cantidad }),
-      });
-
-      console.log("📤 Respuesta del servidor:", res.status);
-
-      if (!res.ok) {
-        // Si es error 401, redirigir al login
-        if (res.status === 401) {
-          localStorage.removeItem("token");
-          setError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
-          navigate("/login");
-          return;
-        }
-        
-        const errorData = await res.json();
-        setError(errorData.message || "Ocurrió un error en la compra.");
-        return;
-      }
-
-      const data = await res.json();
-
-      if (data.success) {
-        setNumerosComprados(data.numeros || []);
-        setSuccess(data.message || "¡Compra exitosa! Se te han asignado números aleatorios.");
-        setError("");
-      } else {
-        setError(data.message || "Ocurrió un error en la compra.");
-      }
-    } catch (err) {
-      console.error("Error en compra:", err);
-      setError("Error de conexión con el servidor.");
-    } finally {
-      setLoading(false);
-    }
+    // ✅ REDIRIGIR DIRECTAMENTE AL CHECKOUT
+    navigate("/checkout", { 
+      state: { rifa, cantidad } 
+    });
   };
 
   if (!rifa) {
@@ -126,8 +80,6 @@ export default function Comprar() {
       <h1>Comprar Números de Rifa</h1>
 
       {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
-      {loading && <div className="loading-message">Procesando compra y asignando números aleatorios...</div>}
 
       <div className="comprar-layout">
         <div className="rifa-info">
@@ -137,6 +89,7 @@ export default function Comprar() {
           <div className="rifa-precio-info">
             <p><strong>Precio unitario:</strong> ${precioUnitario.toLocaleString()}</p>
             <p><strong>Cantidad mínima:</strong> {cantidadMinima} números</p>
+            <p><strong>Disponibles:</strong> {rifa.disponibles || 0} números</p>
           </div>
         </div>
 
@@ -149,7 +102,6 @@ export default function Comprar() {
               onChange={handleCantidadChange}
               min={cantidadMinima}
               max={rifa.disponibles || 100}
-              disabled={loading}
             />
           </div>
 
@@ -169,7 +121,7 @@ export default function Comprar() {
                 <button 
                   className={`btn-oferta ${cantidad === paquete.cantidad ? 'selected' : ''}`}
                   onClick={() => handlePaqueteClick(paquete.cantidad)}
-                  disabled={loading || paquete.cantidad > (rifa.disponibles || 0)}
+                  disabled={paquete.cantidad > (rifa.disponibles || 0)}
                 >
                   {cantidad === paquete.cantidad ? '✓ Seleccionado' : 'Seleccionar'}
                 </button>
@@ -180,31 +132,20 @@ export default function Comprar() {
           <div className="acciones">
             <button 
               className="btn-comprar" 
-              onClick={() => navigate("/checkout", { 
-                state: { rifa, cantidad } 
-              })}
-              disabled={loading || cantidad < cantidadMinima || cantidad > (rifa.disponibles || 0)}
+              onClick={handleContinuar}
+              disabled={cantidad < cantidadMinima || cantidad > (rifa.disponibles || 0)}
             >
-              {loading ? "Procesando..." : `Continuar al Pago - $${total.toLocaleString()}`}
+              Continuar al Pago - $${total.toLocaleString()}
             </button>
-            <button className="btn-cancel" onClick={() => navigate(-1)} disabled={loading}>
+            <button className="btn-cancel" onClick={() => navigate(-1)}>
               Cancelar
             </button>
           </div>
 
-          {numerosComprados.length > 0 && (
-            <div className="numeros-resultado">
-              <h3>🎉 ¡Compra Exitosa!</h3>
-              <p><strong>Se te han asignado {numerosComprados.length} números aleatorios:</strong></p>
-              <div className="numeros-grid">
-                {numerosComprados.map((numero, index) => (
-                  <span key={index} className="numero-comprado">
-                    #{numero.toString().padStart(5, '0')}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          <div className="info-pago">
+            <p>🔒 Pago seguro mediante Mercado Pago</p>
+            <p>🎯 Los números se asignarán automáticamente después del pago exitoso</p>
+          </div>
         </div>
       </div>
     </div>
