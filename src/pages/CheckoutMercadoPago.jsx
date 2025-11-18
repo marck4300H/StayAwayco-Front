@@ -9,6 +9,10 @@ export default function CheckoutMercadoPago() {
   const rifa = location.state?.rifa;
   const cantidad = location.state?.cantidad || 5;
 
+  // ✅ CORREGIDO: Usar precio unitario y cantidad mínima DINÁMICOS de la rifa
+  const precioUnitario = rifa?.precio_unitario || 1000;
+  const cantidadMinima = rifa?.cantidad_minima || 5;
+
   const [usuario, setUsuario] = useState({
     nombres: "",
     apellidos: "",
@@ -48,6 +52,13 @@ export default function CheckoutMercadoPago() {
       setError("El número de documento es obligatorio");
       return false;
     }
+
+    // ✅ VALIDAR CANTIDAD MÍNIMA DINÁMICA DE LA RIFA
+    if (cantidad < cantidadMinima) {
+      setError(`La cantidad mínima para esta rifa es ${cantidadMinima} números`);
+      return false;
+    }
+
     return true;
   };
 
@@ -61,6 +72,18 @@ export default function CheckoutMercadoPago() {
     try {
       setLoading(true);
       
+      // ✅ CALCULAR TOTAL CON PRECIO UNITARIO DINÁMICO
+      const total = cantidad * precioUnitario;
+      
+      console.log("📤 Enviando datos al backend:", {
+        rifaId: rifa.id,
+        cantidad: cantidad,
+        precioUnitario: precioUnitario,
+        cantidadMinima: cantidadMinima,
+        total: total,
+        usuario: usuario
+      });
+
       const response = await fetch(`${API_URL}/pagos/crear-orden`, {
         method: "POST",
         headers: {
@@ -92,7 +115,9 @@ export default function CheckoutMercadoPago() {
           rifaId: rifa.id,
           rifaTitulo: rifa.titulo,
           cantidad: cantidad,
-          total: data.transaccion.total
+          total: total,
+          precioUnitario: precioUnitario,
+          cantidadMinima: cantidadMinima
         }));
 
         window.location.href = data.init_point;
@@ -121,7 +146,8 @@ export default function CheckoutMercadoPago() {
     );
   }
 
-  const total = cantidad * 1000;
+  // ✅ CALCULAR TOTAL CON PRECIO UNITARIO DINÁMICO
+  const total = cantidad * precioUnitario;
 
   return (
     <div className="checkout-container">
@@ -140,10 +166,26 @@ export default function CheckoutMercadoPago() {
               <p>{rifa.descripcion}</p>
               <div className="compra-details">
                 <p><strong>Cantidad:</strong> {cantidad} números</p>
-                <p><strong>Precio unitario:</strong> $1,000</p>
+                <p><strong>Precio unitario:</strong> ${precioUnitario.toLocaleString()}</p>
+                <p><strong>Cantidad mínima:</strong> {cantidadMinima} números</p>
                 <p className="total"><strong>Total:</strong> ${total.toLocaleString()}</p>
+                {cantidad < cantidadMinima && (
+                  <p className="advertencia-minima">
+                    ⚠️ La cantidad mínima para esta rifa es {cantidadMinima} números
+                  </p>
+                )}
               </div>
             </div>
+          </div>
+
+          {/* Botón para modificar cantidad */}
+          <div className="modificar-cantidad">
+            <button 
+              onClick={() => navigate(-1)}
+              className="btn-modificar"
+            >
+              ✏️ Modificar Cantidad
+            </button>
           </div>
         </div>
 
@@ -264,7 +306,7 @@ export default function CheckoutMercadoPago() {
           <div className="acciones-checkout">
             <button 
               onClick={handlePagar}
-              disabled={loading}
+              disabled={loading || cantidad < cantidadMinima}
               className="btn-pagar"
             >
               {loading ? "Procesando..." : `Pagar $${total.toLocaleString()}`}
