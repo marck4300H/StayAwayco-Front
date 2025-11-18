@@ -11,57 +11,90 @@ export default function PagoExitoso() {
   const [numerosAsignados, setNumerosAsignados] = useState([]);
 
   useEffect(() => {
-    // Intentar obtener datos de sessionStorage primero
-    const ultimaTransaccion = sessionStorage.getItem('ultimaTransaccion');
-    
-    if (ultimaTransaccion) {
-      const transaccionData = JSON.parse(ultimaTransaccion);
-      setTransaccion(transaccionData);
-      sessionStorage.removeItem('ultimaTransaccion'); // Limpiar después de usar
-    }
-
-    // También verificar si hay parámetros en la URL
-    const paymentId = searchParams.get('payment_id');
-    const status = searchParams.get('status');
-    const externalReference = searchParams.get('external_reference');
-
-    if (externalReference) {
-      verificarTransaccion(externalReference);
-    } else {
-      setLoading(false);
-    }
+    verificarTransaccion();
   }, [searchParams]);
 
-  const verificarTransaccion = async (referencia) => {
+  const verificarTransaccion = async () => {
+    try {
+      // Intentar obtener datos de sessionStorage primero
+      const ultimaTransaccion = sessionStorage.getItem('ultimaTransaccion');
+      
+      let referencia;
+      
+      if (ultimaTransaccion) {
+        const transaccionData = JSON.parse(ultimaTransaccion);
+        setTransaccion(transaccionData);
+        referencia = transaccionData.referencia;
+        sessionStorage.removeItem('ultimaTransaccion');
+      }
+
+      // También verificar si hay parámetros en la URL
+      const externalReference = searchParams.get('external_reference');
+      if (externalReference) {
+        referencia = externalReference;
+      }
+
+      if (referencia) {
+        await obtenerTransaccionCompleta(referencia);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error verificando transacción:", error);
+      setLoading(false);
+    }
+  };
+
+  const obtenerTransaccionCompleta = async (referencia) => {
     try {
       const res = await fetch(`${API_URL}/pagos/estado/${referencia}`);
       const data = await res.json();
       
       if (data.success) {
-        setTransaccion(data.transaccion);
+        const transaccionCompleta = data.transaccion;
+        setTransaccion(transaccionCompleta);
         
-        // Si la transacción está aprobada, obtener números asignados
-        if (data.transaccion.estado === 'aprobado') {
-          await obtenerNumerosAsignados(data.transaccion.usuario_id || data.transaccion.usuario_documento);
+        // ✅ Obtener números asignados desde datos_respuesta
+        if (transaccionCompleta.datos_respuesta?.numeros_asignados) {
+          setNumerosAsignados(transaccionCompleta.datos_respuesta.numeros_asignados);
+        } else if (transaccionCompleta.estado === 'aprobado') {
+          // Si no hay números en datos_respuesta, intentar obtenerlos de otra forma
+          await obtenerNumerosDesdeBD(transaccionCompleta);
         }
       }
     } catch (error) {
-      console.error("Error verificando transacción:", error);
+      console.error("Error obteniendo transacción completa:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const obtenerNumerosAsignados = async (usuarioId) => {
+  const obtenerNumerosDesdeBD = async (transaccionData) => {
     try {
-      // En una implementación real, aquí llamarías a tu API para obtener los números
-      // Por ahora simulamos números aleatorios
-      const numerosSimulados = Array.from({ length: transaccion?.cantidad || 5 }, () => 
-        Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-      );
-      setNumerosAsignados(numerosSimulados);
+      // Obtener números del usuario para esta rifa
+      const usuarioId = transaccionData.usuario_id;
+      const rifaId = transaccionData.rifa_id;
+      
+      if (usuarioId && rifaId) {
+        const response = await fetch(`${API_URL}/compras/usuario`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.numeros) {
+            const numerosEstaRifa = data.numeros
+              .filter(item => item.rifa_id === rifaId)
+              .map(item => item.numero);
+            
+            setNumerosAsignados(numerosEstaRifa);
+          }
+        }
+      }
     } catch (error) {
-      console.error("Error obteniendo números:", error);
+      console.error("Error obteniendo números desde BD:", error);
     }
   };
 
@@ -75,6 +108,8 @@ export default function PagoExitoso() {
       </div>
     );
   }
+
+  const cantidadReal = numerosAsignados.length > 0 ? numerosAsignados.length : transaccion?.cantidad || 0;
 
   return (
     <div className="pago-resultado">
@@ -91,10 +126,13 @@ export default function PagoExitoso() {
                 <strong>Rifa:</strong> {transaccion.rifaTitulo || "Rifa"}
               </div>
               <div className="detalle-item">
-                <strong>Cantidad:</strong> {transaccion.cantidad} números
+                <strong>Cantidad solicitada:</strong> {transaccion.cantidad} números
               </div>
               <div className="detalle-item">
-                <strong>Total pagado:</strong> ${transaccion.total?.toLocaleString() || "0"}
+                <strong>Cantidad asignada:</strong> {cantidadReal} números
+              </div>
+              <div className="detalle-item">
+                <strong>Total pagado:</strong> ${transaccion.valor_total?.toLocaleString() || transaccion.total?.toLocaleString() || "0"}
               </div>
               {transaccion.referencia && (
                 <div className="detalle-item">
@@ -108,7 +146,7 @@ export default function PagoExitoso() {
         {numerosAsignados.length > 0 && (
           <div className="numeros-asignados">
             <h3>🎉 ¡Tus números asignados!</h3>
-            <p>Se te han asignado {numerosAsignados.length} números aleatorios:</p>
+            <p>Se te han asignado <strong>{numerosAsignados.length}</strong> números aleatorios:</p>
             <div className="numeros-grid">
               {numerosAsignados.map((numero, index) => (
                 <span key={index} className="numero-item">
