@@ -16,30 +16,21 @@ export default function Home() {
         const res = await fetch(`${API_URL}/rifas/`);
         if (!res.ok) throw new Error("Error al obtener las rifas");
         const data = await res.json();
+        
         if (!data.success) throw new Error("No se pudieron cargar las rifas.");
 
-        // Para cada rifa, obtener su estado directamente del backend
-        const rifasConEstado = await Promise.all(
-          data.rifas.map(async (rifa) => {
-            try {
-              const resEstado = await fetch(`${API_URL}/rifas/${rifa.id}`);
-              if (!resEstado.ok) throw new Error("Error al obtener estado de rifa");
-              const estado = await resEstado.json();
+        // ✅ CORREGIDO: Usar los datos que ya vienen del backend con el cálculo correcto
+        const rifasConEstado = data.rifas.map(rifa => ({
+          ...rifa,
+          // Asegurar que los valores sean números
+          disponibles: Number(rifa.disponibles) || 0,
+          vendidos: Number(rifa.vendidos) || 0,
+          porcentaje: Number(rifa.porcentaje) || 0,
+          precio_unitario: rifa.precio_unitario || 1000,
+          cantidad_minima: rifa.cantidad_minima || 5
+        }));
 
-              // El backend ya devuelve disponibles, vendidos y porcentaje
-              return {
-                ...rifa,
-                disponibles: estado.disponibles ?? 0,
-                vendidos: estado.vendidos ?? 0,
-                porcentaje: estado.porcentaje ?? 0,
-              };
-            } catch (err) {
-              console.error("❌ Error obteniendo estado de rifa:", err);
-              return { ...rifa, vendidos: 0, porcentaje: 0, disponibles: rifa.cantidad_numeros };
-            }
-          })
-        );
-
+        console.log("📊 Rifas cargadas:", rifasConEstado);
         setRifas(rifasConEstado);
       } catch (err) {
         console.error("❌ Error al cargar rifas:", err);
@@ -75,6 +66,7 @@ export default function Home() {
               <h3 className="rifa-title">{rifa.titulo}</h3>
               <p className="rifa-desc">{rifa.descripcion}</p>
 
+              {/* ✅ CORREGIDO: Usar el porcentaje calculado en el backend */}
               {typeof rifa.porcentaje === "number" && (
                 <ProgressBar porcentaje={rifa.porcentaje} />
               )}
@@ -82,6 +74,8 @@ export default function Home() {
               <div className="rifa-stats">
                 <span>{rifa.vendidos} vendidos</span>
                 <span>{rifa.disponibles} disponibles</span>
+                <span>${(rifa.precio_unitario || 1000).toLocaleString()} c/u</span>
+                <span>Mín: {rifa.cantidad_minima || 5} tickets</span>
               </div>
 
               <button 

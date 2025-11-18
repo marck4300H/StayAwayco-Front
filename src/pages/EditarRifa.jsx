@@ -8,6 +8,8 @@ export default function EditarRifa() {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [cantidadNumeros, setCantidadNumeros] = useState(0);
+  const [precioUnitario, setPrecioUnitario] = useState("1000");
+  const [cantidadMinima, setCantidadMinima] = useState("5");
   const [imagen, setImagen] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,6 +40,8 @@ export default function EditarRifa() {
     setTitulo(rifa.titulo);
     setDescripcion(rifa.descripcion);
     setCantidadNumeros(rifa.cantidad_numeros || 0);
+    setPrecioUnitario(rifa.precio_unitario?.toString() || "1000");
+    setCantidadMinima(rifa.cantidad_minima?.toString() || "5");
     setImagen(null);
     setMessage("");
   };
@@ -53,6 +57,8 @@ export default function EditarRifa() {
       formData.append("titulo", titulo);
       formData.append("descripcion", descripcion);
       formData.append("cantidad_numeros", cantidadNumeros.toString());
+      formData.append("precio_unitario", precioUnitario);
+      formData.append("cantidad_minima", cantidadMinima);
       
       if (imagen) {
         formData.append("imagen", imagen);
@@ -104,7 +110,7 @@ export default function EditarRifa() {
             <div className="admin-rifa-title">{rifa.titulo}</div>
             <div className="admin-rifa-stats">
               <span>🎯 {rifa.cantidad_numeros} nums</span>
-              <span>💰 {rifa.vendidos} vendidos</span>
+              <span>💰 ${rifa.precio_unitario || 1000}</span>
               <span>📊 {rifa.porcentaje}%</span>
             </div>
           </div>
@@ -140,6 +146,26 @@ export default function EditarRifa() {
                 readOnly
                 className="admin-input"
                 style={{ backgroundColor: '#f8f9fa', color: '#6c757d', cursor: 'not-allowed' }}
+              />
+
+              <label className="admin-label">Precio Unitario ($)</label>
+              <input
+                type="number"
+                value={precioUnitario}
+                onChange={(e) => setPrecioUnitario(e.target.value)}
+                min="100"
+                required
+                className="admin-input"
+              />
+
+              <label className="admin-label">Cantidad Mínima</label>
+              <input
+                type="number"
+                value={cantidadMinima}
+                onChange={(e) => setCantidadMinima(e.target.value)}
+                min="1"
+                required
+                className="admin-input"
               />
 
               <label className="admin-label">Nueva Imagen (opcional)</label>
