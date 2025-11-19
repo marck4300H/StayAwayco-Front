@@ -19,10 +19,8 @@ export default function Home() {
         
         if (!data.success) throw new Error("No se pudieron cargar las rifas.");
 
-        // ✅ CORREGIDO: Usar los datos que ya vienen del backend con el cálculo correcto
         const rifasConEstado = data.rifas.map(rifa => ({
           ...rifa,
-          // Asegurar que los valores sean números
           disponibles: Number(rifa.disponibles) || 0,
           vendidos: Number(rifa.vendidos) || 0,
           porcentaje: Number(rifa.porcentaje) || 0,
@@ -66,7 +64,6 @@ export default function Home() {
               <h3 className="rifa-title">{rifa.titulo}</h3>
               <p className="rifa-desc">{rifa.descripcion}</p>
 
-              {/* ✅ CORREGIDO: Usar el porcentaje calculado en el backend */}
               {typeof rifa.porcentaje === "number" && (
                 <ProgressBar porcentaje={rifa.porcentaje} />
               )}

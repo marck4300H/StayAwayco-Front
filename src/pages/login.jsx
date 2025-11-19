@@ -131,7 +131,15 @@ const Login = () => {
             {loading ? "🔄 Verificando..." : "Ingresar"}
           </button>
         </form>
-
+          <p className="login-forgot-text">
+          ¿Olvidaste tu contraseña?{" "}
+          <span 
+            className="login-forgot-link" 
+            onClick={() => navigate("/forgot-password")}
+          >
+            Recupérala aquí
+          </span>
+        </p>
         <p className="login-register-text">
           ¿No tienes cuenta?{" "}
           <span 
