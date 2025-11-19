@@ -184,7 +184,7 @@ export default function CheckoutMercadoPago() {
               onClick={() => navigate(-1)}
               className="btn-modificar"
             >
-              ✏️ Modificar Cantidad
+            Modificar Cantidad
             </button>
           </div>
         </div>

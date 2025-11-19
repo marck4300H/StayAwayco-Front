@@ -12,6 +12,7 @@ const Layout = () => {
       </main>
       <footer className="footer">
         <p>© {new Date().getFullYear()} StayAwayCo — Todos los derechos reservados</p>
+        <link to="/conditions" className="footer-link">Términos y Condiciones</link>
         <div className="footer-links">
           
         </div>

@@ -75,8 +75,33 @@
 .compra-details .total {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #2ecc71;
+  color: #000000;
   margin-top: 1rem;
+}
+
+.modificar-cantidad {
+  display: flex;
+  justify-content: center;  /* Centra horizontalmente */
+  margin-top: 1rem;
+}
+
+.btn-modificar {
+  background: #000000;
+  flex: 0.7;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-modificar:hover {
+  background: #000000cf;
+  transform: translateY(-1px);
 }
 
 .formulario-datos {
@@ -127,6 +152,7 @@
   border-radius: 6px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background-color: #ffffff;
 }
 
 .form-group input:focus,
@@ -146,20 +172,21 @@
 }
 
 .btn-pagar {
-  flex: 2;
-  background: #2ecc71;
+  flex: 1.5;
+  background: #000000;
   color: white;
   border: none;
   padding: 1rem 2rem;
   border-radius: 6px;
   font-size: 1.1rem;
-  font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .btn-pagar:hover:not(:disabled) {
-  background: #27ae60;
+  background: #000000cf;
+  box-shadow: #c8a851;
+  transform: translateY(-1px);
 }
 
 .btn-pagar:disabled {
@@ -169,9 +196,9 @@
 
 .btn-cancelar {
   flex: 1;
-  background: #e74c3c;
-  color: white;
-  border: none;
+  background: #ffffff;
+  color: #000000;
+  border: 1.3px solid #000000; /* ESTA ES LA LÍNEA CORRECTA */
   padding: 1rem 1.5rem;
   border-radius: 6px;
   font-size: 1rem;
@@ -179,8 +206,16 @@
   transition: background 0.3s ease;
 }
 
+
 .btn-cancelar:hover:not(:disabled) {
-  background: #c0392b;
+  background: #ebe6e6d8;
+  border-color: #000000;
+}
+
+.btn-cancelar:disabled {
+  background: #bdc3c7;
+  border-color: #000000;
+  cursor: not-allowed;
 }
 
 .security-info {
@@ -193,7 +228,7 @@
 
 .security-info p {
   margin: 0;
-  color: #2ecc71;
+  color: #72c9ff;
   font-weight: 600;
 }
 

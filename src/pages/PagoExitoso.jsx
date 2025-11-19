@@ -158,17 +158,17 @@ export default function PagoExitoso() {
         )}
 
         <div className="acciones-resultado">
-          <button onClick={() => navigate("/")} className="btn-primario">
+          <button onClick={() => navigate("/")} className="btn-secundario">
             Volver al Inicio
           </button>
-          <button onClick={() => navigate("/perfil")} className="btn-secundario">
+          <button onClick={() => navigate("/perfil")} className="btn-primario">
             Ver Mis Números
           </button>
         </div>
 
         <div className="info-adicional">
-          <p>📧 Recibirás un correo de confirmación con los detalles de tu compra.</p>
-          <p>🔢 Los números asignados también estarán disponibles en tu perfil.</p>
+          <p>Recibirás un correo de confirmación con los detalles de tu compra.</p>
+          <p>Los números asignados también estarán disponibles en tu perfil.</p>
         </div>
       </div>
     </div>

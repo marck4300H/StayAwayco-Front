@@ -169,7 +169,7 @@
 }
 
 .btn-primario {
-  background: #3498db;
+  background: #c8a951;
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -180,11 +180,12 @@
 }
 
 .btn-primario:hover {
-  background: #2980b9;
+  background: #c8a851b9;
 }
 
 .btn-secundario {
-  background: #95a5a6;
+  background: #000000;
+  flex: 0.4;
   color: white;
   border: none;
   padding: 1rem 2rem;

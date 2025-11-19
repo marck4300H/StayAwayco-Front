@@ -18,25 +18,25 @@ export default function PagoFallido() {
         <div className="sugerencias">
           <h3>¿Qué puedes hacer?</h3>
           <ul>
-            <li>Verificar los datos de tu tarjeta</li>
-            <li>Intentar con otro método de pago</li>
-            <li>Contactar a tu entidad bancaria</li>
-            <li>Reintentar el pago</li>
+            <li>1. Verificar los datos de tu tarjeta</li>
+            <li>2. Intentar con otro método de pago</li>
+            <li>3. Contactar a tu entidad bancaria</li>
+            <li>4. Reintentar el pago</li>
           </ul>
         </div>
 
         <div className="acciones-resultado">
-          <button onClick={() => navigate(-2)} className="btn-primario">
-            Reintentar Pago
-          </button>
           <button onClick={() => navigate("/")} className="btn-secundario">
             Volver al Inicio
+          </button>
+          <button onClick={() => navigate(-2)} className="btn-primario">
+            Reintentar Pago
           </button>
         </div>
 
         <div className="info-adicional">
-          <p>💳 Asegúrate de que tu tarjeta tenga fondos suficientes.</p>
-          <p>🔒 Si el problema persiste, contacta a soporte.</p>
+          <p>Asegúrate de que tu tarjeta tenga fondos suficientes.</p>
+          <p>Si el problema persiste, contacta a soporte.</p>
         </div>
       </div>
     </div>

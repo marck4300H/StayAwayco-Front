@@ -67,10 +67,10 @@ export default function PagoPendiente() {
         <div className="info-proceso">
           <h3>¿Qué está pasando?</h3>
           <ul>
-            <li>✅ Tu transacción fue recibida</li>
-            <li>🔄 Estamos verificando el pago</li>
-            <li>⏰ Esto puede tomar 2-5 minutos</li>
-            <li>📧 Recibirás una confirmación por correo</li>
+            <li>1. Estamos verificando el pago</li>
+            <li>2. Esto puede tomar 2-5 minutos</li>
+            <li>3. Recibirás una confirmación por correo</li>
+            <li>4. Tu transacción fue recibida</li>
           </ul>
         </div>
 
@@ -81,8 +81,8 @@ export default function PagoPendiente() {
         </div>
 
         <div className="info-adicional">
-          <p>⏰ No cierres esta ventana hasta que se complete el proceso.</p>
-          <p>📧 Te notificaremos por correo cuando el pago se complete.</p>
+          <p>No cierres esta ventana hasta que se complete el proceso.</p>
+          <p>Te notificaremos por correo cuando el pago se complete.</p>
         </div>
       </div>
     </div>
