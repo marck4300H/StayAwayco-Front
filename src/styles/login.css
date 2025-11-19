@@ -123,3 +123,20 @@ html, body {
   width: 100%;
   background: #fafafa;
 }
+
+/*recuperar contraseña*/
+.login-forgot-text {
+  text-align: center;
+  margin-top: 15px;
+  color: #666;
+}
+
+.login-forgot-link {
+  color: #667eea;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-forgot-link:hover {
+  color: #5a6fd8;
+}

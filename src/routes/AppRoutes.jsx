@@ -16,6 +16,8 @@ import CheckoutMercadoPago from "../pages/CheckoutMercadoPago";
 import PagoExitoso from "../pages/PagoExitoso";
 import PagoFallido from "../pages/PagoFallido";
 import PagoPendiente from "../pages/PagoPendiente";
+import ResetPassword from "../pages/ResetPassword";
+import ForgotPassword from "../pages/ForgotPassword";
 
 export default function AppRoutes() {
   return (
@@ -32,6 +34,8 @@ export default function AppRoutes() {
         <Route path="/pago-exitoso" element={<PagoExitoso />} />
         <Route path="/pago-fallido" element={<PagoFallido />} />
         <Route path="/pago-pendiente" element={<PagoPendiente />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Route>
 
       {/* ✅ Rutas de administrador (fuera del Layout) */}
