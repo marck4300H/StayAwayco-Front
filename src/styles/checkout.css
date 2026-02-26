@@ -79,6 +79,17 @@
   margin-top: 1rem;
 }
 
+.modificar-cantidad  {
+  display: flex;
+  justify-content: center;  /* centra el botón */
+  margin-top: 10px;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .formulario-datos {
   background: white;
   padding: 2rem;
@@ -176,7 +187,8 @@
   border: none;
   padding: 1rem 1.5rem;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
 }
