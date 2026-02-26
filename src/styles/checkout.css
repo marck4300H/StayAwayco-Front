@@ -127,6 +127,8 @@
   border-radius: 6px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background-color: #ffff;
+  color: #333;
 }
 
 .form-group input:focus,
