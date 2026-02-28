@@ -86,11 +86,7 @@ export default function Comprar() {
           <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
           <h2 className="rifa-title">{rifa.titulo}</h2>
           <p className="rifa-desc">{rifa.descripcion}</p>
-          <div className="rifa-precio-info">
-            <p><strong>Precio unitario:</strong> ${precioUnitario.toLocaleString()}</p>
-            <p><strong>Cantidad mínima:</strong> {cantidadMinima} números</p>
-            <p><strong>Disponibles:</strong> {rifa.disponibles || 0} números</p>
-          </div>
+          
         </div>
 
         <div className="compra-section">
@@ -115,7 +111,7 @@ export default function Comprar() {
                 }`}
               >
                 {paquete.destacado && <div className="badge-destacado">🔥 POPULAR</div>}
-                <h3>{paquete.cantidad} Tickets</h3>
+                <h3>{paquete.cantidad} Números</h3>
                 <p>{paquete.destacado ? 'Mejor valor' : 'Buena opción'}</p>
                 <span className="precio">Precio: ${paquete.precio.toLocaleString()}</span>
                 <button 

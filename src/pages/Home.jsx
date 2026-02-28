@@ -86,10 +86,7 @@ export default function Home() {
               )}
             </div>
 
-            <div className="rifa-stats">
-              <span>{rifa.vendidos} números vendidos</span>
-              <span>${rifa.precio_unitario.toLocaleString()} c/u</span>
-            </div>
+            
           </div>
         </div>
       );
@@ -126,10 +123,8 @@ export default function Home() {
           )}
 
           <div className="rifa-stats">
-            <span>{rifa.vendidos} vendidos</span>
-            <span>{rifa.disponibles} disponibles</span>
             <span>${rifa.precio_unitario.toLocaleString()} c/u</span>
-            <span>Mín: {rifa.cantidad_minima} tickets</span>
+            <span>Mín: {rifa.cantidad_minima} Números</span>
           </div>
 
           <button 
@@ -146,9 +141,9 @@ export default function Home() {
   return (
     <div className="home-page">
       <header className="header">
-        <h1 className="header-title">🎟️ Adquiere tus tickets</h1>
+        <h1 className="header-title"> Adquiere tus Números</h1>
         <p className="header-subtitle">
-          Participa en nuestros eventos invirtiendo en los tickets y podrías ser el próximo dueño de una moto de alto CC.
+          Participa en nuestras rifas con poco dinero, accesible para todo el mundo.
         </p>
       </header>
 
