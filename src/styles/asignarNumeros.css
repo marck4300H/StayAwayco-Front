@@ -1,0 +1,234 @@
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.asignar-numeros-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ===== FORMULARIO ===== */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.campo-ayuda {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #666666;
+  font-style: italic;
+}
+
+/* ===== PRECIO TOTAL ===== */
+.precio-total {
+  margin-top: 10px;
+  padding: 12px;
+  background: #fff3cd;
+  border-left: 4px solid #c8a951;
+  border-radius: 6px;
+  color: #856404;
+  font-size: 1.1rem;
+}
+
+.precio-total strong {
+  color: #c8a951;
+  font-size: 1.3rem;
+}
+
+/* ===== PANTALLA DE ÉXITO ===== */
+.asignacion-exitosa {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.exito-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.exito-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.exito-header h2 {
+  color: #27ae60;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ===== INFO EXITOSA ===== */
+.exito-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.exito-seccion {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 4px solid #c8a951;
+}
+
+.exito-seccion h3 {
+  color: #c8a951;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
+  letter-spacing: 0.5px;
+}
+
+.exito-dato {
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 5px 0;
+}
+
+.exito-subdato {
+  color: #666666;
+  font-size: 0.9rem;
+  margin: 3px 0;
+}
+
+/* ===== GRID DE NÚMEROS ===== */
+.numeros-asignados-grid {
+  margin: 30px 0;
+}
+
+.numeros-asignados-grid h3 {
+  color: #c8a951;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.numeros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.numero-badge {
+  background: linear-gradient(135deg, #c8a951 0%, #dfc77a 100%);
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 3px 10px rgba(200, 169, 81, 0.3);
+  transition: all 0.3s ease;
+  border: 2px solid #dfc77a;
+}
+
+.numero-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(200, 169, 81, 0.4);
+}
+
+/* ===== REFERENCIA Y NOTA ===== */
+.exito-referencia {
+  background: #e8f5e9;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 4px solid #27ae60;
+}
+
+.exito-referencia p {
+  margin: 8px 0;
+  color: #1a1a1a;
+  font-size: 0.95rem;
+}
+
+.exito-referencia strong {
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.exito-nota {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.exito-nota p {
+  margin: 0;
+  color: #1565c0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.exito-nota strong {
+  color: #0d47a1;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .asignar-numeros-container {
+    padding: 15px;
+  }
+
+  .asignacion-exitosa {
+    padding: 25px;
+  }
+
+  .exito-icon {
+    font-size: 3rem;
+  }
+
+  .exito-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .exito-info {
+    grid-template-columns: 1fr;
+  }
+
+  .numeros-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  .numero-badge {
+    padding: 12px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .exito-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .numeros-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .exito-dato {
+    font-size: 1rem;
+  }
+}

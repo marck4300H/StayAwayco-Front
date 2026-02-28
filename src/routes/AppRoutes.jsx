@@ -6,6 +6,7 @@ import AdminDashboard from "../pages/AdminDashboard";
 import CrearRifa from "../pages/CrearRifa";
 import EditarRifa from "../pages/EditarRifa";
 import EliminarRifa from "../pages/EliminarRifa";
+import AsignarNumeros from "../pages/AsignarNumeros";
 import Login from "../pages/login";
 import Registro from "../pages/registro";
 import Perfil from "../pages/perfil";
@@ -45,6 +46,7 @@ export default function AppRoutes() {
         <Route path="crear" element={<CrearRifa />} />
         <Route path="editar" element={<EditarRifa />} />
         <Route path="eliminar" element={<EliminarRifa />} />
+        <Route path="asignar-numeros" element={<AsignarNumeros />} />
       </Route>
 
       {/* ✅ Redirección por defecto */}
