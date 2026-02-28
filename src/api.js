@@ -22,3 +22,32 @@ export const asignarNumerosManual = async (datos, token) => {
   });
   return res.json();
 };
+
+// ========== SORTEO DE RIFAS ==========
+export const sortearRifa = async (datos, token) => {
+  const res = await fetch(`${API_URL}/admin/sortear-rifa`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(datos),
+  });
+  return res.json();
+};
+
+export const obtenerGanador = async (rifaId, token) => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
+  const res = await fetch(`${API_URL}/admin/ganador/${rifaId}`, {
+    method: "GET",
+    headers: headers,
+  });
+  return res.json();
+};

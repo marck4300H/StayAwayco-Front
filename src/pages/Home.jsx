@@ -25,7 +25,8 @@ export default function Home() {
           vendidos: Number(rifa.vendidos) || 0,
           porcentaje: Number(rifa.porcentaje) || 0,
           precio_unitario: rifa.precio_unitario || 1000,
-          cantidad_minima: rifa.cantidad_minima || 5
+          cantidad_minima: rifa.cantidad_minima || 5,
+          estado: rifa.estado || "activa"
         }));
 
         console.log("📊 Rifas cargadas:", rifasConEstado);
@@ -40,6 +41,107 @@ export default function Home() {
 
     fetchRifas();
   }, []);
+
+  const renderRifaCard = (rifa) => {
+    // Rifa sorteada - mostrar ganador
+    if (rifa.estado === "sorteada") {
+      return (
+        <div key={rifa.id} className="rifa-card rifa-sorteada">
+          <div className="banner-sorteada">
+            <span className="trophy-icon">🏆</span>
+            <span>RIFA SORTEADA</span>
+          </div>
+          <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
+          <div className="rifa-content">
+            <h3 className="rifa-title">{rifa.titulo}</h3>
+            <p className="rifa-desc">{rifa.descripcion}</p>
+
+            <div className="ganador-info">
+              <div className="numero-ganador-box">
+                <span className="label-ganador">Número Ganador</span>
+                <span className="numero-ganador">#{rifa.numero_ganador}</span>
+              </div>
+              
+              {rifa.ganador && (
+                <div className="ganador-nombre-box">
+                  <span className="label-ganador">Ganador</span>
+                  <span className="ganador-nombre">{rifa.ganador.nombre_completo}</span>
+                </div>
+              )}
+
+              {rifa.fecha_sorteo && (
+                <p className="fecha-sorteo">
+                  Sorteada el {new Date(rifa.fecha_sorteo).toLocaleDateString("es-CO", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                  })}
+                </p>
+              )}
+
+              {rifa.loteria_referencia && (
+                <p className="loteria-ref">
+                  📋 {rifa.loteria_referencia}
+                </p>
+              )}
+            </div>
+
+            <div className="rifa-stats">
+              <span>{rifa.vendidos} números vendidos</span>
+              <span>${rifa.precio_unitario.toLocaleString()} c/u</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Rifa cancelada
+    if (rifa.estado === "cancelada") {
+      return (
+        <div key={rifa.id} className="rifa-card rifa-cancelada">
+          <div className="banner-cancelada">
+            <span>❌</span>
+            <span>RIFA CANCELADA</span>
+          </div>
+          <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img rifa-img-disabled" />
+          <div className="rifa-content">
+            <h3 className="rifa-title">{rifa.titulo}</h3>
+            <p className="rifa-desc">{rifa.descripcion}</p>
+            <p className="mensaje-cancelada">Esta rifa ha sido cancelada</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Rifa activa - mostrar botón de compra
+    return (
+      <div key={rifa.id} className="rifa-card">
+        <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
+        <div className="rifa-content">
+          <h3 className="rifa-title">{rifa.titulo}</h3>
+          <p className="rifa-desc">{rifa.descripcion}</p>
+
+          {typeof rifa.porcentaje === "number" && (
+            <ProgressBar porcentaje={rifa.porcentaje} />
+          )}
+
+          <div className="rifa-stats">
+            <span>{rifa.vendidos} vendidos</span>
+            <span>{rifa.disponibles} disponibles</span>
+            <span>${rifa.precio_unitario.toLocaleString()} c/u</span>
+            <span>Mín: {rifa.cantidad_minima} tickets</span>
+          </div>
+
+          <button 
+            className="rifa-btn" 
+            onClick={() => navigate("/comprar", { state: { rifa } })}
+          >
+            Comprar Números
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="home-page">
@@ -57,33 +159,7 @@ export default function Home() {
       )}
 
       <div className="rifas-grid">
-        {rifas.map((rifa) => (
-          <div key={rifa.id} className="rifa-card">
-            <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
-            <div className="rifa-content">
-              <h3 className="rifa-title">{rifa.titulo}</h3>
-              <p className="rifa-desc">{rifa.descripcion}</p>
-
-              {typeof rifa.porcentaje === "number" && (
-                <ProgressBar porcentaje={rifa.porcentaje} />
-              )}
-
-              <div className="rifa-stats">
-                <span>{rifa.vendidos} vendidos</span>
-                <span>{rifa.disponibles} disponibles</span>
-                <span>${(rifa.precio_unitario || 1000).toLocaleString()} c/u</span>
-                <span>Mín: {rifa.cantidad_minima || 5} tickets</span>
-              </div>
-
-              <button 
-                className="rifa-btn" 
-                onClick={() => navigate("/comprar", { state: { rifa } })}
-              >
-                Comprar Números
-              </button>
-            </div>
-          </div>
-        ))}
+        {rifas.map((rifa) => renderRifaCard(rifa))}
       </div>
     </div>
   );

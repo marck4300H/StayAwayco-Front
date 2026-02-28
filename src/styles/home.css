@@ -185,3 +185,189 @@
     padding: 15px;
   }
 }
+/* ===== ESTILOS PARA RIFAS SORTEADAS Y CANCELADAS ===== */
+
+/* Banner de rifa sorteada */
+.rifa-sorteada {
+  position: relative;
+  border: 3px solid #c8a951;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+}
+
+.banner-sorteada {
+  position: absolute;
+  top: 20px;
+  right: -10px;
+  background: linear-gradient(135deg, #c8a951 0%, #dfc77a 100%);
+  color: #ffffff;
+  padding: 8px 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 3px 10px rgba(200, 169, 81, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.trophy-icon {
+  font-size: 1.2rem;
+  animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Información del ganador */
+.ganador-info {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 4px solid #c8a951;
+}
+
+.numero-ganador-box {
+  background: linear-gradient(135deg, #c8a951 0%, #dfc77a 100%);
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(200, 169, 81, 0.3);
+}
+
+.label-ganador {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.numero-ganador {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+}
+
+.ganador-nombre-box {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 15px;
+  border: 2px solid #e0e0e0;
+}
+
+.ganador-nombre {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-top: 5px;
+}
+
+.fecha-sorteo {
+  text-align: center;
+  color: #666666;
+  font-size: 0.95rem;
+  margin: 10px 0 5px 0;
+  font-weight: 600;
+}
+
+.loteria-ref {
+  text-align: center;
+  color: #888888;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 5px 0 0 0;
+}
+
+/* Banner de rifa cancelada */
+.rifa-cancelada {
+  position: relative;
+  opacity: 0.7;
+  border: 2px solid #dc3545;
+}
+
+.banner-cancelada {
+  position: absolute;
+  top: 20px;
+  right: -10px;
+  background: #dc3545;
+  color: #ffffff;
+  padding: 8px 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.rifa-img-disabled {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.mensaje-cancelada {
+  text-align: center;
+  color: #dc3545;
+  font-weight: 600;
+  padding: 15px;
+  background: #f8d7da;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner-sorteada,
+  .banner-cancelada {
+    right: -5px;
+    padding: 6px 15px;
+    font-size: 0.75rem;
+  }
+
+  .numero-ganador {
+    font-size: 2rem;
+  }
+
+  .ganador-nombre {
+    font-size: 1.1rem;
+  }
+
+  .trophy-icon {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-sorteada,
+  .banner-cancelada {
+    position: static;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    justify-content: center;
+  }
+
+  .numero-ganador {
+    font-size: 1.8rem;
+  }
+
+  .ganador-info {
+    padding: 15px;
+  }
+}

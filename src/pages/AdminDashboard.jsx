@@ -13,6 +13,7 @@ export default function AdminDashboard() {
         <Link to="editar" className="admin-nav-link">Editar Rifa</Link>
         <Link to="eliminar" className="admin-nav-link">Eliminar Rifa</Link>
         <Link to="asignar-numeros" className="admin-nav-link">🎯 Asignar Números</Link>
+        <Link to="sortear-rifa" className="admin-nav-link">🎲 Sortear Rifa</Link>
       </nav>
 
       {/* Contenido dinámico */}
