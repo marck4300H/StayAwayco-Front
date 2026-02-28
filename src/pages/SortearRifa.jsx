@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { sortearRifa, API_URL } from "../api";
+import { sortearRifa, sorteoDesierto, API_URL } from "../api";
 import "../styles/sortearRifa.css";
 
 export default function SortearRifa() {
@@ -11,6 +11,12 @@ export default function SortearRifa() {
   const [mensaje, setMensaje] = useState({ tipo: "", texto: "" });
   const [resultado, setResultado] = useState(null);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+  
+  // Estados para sorteo desierto
+  const [mostrarModalDesierto, setMostrarModalDesierto] = useState(false);
+  const [datosDesierto, setDatosDesierto] = useState(null);
+  const [nuevaFechaSorteo, setNuevaFechaSorteo] = useState("");
+  const [resultadoDesierto, setResultadoDesierto] = useState(null);
 
   useEffect(() => {
     cargarRifas();
@@ -24,7 +30,6 @@ export default function SortearRifa() {
       const data = await res.json();
       
       if (data.success && data.rifas) {
-        // Solo mostrar rifas activas (no sorteadas ni canceladas)
         const rifasActivas = data.rifas.filter(rifa => rifa.estado === "activa" || !rifa.estado);
         setRifas(rifasActivas);
       } else {
@@ -104,19 +109,81 @@ export default function SortearRifa() {
 
       const res = await sortearRifa(datos, token);
 
+      // Caso 1: Éxito - Hay ganador
       if (res.success) {
         setResultado(res.data);
         mostrarMensaje("success", res.message);
         setNumeroGanador("");
         setLoteriaReferencia("");
         setRifaSeleccionada(null);
-        cargarRifas(); // Recargar rifas para actualizar estados
-      } else {
+        cargarRifas();
+      } 
+      // Caso 2: Error 404 - Número no vendido (sorteo desierto)
+      else if (res.status === 404 && res.tipo_error === "numero_no_vendido") {
+        setDatosDesierto({
+          rifa_id: rifaSeleccionada.id,
+          rifa_titulo: rifaSeleccionada.titulo,
+          numero_sorteado: numeroGanador.trim(),
+          loteria_referencia: loteriaReferencia.trim()
+        });
+        setMostrarModalDesierto(true);
+      }
+      // Caso 3: Otros errores
+      else {
         mostrarMensaje("error", res.message || "Error al sortear la rifa");
       }
     } catch (error) {
       console.error("Error sorteando rifa:", error);
       mostrarMensaje("error", "Error de conexión al sortear la rifa");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProgramarNuevoSorteo = async () => {
+    if (!nuevaFechaSorteo) {
+      mostrarMensaje("warning", "Debes ingresar una fecha para el nuevo sorteo");
+      return;
+    }
+
+    // Validar que la fecha sea futura
+    const fechaSeleccionada = new Date(nuevaFechaSorteo);
+    const ahora = new Date();
+    
+    if (fechaSeleccionada <= ahora) {
+      mostrarMensaje("warning", "La fecha del sorteo debe ser futura");
+      return;
+    }
+
+    setLoading(true);
+    setMensaje({ tipo: "", texto: "" });
+
+    try {
+      const token = localStorage.getItem("token");
+      const datos = {
+        rifa_id: datosDesierto.rifa_id,
+        numero_sorteado: datosDesierto.numero_sorteado,
+        nueva_fecha_sorteo: new Date(nuevaFechaSorteo).toISOString(),
+        loteria_referencia: datosDesierto.loteria_referencia || undefined,
+      };
+
+      const res = await sorteoDesierto(datos, token);
+
+      if (res.success) {
+        setResultadoDesierto(res.data);
+        setMostrarModalDesierto(false);
+        setNumeroGanador("");
+        setLoteriaReferencia("");
+        setNuevaFechaSorteo("");
+        setDatosDesierto(null);
+        setRifaSeleccionada(null);
+        cargarRifas();
+      } else {
+        mostrarMensaje("error", res.message || "Error al programar nuevo sorteo");
+      }
+    } catch (error) {
+      console.error("Error programando sorteo desierto:", error);
+      mostrarMensaje("error", "Error de conexión al programar sorteo");
     } finally {
       setLoading(false);
     }
@@ -129,10 +196,11 @@ export default function SortearRifa() {
 
   const handleNuevoSorteo = () => {
     setResultado(null);
+    setResultadoDesierto(null);
     setMensaje({ tipo: "", texto: "" });
   };
 
-  // Pantalla de resultado exitoso
+  // Pantalla de resultado exitoso (con ganador)
   if (resultado) {
     const { ganador, rifa, estadisticas, loteria_referencia } = resultado;
 
@@ -216,7 +284,86 @@ export default function SortearRifa() {
     );
   }
 
-  // Modal de confirmación
+  // Pantalla de resultado de sorteo desierto
+  if (resultadoDesierto) {
+    const { rifa, numero_sorteado, nueva_fecha_sorteo, loteria_referencia, estadisticas } = resultadoDesierto;
+
+    return (
+      <div className="sortear-rifa-container">
+        <div className="sorteo-desierto-exitoso">
+          <div className="desierto-header">
+            <div className="desierto-icon">📅</div>
+            <h2>Sorteo Desierto - Nuevo Sorteo Programado</h2>
+          </div>
+
+          <div className="desierto-info">
+            <div className="numero-desierto-box">
+              <span className="label-desierto">Número Sorteado (No Vendido)</span>
+              <span className="numero-desierto">#{numero_sorteado}</span>
+            </div>
+
+            {loteria_referencia && (
+              <p className="loteria-info">📋 {loteria_referencia}</p>
+            )}
+
+            <div className="nueva-fecha-box">
+              <h3>📅 Nueva Fecha de Sorteo</h3>
+              <p className="fecha-destacada">
+                {new Date(nueva_fecha_sorteo).toLocaleString("es-CO", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit"
+                })}
+              </p>
+            </div>
+
+            <div className="rifa-info-desierto">
+              <p><strong>Rifa:</strong> {rifa.titulo}</p>
+              <p><strong>Estado:</strong> <span className="estado-activa">Activa (sigue disponible para compra)</span></p>
+            </div>
+          </div>
+
+          <div className="estadisticas-desierto">
+            <h3>📧 Notificaciones Enviadas</h3>
+            <div className="stats-grid">
+              <div className="stat-box">
+                <div className="stat-icono">👥</div>
+                <div className="stat-valor">{estadisticas.total_participantes}</div>
+                <div className="stat-label">Participantes Notificados</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-icono">📧</div>
+                <div className="stat-valor">{estadisticas.correos_pendientes}</div>
+                <div className="stat-label">Correos Enviándose</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-icono">⏱️</div>
+                <div className="stat-valor">~{Math.ceil(estadisticas.correos_pendientes / 60)} min</div>
+                <div className="stat-label">Tiempo Estimado</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="nota-desierto">
+            <p>
+              📧 Se están enviando correos a todos los participantes informando que el número sorteado
+              no fue vendido y la nueva fecha del sorteo. Los correos se envían en segundo plano
+              (aproximadamente 1 por segundo).
+            </p>
+          </div>
+
+          <button onClick={handleNuevoSorteo} className="admin-button">
+            Sortear Otra Rifa
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Modal de confirmación de sorteo
   const ModalConfirmacion = () => {
     if (!mostrarConfirmacion) return null;
 
@@ -234,12 +381,12 @@ export default function SortearRifa() {
             )}
             
             <div className="warning-box">
-              <p>⚠️ <strong>Esta acción es IRREVERSIBLE</strong></p>
+              <p>⚠️ <strong>Esta acción es IRREVERSIBLE si hay ganador</strong></p>
               <ul>
                 <li>Se buscará automáticamente al comprador del número</li>
-                <li>La rifa se marcará como "Sorteada"</li>
-                <li>Se enviarán correos a todos los participantes</li>
-                <li>No se podrán comprar más números de esta rifa</li>
+                <li>Si el número fue vendido: La rifa se marca como "Sorteada"</li>
+                <li>Si el número NO fue vendido: Se programará un nuevo sorteo</li>
+                <li>Se enviarán correos a los participantes</li>
               </ul>
             </div>
           </div>
@@ -253,8 +400,86 @@ export default function SortearRifa() {
             <button 
               onClick={handleSortear}
               className="btn-confirmar-sorteo"
+              disabled={loading}
             >
-              Confirmar Sorteo
+              {loading ? "Sorteando..." : "Confirmar Sorteo"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Modal de sorteo desierto (programar nuevo sorteo)
+  const ModalSorteoDesierto = () => {
+    if (!mostrarModalDesierto || !datosDesierto) return null;
+
+    // Fecha mínima: mañana
+    const manana = new Date();
+    manana.setDate(manana.getDate() + 1);
+    const fechaMinima = manana.toISOString().slice(0, 16);
+
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content modal-desierto" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header-desierto">
+            <div className="icono-advertencia">⚠️</div>
+            <h2>Sorteo Desierto - Número No Vendido</h2>
+          </div>
+          <div className="modal-body">
+            <div className="numero-no-vendido-box">
+              <p className="texto-destacado">El número sorteado NO fue vendido</p>
+              <div className="numero-destacado">#{datosDesierto.numero_sorteado}</div>
+            </div>
+
+            <p><strong>Rifa:</strong> {datosDesierto.rifa_titulo}</p>
+            {datosDesierto.loteria_referencia && (
+              <p><strong>Lotería:</strong> {datosDesierto.loteria_referencia}</p>
+            )}
+
+            <div className="info-box-desierto">
+              <h4>¿Qué significa esto?</h4>
+              <ul>
+                <li>El número ganador de la lotería no tiene comprador en esta rifa</li>
+                <li>Debes programar una nueva fecha para sortear nuevamente</li>
+                <li>Se notificará a todos los participantes sobre la nueva fecha</li>
+                <li>La rifa seguirá activa y se pueden seguir comprando números</li>
+              </ul>
+            </div>
+
+            <div className="form-group">
+              <label className="admin-label">Nueva Fecha y Hora del Sorteo *</label>
+              <input
+                type="datetime-local"
+                className="admin-input"
+                value={nuevaFechaSorteo}
+                onChange={(e) => setNuevaFechaSorteo(e.target.value)}
+                min={fechaMinima}
+                required
+              />
+              <p className="campo-ayuda">
+                Selecciona cuándo se realizará el próximo sorteo
+              </p>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button 
+              onClick={() => {
+                setMostrarModalDesierto(false);
+                setDatosDesierto(null);
+                setNuevaFechaSorteo("");
+              }}
+              className="btn-cancelar-modal"
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+            <button 
+              onClick={handleProgramarNuevoSorteo}
+              className="btn-programar-sorteo"
+              disabled={loading || !nuevaFechaSorteo}
+            >
+              {loading ? "Programando..." : "Programar Nuevo Sorteo"}
             </button>
           </div>
         </div>
@@ -286,7 +511,7 @@ export default function SortearRifa() {
               onChange={(e) => {
                 const rifa = rifas.find((r) => r.id === e.target.value);
                 setRifaSeleccionada(rifa);
-                setNumeroGanador(""); // Limpiar número al cambiar de rifa
+                setNumeroGanador("");
               }}
               required
             >
@@ -356,6 +581,7 @@ export default function SortearRifa() {
       </div>
 
       <ModalConfirmacion />
+      <ModalSorteoDesierto />
     </div>
   );
 }

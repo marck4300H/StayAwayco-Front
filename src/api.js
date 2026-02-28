@@ -33,6 +33,24 @@ export const sortearRifa = async (datos, token) => {
     },
     body: JSON.stringify(datos),
   });
+  
+  // Retornar tanto la respuesta como el status para manejar errores
+  const jsonData = await res.json();
+  return {
+    ...jsonData,
+    status: res.status
+  };
+};
+
+export const sorteoDesierto = async (datos, token) => {
+  const res = await fetch(`${API_URL}/admin/sorteo-desierto`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(datos),
+  });
   return res.json();
 };
 

@@ -50,7 +50,7 @@
   background: linear-gradient(135deg, #b89840 0%, #c8a951 100%) !important;
 }
 
-/* ===== MODAL DE CONFIRMACIÓN ===== */
+/* ===== MODAL BASE ===== */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -96,6 +96,7 @@
   }
 }
 
+/* ===== MODAL DE CONFIRMACIÓN ===== */
 .modal-header-warning {
   background: #ff9800;
   color: #ffffff;
@@ -168,9 +169,14 @@
   font-family: Poppins, sans-serif;
 }
 
-.btn-cancelar-modal:hover {
+.btn-cancelar-modal:hover:not(:disabled) {
   background: #5a6268;
   transform: translateY(-2px);
+}
+
+.btn-cancelar-modal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .btn-confirmar-sorteo {
@@ -185,13 +191,128 @@
   font-family: Poppins, sans-serif;
 }
 
-.btn-confirmar-sorteo:hover {
+.btn-confirmar-sorteo:hover:not(:disabled) {
   background: #c82333;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
 }
 
-/* ===== PANTALLA DE ÉXITO ===== */
+.btn-confirmar-sorteo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== MODAL DE SORTEO DESIERTO ===== */
+.modal-desierto {
+  max-width: 600px;
+}
+
+.modal-header-desierto {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 15px 15px 0 0;
+  text-align: center;
+}
+
+.icono-advertencia {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.modal-header-desierto h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.numero-no-vendido-box {
+  background: #fff3cd;
+  border: 3px solid #ffc107;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.texto-destacado {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #856404;
+  margin: 0 0 15px 0;
+}
+
+.numero-destacado {
+  font-size: 3rem;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  color: #ff9800;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0 3px 10px rgba(255, 152, 0, 0.3);
+}
+
+.info-box-desierto {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.info-box-desierto h4 {
+  color: #1976d2;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.info-box-desierto ul {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+.info-box-desierto li {
+  color: #424242;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.btn-programar-sorteo {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: Poppins, sans-serif;
+}
+
+.btn-programar-sorteo:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.btn-programar-sorteo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== PANTALLA DE ÉXITO (CON GANADOR) ===== */
 .sorteo-exitoso {
   background: #ffffff;
   border-radius: 15px;
@@ -225,7 +346,6 @@
   margin: 15px 0 0 0;
 }
 
-/* ===== SECCIÓN DEL GANADOR ===== */
 .ganador-section {
   margin: 30px 0;
 }
@@ -277,7 +397,6 @@
   color: #666666;
 }
 
-/* ===== INFO DE RIFA SORTEADA ===== */
 .rifa-sorteada-info {
   background: #f8f9fa;
   border-radius: 12px;
@@ -316,7 +435,6 @@
   font-weight: 700;
 }
 
-/* ===== ESTADÍSTICAS ===== */
 .estadisticas-section {
   margin: 30px 0;
 }
@@ -371,7 +489,6 @@
   letter-spacing: 0.5px;
 }
 
-/* ===== NOTA DE CORREOS ===== */
 .nota-correos {
   background: #e3f2fd;
   border: 1px solid #90caf9;
@@ -388,13 +505,160 @@
   line-height: 1.6;
 }
 
+/* ===== PANTALLA DE SORTEO DESIERTO EXITOSO ===== */
+.sorteo-desierto-exitoso {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.desierto-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.desierto-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  animation: swing 2s infinite;
+}
+
+@keyframes swing {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(15deg);
+  }
+  75% {
+    transform: rotate(-15deg);
+  }
+}
+
+.desierto-header h2 {
+  color: #ff9800;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.desierto-info {
+  margin: 30px 0;
+}
+
+.numero-desierto-box {
+  background: #fff3cd;
+  border: 3px solid #ffc107;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.label-desierto {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #856404;
+  margin-bottom: 15px;
+}
+
+.numero-desierto {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  color: #ff9800;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(255, 152, 0, 0.3);
+}
+
+.loteria-info {
+  text-align: center;
+  color: #666666;
+  font-size: 0.95rem;
+  font-style: italic;
+  margin-bottom: 25px;
+}
+
+.nueva-fecha-box {
+  background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.nueva-fecha-box h3 {
+  color: #4caf50;
+  margin: 0 0 15px 0;
+  font-size: 1.3rem;
+}
+
+.fecha-destacada {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.rifa-info-desierto {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 25px 0;
+}
+
+.rifa-info-desierto p {
+  margin: 10px 0;
+  color: #333333;
+}
+
+.estado-activa {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+.estadisticas-desierto {
+  margin: 30px 0;
+}
+
+.estadisticas-desierto h3 {
+  color: #ff9800;
+  font-size: 1.3rem;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.nota-desierto {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 30px 0;
+  text-align: center;
+}
+
+.nota-desierto p {
+  margin: 0;
+  color: #856404;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .sortear-rifa-container {
     padding: 15px;
   }
 
-  .sorteo-exitoso {
+  .sorteo-exitoso,
+  .sorteo-desierto-exitoso {
     padding: 25px;
   }
 
@@ -402,13 +666,23 @@
     font-size: 3.5rem;
   }
 
-  .exitoso-header h2 {
+  .desierto-icon {
+    font-size: 3rem;
+  }
+
+  .exitoso-header h2,
+  .desierto-header h2 {
     font-size: 1.5rem;
   }
 
-  .numero-ganador-grande {
-    font-size: 2.5rem;
+  .numero-ganador-grande,
+  .numero-desierto {
+    font-size: 2rem;
     padding: 15px;
+  }
+
+  .numero-destacado {
+    font-size: 2.5rem;
   }
 
   .ganador-nombre {
@@ -428,7 +702,31 @@
   }
 
   .btn-cancelar-modal,
-  .btn-confirmar-sorteo {
+  .btn-confirmar-sorteo,
+  .btn-programar-sorteo {
     width: 100%;
+  }
+
+  .fecha-destacada {
+    font-size: 1.1rem;
+  }
+
+  .icono-advertencia {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-header-warning h2,
+  .modal-header-desierto h2 {
+    font-size: 1.2rem;
+  }
+
+  .stat-valor {
+    font-size: 1.5rem;
+  }
+
+  .stat-icono {
+    font-size: 2rem;
   }
 }
