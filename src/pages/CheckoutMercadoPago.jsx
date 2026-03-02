@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../api";
 import "../styles/checkout.css";
@@ -9,13 +9,8 @@ export default function CheckoutMercadoPago() {
   const rifa = location.state?.rifa;
   const cantidad = location.state?.cantidad || 5;
 
-  // ✅ CORREGIDO: Usar precio unitario y cantidad mínima DINÁMICOS de la rifa
   const precioUnitario = rifa?.precio_unitario || 1000;
   const cantidadMinima = rifa?.cantidad_minima || 5;
-
-  // ✅ Detectar si el usuario está logueado
-  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   const [usuario, setUsuario] = useState({
     nombres: "",
@@ -31,53 +26,6 @@ export default function CheckoutMercadoPago() {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // ✅ Cargar datos del usuario si está logueado
-  useEffect(() => {
-    const cargarDatosUsuario = async () => {
-      const token = localStorage.getItem("token");
-      
-      if (token) {
-        try {
-          const response = await fetch(`${API_URL}/usuarios/perfil`, {
-            headers: {
-              "Authorization": `Bearer ${token}`
-            }
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setUsuarioLogueado(data);
-            
-            // Pre-llenar formulario con datos del usuario logueado
-            setUsuario({
-              nombres: data.nombres || "",
-              apellidos: data.apellidos || "",
-              correo_electronico: data.correo_electronico || "",
-              telefono: data.telefono || "",
-              tipo_documento: data.tipo_documento || "CC",
-              numero_documento: data.numero_documento || "",
-              direccion: data.direccion || "",
-              ciudad: data.ciudad || "",
-              departamento: data.departamento || ""
-            });
-          } else {
-            // Token inválido o expirado
-            localStorage.removeItem("token");
-            setMostrarFormulario(true);
-          }
-        } catch (error) {
-          console.error("Error cargando perfil:", error);
-          setMostrarFormulario(true);
-        }
-      } else {
-        // No hay token, mostrar formulario vacío
-        setMostrarFormulario(true);
-      }
-    };
-
-    cargarDatosUsuario();
-  }, []);
 
   const handleInputChange = (e) => {
     setUsuario({
@@ -104,7 +52,6 @@ export default function CheckoutMercadoPago() {
       return false;
     }
 
-    // ✅ VALIDAR CANTIDAD MÍNIMA DINÁMICA DE LA RIFA
     if (cantidad < cantidadMinima) {
       setError(`La cantidad mínima para esta rifa es ${cantidadMinima} números`);
       return false;
@@ -123,7 +70,6 @@ export default function CheckoutMercadoPago() {
     try {
       setLoading(true);
       
-      // ✅ CALCULAR TOTAL CON PRECIO UNITARIO DINÁMICO
       const total = cantidad * precioUnitario;
       
       console.log("📤 Enviando datos al backend:", {
@@ -132,8 +78,7 @@ export default function CheckoutMercadoPago() {
         precioUnitario: precioUnitario,
         cantidadMinima: cantidadMinima,
         total: total,
-        usuario: usuario,
-        usuarioLogueado: !!usuarioLogueado
+        usuario: usuario
       });
 
       const response = await fetch(`${API_URL}/pagos/crear-orden`, {
@@ -157,11 +102,9 @@ export default function CheckoutMercadoPago() {
       }
 
       if (data.success && data.init_point) {
-        // ✅ Redirigir a Mercado Pago
         console.log("🔗 Redirigiendo a Mercado Pago:", data.init_point);
         console.log("📦 Datos de la transacción:", data.transaccion);
         
-        // Guardar referencia en sessionStorage para usar después
         sessionStorage.setItem('ultimaTransaccion', JSON.stringify({
           referencia: data.transaccion.referencia,
           rifaId: rifa.id,
@@ -199,7 +142,6 @@ export default function CheckoutMercadoPago() {
     );
   }
 
-  // ✅ CALCULAR TOTAL CON PRECIO UNITARIO DINÁMICO
   const total = cantidad * precioUnitario;
 
   return (
@@ -208,32 +150,7 @@ export default function CheckoutMercadoPago() {
       
       {error && <div className="error-message">{error}</div>}
 
-      {/* ✅ Mostrar banner si el usuario NO está logueado */}
-      {!usuarioLogueado && (
-        <div className="info-banner">
-          <h3>¿Ya tienes cuenta?</h3>
-          <p>Si ya estás registrado, inicia sesión para autocompletar tus datos.</p>
-          <button 
-            onClick={() => navigate("/login", { state: { from: location.pathname, state: { rifa, cantidad } } })}
-            className="btn-login-banner"
-          >
-            Iniciar Sesión
-          </button>
-          <p className="texto-secundario">O completa el formulario para comprar sin registro. Tu cuenta se creará automáticamente.</p>
-        </div>
-      )}
-
-      {/* ✅ Mostrar banner si el usuario SÍ está logueado */}
-      {usuarioLogueado && (
-        <div className="info-banner usuario-logueado">
-          <h3>✓ Sesión activa</h3>
-          <p>Hola <strong>{usuarioLogueado.nombres} {usuarioLogueado.apellidos}</strong></p>
-          <p>Tus datos se han precargado automáticamente.</p>
-        </div>
-      )}
-
       <div className="checkout-layout">
-        {/* Información de la compra */}
         <div className="compra-info">
           <h2>Resumen de Compra</h2>
           <div className="rifa-card-checkout">
@@ -255,7 +172,6 @@ export default function CheckoutMercadoPago() {
             </div>
           </div>
 
-          {/* Botón para modificar cantidad */}
           <div className="modificar-cantidad">
             <button 
               onClick={() => navigate(-1)}
@@ -266,15 +182,12 @@ export default function CheckoutMercadoPago() {
           </div>
         </div>
 
-        {/* Formulario de datos */}
         <div className="formulario-datos">
           <h2>Datos Personales</h2>
           <p className="form-info">* Campos obligatorios</p>
-          {!usuarioLogueado && (
-            <p className="form-info-secundario">
-              Si no tienes cuenta, se creará automáticamente con estos datos.
-            </p>
-          )}
+          <p className="form-info-secundario">
+            Si ya tienes cuenta, se actualizarán tus datos. Si no, tu cuenta se creará automáticamente.
+          </p>
           
           <div className="form-grid">
             <div className="form-group">
@@ -310,11 +223,7 @@ export default function CheckoutMercadoPago() {
                 onChange={handleInputChange}
                 required
                 placeholder="tu@email.com"
-                disabled={!!usuarioLogueado}
               />
-              {usuarioLogueado && (
-                <small className="campo-bloqueado">Este campo no se puede modificar</small>
-              )}
             </div>
 
             <div className="form-group">
