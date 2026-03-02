@@ -40,13 +40,6 @@ export default function Comprar() {
   const handleContinuar = () => {
     setError("");
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Debes iniciar sesión para comprar números.");
-      navigate("/login");
-      return;
-    }
-
     // ✅ Validación con cantidad mínima dinámica
     if (cantidad < cantidadMinima) {
       setError(`La cantidad mínima es ${cantidadMinima} números.`);
@@ -58,7 +51,8 @@ export default function Comprar() {
       return;
     }
 
-    // ✅ REDIRIGIR DIRECTAMENTE AL CHECKOUT
+    // ✅ REDIRIGIR DIRECTAMENTE AL CHECKOUT (SIN VALIDAR LOGIN)
+    // El checkout manejará tanto usuarios logueados como no logueados
     navigate("/checkout", { 
       state: { rifa, cantidad } 
     });
@@ -131,7 +125,7 @@ export default function Comprar() {
               onClick={handleContinuar}
               disabled={cantidad < cantidadMinima || cantidad > (rifa.disponibles || 0)}
             >
-              Continuar al Pago - $${total.toLocaleString()}
+              Continuar al Pago - ${total.toLocaleString()}
             </button>
             <button className="btn-cancel" onClick={() => navigate(-1)}>
               Cancelar
@@ -141,6 +135,7 @@ export default function Comprar() {
           <div className="info-pago">
             <p>🔒 Pago seguro mediante Mercado Pago</p>
             <p>🎯 Los números se asignarán automáticamente después del pago exitoso</p>
+            <p>✅ No necesitas registrarte previamente - tu cuenta se creará automáticamente</p>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../api";
 import "../styles/checkout.css";
@@ -12,6 +12,10 @@ export default function CheckoutMercadoPago() {
   // ✅ CORREGIDO: Usar precio unitario y cantidad mínima DINÁMICOS de la rifa
   const precioUnitario = rifa?.precio_unitario || 1000;
   const cantidadMinima = rifa?.cantidad_minima || 5;
+
+  // ✅ Detectar si el usuario está logueado
+  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   const [usuario, setUsuario] = useState({
     nombres: "",
@@ -27,6 +31,53 @@ export default function CheckoutMercadoPago() {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // ✅ Cargar datos del usuario si está logueado
+  useEffect(() => {
+    const cargarDatosUsuario = async () => {
+      const token = localStorage.getItem("token");
+      
+      if (token) {
+        try {
+          const response = await fetch(`${API_URL}/usuarios/perfil`, {
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setUsuarioLogueado(data);
+            
+            // Pre-llenar formulario con datos del usuario logueado
+            setUsuario({
+              nombres: data.nombres || "",
+              apellidos: data.apellidos || "",
+              correo_electronico: data.correo_electronico || "",
+              telefono: data.telefono || "",
+              tipo_documento: data.tipo_documento || "CC",
+              numero_documento: data.numero_documento || "",
+              direccion: data.direccion || "",
+              ciudad: data.ciudad || "",
+              departamento: data.departamento || ""
+            });
+          } else {
+            // Token inválido o expirado
+            localStorage.removeItem("token");
+            setMostrarFormulario(true);
+          }
+        } catch (error) {
+          console.error("Error cargando perfil:", error);
+          setMostrarFormulario(true);
+        }
+      } else {
+        // No hay token, mostrar formulario vacío
+        setMostrarFormulario(true);
+      }
+    };
+
+    cargarDatosUsuario();
+  }, []);
 
   const handleInputChange = (e) => {
     setUsuario({
@@ -81,7 +132,8 @@ export default function CheckoutMercadoPago() {
         precioUnitario: precioUnitario,
         cantidadMinima: cantidadMinima,
         total: total,
-        usuario: usuario
+        usuario: usuario,
+        usuarioLogueado: !!usuarioLogueado
       });
 
       const response = await fetch(`${API_URL}/pagos/crear-orden`, {
@@ -117,7 +169,8 @@ export default function CheckoutMercadoPago() {
           cantidad: cantidad,
           total: total,
           precioUnitario: precioUnitario,
-          cantidadMinima: cantidadMinima
+          cantidadMinima: cantidadMinima,
+          correo: usuario.correo_electronico
         }));
 
         window.location.href = data.init_point;
@@ -155,6 +208,30 @@ export default function CheckoutMercadoPago() {
       
       {error && <div className="error-message">{error}</div>}
 
+      {/* ✅ Mostrar banner si el usuario NO está logueado */}
+      {!usuarioLogueado && (
+        <div className="info-banner">
+          <h3>¿Ya tienes cuenta?</h3>
+          <p>Si ya estás registrado, inicia sesión para autocompletar tus datos.</p>
+          <button 
+            onClick={() => navigate("/login", { state: { from: location.pathname, state: { rifa, cantidad } } })}
+            className="btn-login-banner"
+          >
+            Iniciar Sesión
+          </button>
+          <p className="texto-secundario">O completa el formulario para comprar sin registro. Tu cuenta se creará automáticamente.</p>
+        </div>
+      )}
+
+      {/* ✅ Mostrar banner si el usuario SÍ está logueado */}
+      {usuarioLogueado && (
+        <div className="info-banner usuario-logueado">
+          <h3>✓ Sesión activa</h3>
+          <p>Hola <strong>{usuarioLogueado.nombres} {usuarioLogueado.apellidos}</strong></p>
+          <p>Tus datos se han precargado automáticamente.</p>
+        </div>
+      )}
+
       <div className="checkout-layout">
         {/* Información de la compra */}
         <div className="compra-info">
@@ -184,7 +261,7 @@ export default function CheckoutMercadoPago() {
               onClick={() => navigate(-1)}
               className="btn-modificar"
             >
-               Modificar Cantidad
+              Modificar Cantidad
             </button>
           </div>
         </div>
@@ -193,6 +270,11 @@ export default function CheckoutMercadoPago() {
         <div className="formulario-datos">
           <h2>Datos Personales</h2>
           <p className="form-info">* Campos obligatorios</p>
+          {!usuarioLogueado && (
+            <p className="form-info-secundario">
+              Si no tienes cuenta, se creará automáticamente con estos datos.
+            </p>
+          )}
           
           <div className="form-grid">
             <div className="form-group">
@@ -228,7 +310,11 @@ export default function CheckoutMercadoPago() {
                 onChange={handleInputChange}
                 required
                 placeholder="tu@email.com"
+                disabled={!!usuarioLogueado}
               />
+              {usuarioLogueado && (
+                <small className="campo-bloqueado">Este campo no se puede modificar</small>
+              )}
             </div>
 
             <div className="form-group">

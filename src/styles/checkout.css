@@ -253,3 +253,79 @@
     flex-direction: column;
   }
 }
+/* ===== BANNER INFORMATIVO ===== */
+.info-banner {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f1f8f4 100%);
+  border: 2px solid #2196f3;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 25px 0;
+  text-align: center;
+}
+
+.info-banner h3 {
+  color: #1976d2;
+  margin: 0 0 15px 0;
+  font-size: 1.3rem;
+}
+
+.info-banner p {
+  color: #424242;
+  margin: 10px 0;
+  font-size: 1rem;
+}
+
+.info-banner strong {
+  color: #c8a951;
+}
+
+.btn-login-banner {
+  background: linear-gradient(135deg, #c8a951 0%, #dfc77a 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 15px 0;
+  transition: all 0.3s ease;
+}
+
+.btn-login-banner:hover {
+  background: linear-gradient(135deg, #b89840 0%, #c8a951 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(200, 169, 81, 0.4);
+}
+
+.texto-secundario {
+  color: #666666;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+/* Banner de usuario logueado */
+.info-banner.usuario-logueado {
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f4 100%);
+  border-color: #4caf50;
+}
+
+.info-banner.usuario-logueado h3 {
+  color: #2e7d32;
+}
+
+/* Campo bloqueado */
+.campo-bloqueado {
+  display: block;
+  color: #666666;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.form-info-secundario {
+  color: #2196f3;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
