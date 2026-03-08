@@ -11,6 +11,13 @@ export default function EditarRifa() {
   const [precioUnitario, setPrecioUnitario] = useState("1000");
   const [cantidadMinima, setCantidadMinima] = useState("5");
   const [imagen, setImagen] = useState(null);
+  
+  // ✅ NUEVO: Estados para paquetes promocionales
+  const [usarPromociones, setUsarPromociones] = useState(false);
+  const [paquete1, setPaquete1] = useState({ cantidad_compra: "", numeros_gratis: "" });
+  const [paquete2, setPaquete2] = useState({ cantidad_compra: "", numeros_gratis: "" });
+  const [paquete3, setPaquete3] = useState({ cantidad_compra: "", numeros_gratis: "" });
+  
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +51,31 @@ export default function EditarRifa() {
     setCantidadMinima(rifa.cantidad_minima?.toString() || "5");
     setImagen(null);
     setMessage("");
+    
+    // ✅ NUEVO: Cargar paquetes promocionales existentes
+    if (rifa.paquetes_promocion) {
+      setUsarPromociones(true);
+      
+      setPaquete1({
+        cantidad_compra: rifa.paquetes_promocion.paquete1?.cantidad_compra?.toString() || "",
+        numeros_gratis: rifa.paquetes_promocion.paquete1?.numeros_gratis?.toString() || ""
+      });
+      
+      setPaquete2({
+        cantidad_compra: rifa.paquetes_promocion.paquete2?.cantidad_compra?.toString() || "",
+        numeros_gratis: rifa.paquetes_promocion.paquete2?.numeros_gratis?.toString() || ""
+      });
+      
+      setPaquete3({
+        cantidad_compra: rifa.paquetes_promocion.paquete3?.cantidad_compra?.toString() || "",
+        numeros_gratis: rifa.paquetes_promocion.paquete3?.numeros_gratis?.toString() || ""
+      });
+    } else {
+      setUsarPromociones(false);
+      setPaquete1({ cantidad_compra: "", numeros_gratis: "" });
+      setPaquete2({ cantidad_compra: "", numeros_gratis: "" });
+      setPaquete3({ cantidad_compra: "", numeros_gratis: "" });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -62,6 +94,44 @@ export default function EditarRifa() {
       
       if (imagen) {
         formData.append("imagen", imagen);
+      }
+
+      // ✅ NUEVO: Agregar paquetes promocionales
+      if (usarPromociones) {
+        const paquetesPromocion = {};
+        
+        if (paquete1.cantidad_compra && paquete1.numeros_gratis) {
+          const cantidadCompra = parseInt(paquete1.cantidad_compra);
+          const numerosGratis = parseInt(paquete1.numeros_gratis);
+          if (cantidadCompra > 0 && numerosGratis > 0) {
+            paquetesPromocion.paquete1 = { cantidad_compra: cantidadCompra, numeros_gratis: numerosGratis };
+          }
+        }
+        
+        if (paquete2.cantidad_compra && paquete2.numeros_gratis) {
+          const cantidadCompra = parseInt(paquete2.cantidad_compra);
+          const numerosGratis = parseInt(paquete2.numeros_gratis);
+          if (cantidadCompra > 0 && numerosGratis > 0) {
+            paquetesPromocion.paquete2 = { cantidad_compra: cantidadCompra, numeros_gratis: numerosGratis };
+          }
+        }
+        
+        if (paquete3.cantidad_compra && paquete3.numeros_gratis) {
+          const cantidadCompra = parseInt(paquete3.cantidad_compra);
+          const numerosGratis = parseInt(paquete3.numeros_gratis);
+          if (cantidadCompra > 0 && numerosGratis > 0) {
+            paquetesPromocion.paquete3 = { cantidad_compra: cantidadCompra, numeros_gratis: numerosGratis };
+          }
+        }
+        
+        if (Object.keys(paquetesPromocion).length > 0) {
+          formData.append("paquetes_promocion", JSON.stringify(paquetesPromocion));
+        } else {
+          formData.append("paquetes_promocion", "null");
+        }
+      } else {
+        // Eliminar promociones si se desactivan
+        formData.append("paquetes_promocion", "null");
       }
 
       const res = await fetch(`${API_URL}/rifas/editar/${selectedRifa.id}`, {
@@ -85,7 +155,7 @@ export default function EditarRifa() {
       if (data.success) {
         setMessage("✅ Rifa editada con éxito");
         setSelectedRifa(data.rifa);
-        fetchRifas(); // Actualizar la lista
+        fetchRifas();
       } else {
         setMessage("❌ " + (data.message || "Error al editar rifa"));
       }
@@ -112,6 +182,7 @@ export default function EditarRifa() {
               <span>🎯 {rifa.cantidad_numeros} nums</span>
               <span>💰 ${rifa.precio_unitario || 1000}</span>
               <span>📊 {rifa.porcentaje}%</span>
+              {rifa.paquetes_promocion && <span>🎁 Promo</span>}
             </div>
           </div>
         ))}
@@ -175,6 +246,130 @@ export default function EditarRifa() {
                 onChange={(e) => setImagen(e.target.files[0])}
                 className="admin-input admin-file-input"
               />
+
+              {/* ✅ NUEVO: Sección de Paquetes Promocionales */}
+              <div className="admin-promociones-section">
+                <div className="admin-promociones-header">
+                  <label className="admin-label">
+                    <input
+                      type="checkbox"
+                      checked={usarPromociones}
+                      onChange={(e) => setUsarPromociones(e.target.checked)}
+                      className="admin-checkbox"
+                    />
+                    🎁 Activar Paquetes Promocionales (Opcional)
+                  </label>
+                  <p className="admin-help-text">
+                    Configura promociones para incentivar compras. Ejemplo: "Compra 15 números y obtén 1 gratis"
+                  </p>
+                </div>
+
+                {usarPromociones && (
+                  <div className="admin-paquetes-grid">
+                    {/* Paquete 1 */}
+                    <div className="admin-paquete-box">
+                      <h4>📦 Paquete 1</h4>
+                      <div className="admin-paquete-inputs">
+                        <div className="admin-input-group">
+                          <label>Cantidad de compra</label>
+                          <input
+                            type="number"
+                            placeholder="15"
+                            value={paquete1.cantidad_compra}
+                            onChange={(e) => setPaquete1({...paquete1, cantidad_compra: e.target.value})}
+                            min="1"
+                            className="admin-input-small"
+                          />
+                        </div>
+                        <div className="admin-input-group">
+                          <label>Números gratis</label>
+                          <input
+                            type="number"
+                            placeholder="1"
+                            value={paquete1.numeros_gratis}
+                            onChange={(e) => setPaquete1({...paquete1, numeros_gratis: e.target.value})}
+                            min="1"
+                            className="admin-input-small"
+                          />
+                        </div>
+                      </div>
+                      {paquete1.cantidad_compra && paquete1.numeros_gratis && (
+                        <p className="admin-paquete-preview">
+                          Vista previa: Compra {paquete1.cantidad_compra} → Obtén {paquete1.numeros_gratis} gratis
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Paquete 2 */}
+                    <div className="admin-paquete-box">
+                      <h4>📦 Paquete 2</h4>
+                      <div className="admin-paquete-inputs">
+                        <div className="admin-input-group">
+                          <label>Cantidad de compra</label>
+                          <input
+                            type="number"
+                            placeholder="25"
+                            value={paquete2.cantidad_compra}
+                            onChange={(e) => setPaquete2({...paquete2, cantidad_compra: e.target.value})}
+                            min="1"
+                            className="admin-input-small"
+                          />
+                        </div>
+                        <div className="admin-input-group">
+                          <label>Números gratis</label>
+                          <input
+                            type="number"
+                            placeholder="2"
+                            value={paquete2.numeros_gratis}
+                            onChange={(e) => setPaquete2({...paquete2, numeros_gratis: e.target.value})}
+                            min="1"
+                            className="admin-input-small"
+                          />
+                        </div>
+                      </div>
+                      {paquete2.cantidad_compra && paquete2.numeros_gratis && (
+                        <p className="admin-paquete-preview">
+                          Vista previa: Compra {paquete2.cantidad_compra} → Obtén {paquete2.numeros_gratis} gratis
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Paquete 3 */}
+                    <div className="admin-paquete-box">
+                      <h4>📦 Paquete 3</h4>
+                      <div className="admin-paquete-inputs">
+                        <div className="admin-input-group">
+                          <label>Cantidad de compra</label>
+                          <input
+                            type="number"
+                            placeholder="40"
+                            value={paquete3.cantidad_compra}
+                            onChange={(e) => setPaquete3({...paquete3, cantidad_compra: e.target.value})}
+                            min="1"
+                            className="admin-input-small"
+                          />
+                        </div>
+                        <div className="admin-input-group">
+                          <label>Números gratis</label>
+                          <input
+                            type="number"
+                            placeholder="3"
+                            value={paquete3.numeros_gratis}
+                            onChange={(e) => setPaquete3({...paquete3, numeros_gratis: e.target.value})}
+                            min="1"
+                            className="admin-input-small"
+                          />
+                        </div>
+                      </div>
+                      {paquete3.cantidad_compra && paquete3.numeros_gratis && (
+                        <p className="admin-paquete-preview">
+                          Vista previa: Compra {paquete3.cantidad_compra} → Obtén {paquete3.numeros_gratis} gratis
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <button
                 type="submit"
