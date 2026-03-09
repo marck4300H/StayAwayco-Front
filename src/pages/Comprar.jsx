@@ -8,18 +8,31 @@ export default function Comprar() {
   const location = useLocation();
   const rifa = location.state?.rifa;
 
-  // ✅ USAR CANTIDAD MÍNIMA DINÁMICA DE LA RIFA
   const [cantidad, setCantidad] = useState(rifa?.cantidad_minima || 5);
   const [error, setError] = useState("");
 
-  // ✅ PRECIO UNITARIO DINÁMICO
+  // Variables DINÁMICAS que YA TENÍAS
   const precioUnitario = rifa?.precio_unitario || 1000;
   const cantidadMinima = rifa?.cantidad_minima || 5;
-  
+  const disponibles = rifa?.disponibles || 0;
+
+  // Paquetes DINÁMICOS basados en cantidadMinima
   const paquetes = [
-    { cantidad: Math.max(cantidadMinima, 15), precio: Math.max(cantidadMinima, 15) * precioUnitario, destacado: true },
-    { cantidad: Math.max(cantidadMinima, 25), precio: Math.max(cantidadMinima, 25) * precioUnitario, destacado: true },
-    { cantidad: Math.max(cantidadMinima, 40), precio: Math.max(cantidadMinima, 40) * precioUnitario, destacado: true }
+    { 
+      cantidad: Math.max(cantidadMinima, 5), 
+      precio: Math.max(cantidadMinima, 5) * precioUnitario, 
+      destacado: false 
+    },
+    { 
+      cantidad: Math.max(cantidadMinima, 20), 
+      precio: Math.max(cantidadMinima, 20) * precioUnitario, 
+      destacado: true 
+    },
+    { 
+      cantidad: Math.max(cantidadMinima, 45), 
+      precio: Math.max(cantidadMinima, 45) * precioUnitario, 
+      destacado: false 
+    },
   ];
 
   const handleCantidadChange = (e) => {
@@ -33,29 +46,26 @@ export default function Comprar() {
   };
 
   const handlePaqueteClick = (cantidadPaquete) => {
-    setCantidad(cantidadPaquete);
-    setError("");
+    if (cantidadPaquete <= disponibles) {
+      setCantidad(cantidadPaquete);
+      setError("");
+    }
   };
 
   const handleContinuar = () => {
     setError("");
 
-    // ✅ Validación con cantidad mínima dinámica
     if (cantidad < cantidadMinima) {
       setError(`La cantidad mínima es ${cantidadMinima} números.`);
       return;
     }
 
-    if (cantidad > (rifa.disponibles || 0)) {
-      setError(`Solo hay ${rifa.disponibles} números disponibles.`);
+    if (cantidad > disponibles) {
+      setError(`Solo hay ${disponibles} números disponibles.`);
       return;
     }
 
-    // ✅ REDIRIGIR DIRECTAMENTE AL CHECKOUT (SIN VALIDAR LOGIN)
-    // El checkout manejará tanto usuarios logueados como no logueados
-    navigate("/checkout", { 
-      state: { rifa, cantidad } 
-    });
+    navigate("/checkout", { state: { rifa, cantidad } });
   };
 
   if (!rifa) {
@@ -71,74 +81,107 @@ export default function Comprar() {
 
   return (
     <div className="comprar-container">
-      <h1>Comprar Números de Rifa</h1>
-
-      {error && <div className="error-message">{error}</div>}
-
-      <div className="comprar-layout">
-        <div className="rifa-info">
-          <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img" />
-          <h2 className="rifa-title">{rifa.titulo}</h2>
-          <p className="rifa-desc">{rifa.descripcion}</p>
-          
-        </div>
-
-        <div className="compra-section">
-          <div className="cantidad-section">
-            <label>Cantidad de números <small>(mínimo {cantidadMinima})</small>:</label>
-            <input
-              type="number"
-              value={cantidad}
-              onChange={handleCantidadChange}
-              min={cantidadMinima}
-              max={rifa.disponibles || 100}
-            />
-          </div>
-
-          {/* ✅ OFERTAS DINÁMICAS CON PRECIOS CALCULADOS */}
-          <div className="ofertas-container">
-            {paquetes.map((paquete, index) => (
-              <div 
-                key={index} 
-                className={`oferta-box ${cantidad === paquete.cantidad ? 'active' : ''} ${
-                  paquete.destacado ? 'destacado' : ''
-                }`}
-              >
-                {paquete.destacado && <div className="badge-destacado">🔥 POPULAR</div>}
-                <h3>{paquete.cantidad} Números</h3>
-                <p>{paquete.destacado ? 'Mejor valor' : 'Buena opción'}</p>
-                <span className="precio">Precio: ${paquete.precio.toLocaleString()}</span>
-                <button 
-                  className={`btn-oferta ${cantidad === paquete.cantidad ? 'selected' : ''}`}
-                  onClick={() => handlePaqueteClick(paquete.cantidad)}
-                  disabled={paquete.cantidad > (rifa.disponibles || 0)}
-                >
-                  {cantidad === paquete.cantidad ? '✓ Seleccionado' : 'Seleccionar'}
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="acciones">
-            <button 
-              className="btn-comprar" 
-              onClick={handleContinuar}
-              disabled={cantidad < cantidadMinima || cantidad > (rifa.disponibles || 0)}
-            >
-              Continuar al Pago - ${total.toLocaleString()}
-            </button>
-            <button className="btn-cancel" onClick={() => navigate(-1)}>
-              Cancelar
-            </button>
-          </div>
-
-          <div className="info-pago">
-            <p>🔒 Pago seguro mediante Mercado Pago</p>
-            <p>🎯 Los números se asignarán automáticamente después del pago exitoso</p>
-            <p>✅ No necesitas registrarte previamente - tu cuenta se creará automáticamente</p>
+      {/* Header rifa con variables dinámicas */}
+      <div className="rifa-header">
+        <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img-header" />
+        <div className="rifa-info-header">
+          <h1 className="rifa-titulo">{rifa.titulo}</h1>
+          <p className="rifa-desc-header">{rifa.descripcion}</p>
+          <div className="rifa-stats-header">
+            Precio: ${precioUnitario.toLocaleString()} c/u | Mín: {cantidadMinima} números
           </div>
         </div>
       </div>
+
+      {error && <div className="error-message">{error}</div>}
+
+      {/* Paquetes DINÁMICOS */}
+      <section className="paquetes-section">
+        <h2 className="paquetes-title">Elige tu paquete</h2>
+
+        <div className="paquetes-grid">
+          {paquetes.map((paquete, index) => (
+            <div
+              key={index}
+              className={`paquete-card ${paquete.destacado ? "popular" : ""} ${
+                cantidad === paquete.cantidad ? "active" : ""
+              }`}
+              onClick={() => handlePaqueteClick(paquete.cantidad)}
+            >
+              {paquete.destacado && <div className="paquete-popular">POPULAR</div>}
+              <div className="paquete-precio">
+                ${paquete.precio.toLocaleString()}
+              </div>
+              <div className="paquete-sub">
+                {paquete.cantidad} números
+              </div>
+              <div className="paquete-features">
+                <div className="feature">
+                  ✅ {paquete.cantidad} números aleatorios
+                </div>
+                <div className="feature">✅ Correo confirmación</div>
+                <div className="feature">✅ Participación inmediata</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Input personalizado con variables dinámicas */}
+      <div className="cantidad-personalizada">
+        <label>
+          O cantidad personalizada (mín {cantidadMinima})
+        </label>
+        <div className="input-group">
+          <input
+            type="number"
+            value={cantidad}
+            onChange={handleCantidadChange}
+            min={cantidadMinima}
+            max={disponibles}
+            className="cantidad-input"
+          />
+          <span className="total-preview">
+            Total: ${total.toLocaleString()}
+          </span>
+          <small>Disponibles: {disponibles}</small>
+        </div>
+      </div>
+
+      {/* Botones acción */}
+      <div className="acciones-comprar">
+        <button
+          className="btn-comprar-principal"
+          onClick={handleContinuar}
+          disabled={cantidad < cantidadMinima || cantidad > disponibles}
+        >
+          Continuar al Pago - ${total.toLocaleString()}
+        </button>
+        <button className="btn-cancelar" onClick={() => navigate(-1)}>
+          ← Volver
+        </button>
+      </div>
+
+            {/* NUEVO BLOQUE INFERIOR - 3 CARDS HORIZONTALES */}
+      <section className="trust-section">
+        <div className="trust-card">
+          <div className="trust-icon">🔒</div>
+          <h3>Pagos Seguros</h3>
+          <p>Todos los pagos procesados con Mercado Pago</p>
+        </div>
+
+        <div className="trust-card">
+          <div className="trust-icon">🎯</div>
+          <h3>Ganadores Reales</h3>
+          <p>Sorteos públicos con resultados verificables</p>
+        </div>
+
+        <div className="trust-card">
+          <div className="trust-icon">🛠️</div>
+          <h3>Soporte 24/7</h3>
+          <p>Estamos aquí para ayudarte en cualquier momento</p>
+        </div>
+      </section>
     </div>
   );
 }

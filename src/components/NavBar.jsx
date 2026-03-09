@@ -7,7 +7,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const userType = localStorage.getItem("userType"); // 'admin' o 'user'
+  const userType = localStorage.getItem("userType");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -23,76 +23,89 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo-container">
-        <h2 onClick={() => navigate("/")} className="logo-title">StayAwayCo</h2>
-        {userType === "admin" && (
-          <span className="admin-badge" title="Administrador">
-            <FaUserShield size={16} />
-          </span>
-        )}
-      </div>
-      
-      <div className="nav-links">
-        {token ? (
-          // Usuario logueado (admin o user)
-          <>
-            {userType === "admin" && (
-              <button className="link-btn admin-btn" onClick={handleAdminPanel}>
-                <FaUserShield /> Panel Admin
+      {/* UNA SOLA LÍNEA */}
+      <div className="navbar-line">
+        {/* LOGO IZQUIERDA */}
+        <div className="logo-container">
+          <h2 onClick={() => navigate("/")} className="logo-title">
+            StayAway
+          </h2>
+          {userType === "admin" && (
+            <span className="admin-badge" title="Administrador">
+              <FaUserShield size={14} />
+            </span>
+          )}
+        </div>
+
+        {/* OPCIONES DERECHA - SIEMPRE IGUAL */}
+        <div className="navbar-right">
+          <a href="#rifas" className="nav-link">Rifas</a>
+          <a href="#como-funciona" className="nav-link">Cómo funciona</a>
+          <a href="#contacto" className="nav-link">Contacto</a>
+          
+          {/* Botones dinámicos pero en línea */}
+          {token ? (
+            <>
+              <button className="link-btn" onClick={() => navigate("/perfil")}>
+                Mi Perfil
               </button>
-            )}
-            <button className="link-btn" onClick={() => navigate("/perfil")}>
-              Mi Perfil {userType === "admin" && "(Admin)"}
-            </button>
-            <button className="link-btn" onClick={handleLogout}>
-              Cerrar Sesión
-            </button>
-            <FaShoppingCart className="cart-icon" size={22} />
-          </>
-        ) : (
-          // Usuario no logueado
-          <>
-            <button className="link-btn" onClick={() => navigate("/login")}>
-              Login
-            </button>
-            <button className="btn-register" onClick={() => navigate("/registro")}>
-              Registro
-            </button>
-            <FaShoppingCart className="cart-icon" size={22} />
-          </>
-        )}
+              <button className="link-btn" onClick={handleLogout}>
+                Cerrar Sesión
+              </button>
+              {userType === "admin" && (
+                <button className="link-btn admin-btn" onClick={handleAdminPanel}>
+                  Admin
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <button className="link-btn" onClick={() => navigate("/login")}>
+                Iniciar Sesión
+              </button>
+              <button className="btn-register" onClick={() => navigate("/registro")}>
+                Registrarse
+              </button>
+            </>
+          )}
+          
+          <FaShoppingCart className="cart-icon" size={18} />
+        </div>
+
+        {/* Hamburguesa móvil */}
+        <button className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+        </button>
       </div>
 
       {/* Menú móvil */}
-      <button className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-      </button>
-      
       {menuOpen && (
         <div className="mobile-menu">
+          <a href="#rifas" className="mobile-nav-link">Rifas</a>
+          <a href="#como-funciona" className="mobile-nav-link">Cómo funciona</a>
+          <a href="#contacto" className="mobile-nav-link">Contacto</a>
+          
           {token ? (
-            // Usuario logueado (móvil)
             <>
+              <button className="mobile-link" onClick={() => { navigate("/perfil"); setMenuOpen(false); }}>
+                Mi Perfil
+              </button>
               {userType === "admin" && (
                 <button className="mobile-link admin-link" onClick={() => { handleAdminPanel(); setMenuOpen(false); }}>
-                  <FaUserShield /> Panel Admin
+                  Panel Admin
                 </button>
               )}
-              <button className="mobile-link" onClick={() => { navigate("/perfil"); setMenuOpen(false); }}>
-                Mi Perfil {userType === "admin" && "(Admin)"}
-              </button>
               <button className="mobile-link" onClick={() => { handleLogout(); setMenuOpen(false); }}>
                 Cerrar Sesión
               </button>
             </>
           ) : (
-            // Usuario no logueado (móvil)
             <>
               <button className="mobile-link" onClick={() => { navigate("/login"); setMenuOpen(false); }}>
-                Login
+                Iniciar Sesión
               </button>
               <button className="mobile-btn-register" onClick={() => { navigate("/registro"); setMenuOpen(false); }}>
-                Registro
+                Registrarse
               </button>
             </>
           )}

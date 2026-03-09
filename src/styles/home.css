@@ -1,373 +1,261 @@
-/* ===== HOME PAGE ===== */
-.home-page {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
+/* ===== HERO NUEVO ===== */
 
-/* HEADER */
-.header {
-  text-align: center;
-  margin-bottom: 50px;
-  margin-top: 30px;
-  padding: 0 20px;
-}
-
-.header-title {
-  font-size: 2.8rem;
-  color: #c8a951;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.header-subtitle {
-  font-size: 1.1rem;
-  color: #666666;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* LOAD & ERROR TEXT */
-.loading-text {
-  text-align: center;
-  color: #c8a951;
-  font-weight: bold;
-  font-size: 1.2rem;
-  padding: 40px 0;
-}
-
-.error-text {
-  text-align: center;
-  color: #d9534f;
-  font-weight: bold;
-  font-size: 1.2rem;
-  padding: 40px 0;
-}
-
-.no-rifas {
-  text-align: center;
-  color: #666666;
-  font-size: 1.1rem;
-  padding: 40px 0;
-}
-
-/* GRID DE RIFAS */
-.rifas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* === CARD CONFIG FLEX PARA ALINEAR BOTÓN ABAJO === */
-.rifa-card {
-  background: #ffffff;
-  border-radius: 15px;
-  border: 1px solid #0000004a;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.332);
-
-  /* NEW 👇 */
+.hero {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 40px 20px 60px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #f7f9fc 0%, #CFDEE7 100%);
+  margin-bottom: 40px;
 }
 
-.rifa-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 25px rgba(200, 168, 81, 0.879);
+.hero-left {
+  flex: 1.1;
 }
 
-.rifa-img {
-  width: 100%;
-  height: 260px;
-  object-fit: contain;
-  object-position: center;
-  background-color: white;
-}
-
-.rifa-content {
-  padding: 18px;
-
-  /* NEW 👇 */
+.hero-right {
   flex: 1;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
 }
 
-/* === LIMITE DE TEXTO === */
-.rifa-desc {
-  color: #666666;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 15px;
-
-  /* NEW 👇 máximo 3 líneas */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.rifa-title {
-  color: #1a1a1a;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+/* Badge superior */
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #CFDEE7;
+  color: #0A369D;
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
 }
 
-.rifa-stats {
-  display: flex;
-  justify-content: space-between;
-  margin: 15px 0;
-  font-size: 0.9rem;
-  color: #64748b;
-  font-weight: 500;
+/* Título */
+.hero-title {
+  font-size: 2.7rem;
+  line-height: 1.1;
+  color: #0A369D;
+  margin-bottom: 18px;
+  font-weight: 800;
 }
 
-/* === BOTÓN SIEMPRE ABAJO === */
-.rifa-btn {
-  margin-top: auto; /* NEW 👈 Mantiene el botón abajo */
-  width: 100%;
-  background: #c8a951;
-  color: #ffffff;
-  padding: 12px 0;
-  border-radius: 10px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
+.hero-title span {
+  color: #4472CA; /* acento */
+}
+
+/* Texto */
+.hero-text {
   font-size: 1rem;
+  color: #4a4a4a;
+  max-width: 420px;
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+
+/* Botones */
+.hero-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.btn-primary {
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: none;
+  background: #0A369D;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(10, 54, 157, 0.35);
   transition: all 0.2s ease;
 }
 
-.rifa-btn:hover {
-  background: #dfc77a;
+.btn-primary:hover {
+  background: #4472CA;
 }
 
-/* ===== RESPONSIVE HOME ===== */
-@media (max-width: 768px) {
-  .home-page {
-    padding: 15px;
-  }
-  
-  .header {
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .header-title {
-    font-size: 2.2rem;
-  }
-  
-  .header-subtitle {
-    font-size: 1rem;
-  }
-  
-  .rifas-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
+.btn-secondary {
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid #CFDEE7;
+  background: #ffffff;
+  color: #0A369D;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-@media (max-width: 480px) {
-  .header-title {
-    font-size: 1.8rem;
-  }
-  
-  .rifa-card {
-    border-radius: 12px;
-  }
-  
-  .rifa-content {
-    padding: 15px;
-  }
-}
-/* ===== ESTILOS PARA RIFAS SORTEADAS Y CANCELADAS ===== */
-
-/* Banner de rifa sorteada */
-.rifa-sorteada {
-  position: relative;
-  border: 3px solid #c8a951;
-  background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+.btn-secondary:hover {
+  border-color: #4472CA;
+  color: #4472CA;
 }
 
-.banner-sorteada {
-  position: absolute;
-  top: 20px;
-  right: -10px;
-  background: linear-gradient(135deg, #c8a951 0%, #dfc77a 100%);
-  color: #ffffff;
-  padding: 8px 20px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  border-radius: 5px 0 0 5px;
-  box-shadow: 0 3px 10px rgba(200, 169, 81, 0.4);
+/* Tarjeta de imagen de la moto */
+.hero-image-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 18px 45px rgba(10, 54, 157, 0.18);
+}
+
+.hero-image-card img {
+  width: 100%;
+  border-radius: 18px;
+  display: block;
+  background: radial-gradient(circle at top, #92B4F4 0%, #0A369D 70%);
+  object-fit: contain;
+}
+/* ===== ESTADO DEL SORTEO (COMPACTO) ===== */
+
+.sorteo-status {
+  margin: 0 auto 32px;
+  padding: 20px 24px;
+  max-width: 1270px;          /* más angosto */
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 35px rgba(10, 54, 157, 0.08);
   display: flex;
   align-items: center;
-  gap: 8px;
-  z-index: 10;
+  justify-content: space-between;
+  gap: 28px;
 }
 
-.trophy-icon {
-  font-size: 1.2rem;
-  animation: sparkle 2s infinite;
+.sorteo-status-left {
+  flex: 0.9;
 }
 
-@keyframes sparkle {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
+.sorteo-status-right {
+  flex: 1.1;
 }
 
-/* Información del ganador */
-.ganador-info {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 20px;
-  margin: 20px 0;
-  border-left: 4px solid #c8a951;
+.sorteo-status-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0A369D;
+  margin-bottom: 12px;
 }
 
-.numero-ganador-box {
-  background: linear-gradient(135deg, #c8a951 0%, #dfc77a 100%);
-  color: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
+/* Contadores */
+.sorteo-countdown {
+  display: flex;
+  gap: 12px;
+}
+
+.sorteo-count-box {
+  background: #f5f7fb;
+  border-radius: 18px;
+  padding: 12px 18px;
   text-align: center;
-  margin-bottom: 15px;
-  box-shadow: 0 3px 10px rgba(200, 169, 81, 0.3);
+  min-width: 90px;
+  box-shadow: 0 4px 12px rgba(10, 54, 157, 0.185);
 }
 
-.label-ganador {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  opacity: 0.9;
-}
-
-.numero-ganador {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 900;
-  font-family: 'Courier New', monospace;
-  letter-spacing: 2px;
-}
-
-.ganador-nombre-box {
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  margin-bottom: 15px;
-  border: 2px solid #e0e0e0;
-}
-
-.ganador-nombre {
+.sorteo-count-value {
   display: block;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1a1a1a;
-  margin-top: 5px;
+  color: #0A369D;
 }
 
-.fecha-sorteo {
-  text-align: center;
-  color: #666666;
-  font-size: 0.95rem;
-  margin: 10px 0 5px 0;
-  font-weight: 600;
+.sorteo-count-text {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #8a96a8;
 }
 
-.loteria-ref {
-  text-align: center;
-  color: #888888;
-  font-size: 0.85rem;
-  font-style: italic;
-  margin: 5px 0 0 0;
-}
-
-/* Banner de rifa cancelada */
-.rifa-cancelada {
-  position: relative;
-  opacity: 0.7;
-  border: 2px solid #dc3545;
-}
-
-.banner-cancelada {
-  position: absolute;
-  top: 20px;
-  right: -10px;
-  background: #dc3545;
-  color: #ffffff;
-  padding: 8px 20px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  border-radius: 5px 0 0 5px;
-  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.4);
+/* Progreso */
+.sorteo-status-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  z-index: 10;
+  margin-bottom: 8px;
 }
 
-.rifa-img-disabled {
-  filter: grayscale(100%);
-  opacity: 0.6;
+.sorteo-status-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0A369D;
 }
 
-.mensaje-cancelada {
-  text-align: center;
-  color: #dc3545;
-  font-weight: 600;
-  padding: 15px;
-  background: #f8d7da;
-  border-radius: 8px;
-  margin-top: 15px;
+.sorteo-status-percent {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #0A369D;
+}
+
+.sorteo-status-bar-wrapper {
+  max-width: 500px;      /* barra más corta */
+}
+
+.sorteo-status-bar {
+  width: 130%;
+  height: 16px;
+  border-radius: 999px;
+  background: #CFDEE7;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.sorteo-status-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0A369D 0%, #4472CA 100%);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.sorteo-status-note {
+  font-size: 0.82rem;
+  color: #8a96a8;
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .banner-sorteada,
-  .banner-cancelada {
-    right: -5px;
-    padding: 6px 15px;
-    font-size: 0.75rem;
+@media (max-width: 900px) {
+  .sorteo-status {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .numero-ganador {
-    font-size: 2rem;
-  }
-
-  .ganador-nombre {
-    font-size: 1.1rem;
-  }
-
-  .trophy-icon {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .banner-sorteada,
-  .banner-cancelada {
-    position: static;
-    margin-bottom: 10px;
-    border-radius: 5px;
+  .sorteo-countdown {
     justify-content: center;
   }
 
-  .numero-ganador {
-    font-size: 1.8rem;
+  .sorteo-status-right {
+    width: 100%;
   }
 
-  .ganador-info {
-    padding: 15px;
+  .sorteo-status-bar-wrapper {
+    max-width: 100%;
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    padding: 28px 18px 40px;
+  }
+
+  .hero-left {
+    text-align: center;
+  }
+
+  .hero-text {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
   }
 }
