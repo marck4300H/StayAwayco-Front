@@ -20,6 +20,8 @@ import PagoFallido from "../pages/PagoFallido";
 import PagoPendiente from "../pages/PagoPendiente";
 import ResetPassword from "../pages/ResetPassword";
 import ForgotPassword from "../pages/ForgotPassword";
+import Contacto from "../pages/contacto";
+import ComoFunciona from "../pages/ComoFunciona";
 
 export default function AppRoutes() {
   return (
@@ -38,6 +40,8 @@ export default function AppRoutes() {
         <Route path="/pago-pendiente" element={<PagoPendiente />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/como-funciona" element={<ComoFunciona />} />
       </Route>
 
       {/* ✅ Rutas de administrador (fuera del Layout) */}

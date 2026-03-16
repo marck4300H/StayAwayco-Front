@@ -1,3 +1,19 @@
+/* ===== LOGIN CON NUEVA PALETA AZUL ===== */
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  background: #f5f7fb;
+}
+
 /* Contenedor principal */
 .login-container {
   width: 100vw;
@@ -5,36 +21,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fafafa;
+  background: linear-gradient(135deg, #f8faff 0%, #CFDEE7 100%);
   padding: 20px;
 }
 
 /* Tarjeta del formulario */
 .login-card {
-  width: 350px;
+  width: 360px;
   padding: 32px;
-  border-radius: 18px;
-  border: 1px solid #0000004a;
+  border-radius: 20px;
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.332);
-  border: 1px solid #e5e5e5;
-  
+  border: 1px solid #CFDEE7;
+  box-shadow: 0 14px 40px rgba(10, 54, 157, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(200, 168, 81, 0.879);
+  transform: translateY(-4px);
+  box-shadow: 0 22px 60px rgba(10, 54, 157, 0.2);
 }
 
 /* Título */
 .login-title {
   text-align: center;
-  font-size: 28px;
-  margin-bottom: 25px;
-  color: #111;
-  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 24px;
+  color: #0A369D;
+  font-weight: 800;
 }
-
 
 /* Formularios */
 .login-form {
@@ -52,43 +66,52 @@
 .login-field label {
   font-size: 14px;
   margin-bottom: 6px;
-  color: #333;
-  font-weight: 500;
+  color: #4b5563;
+  font-weight: 600;
 }
 
 .login-field input {
   padding: 12px;
-  border-radius: 10px;
-  border: 1.5px solid #d4d4d4;
+  border-radius: 12px;
+  border: 1.5px solid #CFDEE7;
   font-size: 15px;
-  transition: 0.3s ease;
-  background-color: #fff;
-  color: #000;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease,
+    background-color 0.25s ease;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+.login-field input::placeholder {
+  color: #9ca3af;
 }
 
 .login-field input:focus {
-  border-color: #d4af37; /* dorado */
-  box-shadow: 0 0 6px #d4af3744;
+  border-color: #4472CA;
+  box-shadow: 0 0 0 3px rgba(68, 114, 202, 0.25);
   outline: none;
+  background-color: #f9fbff;
 }
 
 /* Botón */
 .login-button {
   padding: 12px;
-  background-color: #d4af37; /* dorado */
-  color: #fff;
+  background: linear-gradient(135deg, #0A369D 0%, #4472CA 100%);
+  color: #ffffff;
   border: none;
-  border-radius: 12px;
+  border-radius: 999px;
   font-size: 16px;
   cursor: pointer;
-  font-weight: 600;
-  margin-top: 10px;
-  transition: 0.25s ease;
+  font-weight: 700;
+  margin-top: 6px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease;
+  box-shadow: 0 10px 24px rgba(10, 54, 157, 0.3);
 }
 
 .login-button:hover {
-  background-color: #c09b2f;
+  background: linear-gradient(135deg, #4472CA 0%, #60a5fa 100%);
   transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(68, 114, 202, 0.4);
 }
 
 /* Texto inferior */
@@ -96,47 +119,50 @@
   text-align: center;
   margin-top: 18px;
   font-size: 14px;
-  color: #444;
+  color: #6b7280;
 }
 
 .login-register-link {
-  color: #d4af37;
+  color: #0A369D;
   cursor: pointer;
   font-weight: 700;
-  transition: 0.2s;
+  transition: color 0.2s ease;
 }
 
 .login-register-link:hover {
   text-decoration: underline;
-  color: #c09b2f;
+  color: #4472CA;
 }
 
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-  background: #fafafa;
-}
-
-/*recuperar contraseña*/
+/* Recuperar contraseña */
 .login-forgot-text {
   text-align: center;
-  margin-top: 15px;
-  color: #666;
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 13px;
 }
 
 .login-forgot-link {
-  color: #667eea;
+  color: #4472CA;
   cursor: pointer;
   text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .login-forgot-link:hover {
-  color: #5a6fd8;
+  color: #0A369D;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    width: 100%;
+    max-width: 340px;
+    padding: 24px 20px;
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
 }

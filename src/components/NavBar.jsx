@@ -39,9 +39,9 @@ const Navbar = () => {
 
         {/* OPCIONES DERECHA - SIEMPRE IGUAL */}
         <div className="navbar-right">
-          <a href="#rifas" className="nav-link">Rifas</a>
-          <a href="#como-funciona" className="nav-link">Cómo funciona</a>
-          <a href="#contacto" className="nav-link">Contacto</a>
+          <a href="/" className="nav-link">Menu</a>
+          <a href="/como-funciona" className="nav-link" >Cómo funciona</a>
+          <a href="/contacto" className="nav-link">Contacto</a>
           
           {/* Botones dinámicos pero en línea */}
           {token ? (
@@ -68,8 +68,6 @@ const Navbar = () => {
               </button>
             </>
           )}
-          
-          <FaShoppingCart className="cart-icon" size={18} />
         </div>
 
         {/* Hamburguesa móvil */}
@@ -81,9 +79,9 @@ const Navbar = () => {
       {/* Menú móvil */}
       {menuOpen && (
         <div className="mobile-menu">
-          <a href="#rifas" className="mobile-nav-link">Rifas</a>
-          <a href="#como-funciona" className="mobile-nav-link">Cómo funciona</a>
-          <a href="#contacto" className="mobile-nav-link">Contacto</a>
+          <a href="/" className="mobile-nav-link">Menu</a>
+          <a href="/como-funciona" className="mobile-nav-link">Cómo funciona</a>
+          <a href="/contacto" className="mobile-nav-link">Contacto</a>
           
           {token ? (
             <>
@@ -109,7 +107,6 @@ const Navbar = () => {
               </button>
             </>
           )}
-          <FaShoppingCart size={20} className="mobile-cart" />
         </div>
       )}
     </nav>

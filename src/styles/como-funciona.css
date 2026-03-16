@@ -1,0 +1,113 @@
+/* ===== CÓMO FUNCIONA - STAYAWAY ===== */
+
+.cf-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* Hero */
+.cf-hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.cf-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0a369d;
+  margin-bottom: 8px;
+}
+
+.cf-subtitle {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 0.98rem;
+  color: #6b7280;
+  line-height: 1.7;
+}
+
+/* Grid de pasos */
+.cf-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Card de paso */
+.cf-step-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px 18px 22px;
+  border: 1px solid #cfdee7;
+  box-shadow: 0 10px 30px rgba(10, 54, 157, 0.06);
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cf-step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(10, 54, 157, 0.16);
+  border-color: #4472ca;
+}
+
+/* Badge del paso */
+.cf-step-badge {
+  position: absolute;
+  top: -12px;
+  left: 18px;
+  background: linear-gradient(135deg, #0a369d 0%, #4472ca 100%);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(10, 54, 157, 0.25);
+}
+
+.cf-step-card h2 {
+  margin-top: 8px;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0a369d;
+}
+
+.cf-step-card p {
+  font-size: 0.92rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Nota final */
+.cf-footer-note {
+  margin-top: 32px;
+  padding: 20px 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f8faff 0%, #f0f7ff 100%);
+  border: 1px solid #cfdee7;
+}
+
+.cf-footer-note p {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .cf-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .cf-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .cf-title {
+    font-size: 1.7rem;
+  }
+}

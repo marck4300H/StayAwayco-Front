@@ -11,7 +11,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  height: 52px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -21,11 +21,11 @@
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .logo-title {
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   font-weight: 800;
   cursor: pointer;
   margin: 0;
@@ -40,7 +40,7 @@
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 30px;
   flex: 1;
   justify-content: flex-end;
 }
@@ -61,7 +61,7 @@
 }
 
 .link-btn {
-  padding: 4px 12px;
+  padding: 12px 26px;
   border-radius: 999px;
   border: 1px solid #d1d5db;
   background: #ffffff;
@@ -79,6 +79,7 @@
 
 .btn-register {
   background: linear-gradient(135deg, #0A369D 0%, #4472CA 100%);
+  border-radius: 999px;
   color: white;
   border: none;
 }

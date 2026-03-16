@@ -206,18 +206,6 @@ export default function Home() {
               Participar Ahora
             </button>
 
-            <button
-              className="btn-secondary"
-              onClick={() => {
-                const primeraRifa = rifas[0];
-                if (primeraRifa) {
-                  navigate("/comprar", { state: { rifa: primeraRifa } });
-                }
-              }}
-              disabled={rifas.length === 0}
-            >
-              Ver Detalles
-            </button>
           </div>
         </div>
 
