@@ -142,7 +142,7 @@
 }
 
 /* ===== RESPONSIVE PAQUETES — horizontal en móvil ===== */
-@media (max-width: 900px) {
+@media (max-width: 90px) {
   .paquetes-grid {
     flex-direction: row;
     flex-wrap: nowrap;
