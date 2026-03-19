@@ -15,23 +15,15 @@ export default function Comprar() {
   const [error, setError] = useState("");
 
   const [timeLeft, setTimeLeft] = useState({
-    dias: "00",
-    horas: "00",
-    mins: "00",
-    segs: "00",
+    dias: "00", horas: "00", mins: "00", segs: "00",
   });
 
-  // ─────────────────────────────────────────────
-  // PAQUETES: dinámicos si vienen del backend,
-  // fijos si no hay paquetes_promocion en la rifa
-  // ─────────────────────────────────────────────
   const tienePaquetes = !!rifa?.paquetes_promocion;
 
   const buildPaquetes = () => {
     if (tienePaquetes) {
       const paquetesRaw = rifa.paquetes_promocion;
       const lista = [];
-
       ["paquete1", "paquete2", "paquete3"].forEach((key) => {
         const p = paquetesRaw[key];
         if (p && p.cantidad_compra > 0 && p.numeros_gratis > 0) {
@@ -42,12 +34,10 @@ export default function Comprar() {
           });
         }
       });
-
       lista.sort((a, b) => a.cantidad - b.cantidad);
       return lista;
     }
 
-    // Sin paquetes: 3 fijos en COP
     return [
       { precio: 10000 },
       { precio: 25000 },
@@ -62,10 +52,6 @@ export default function Comprar() {
   const paquetes = buildPaquetes();
   const indexPopular = 1;
 
-  // ─────────────────────────────────────────────
-  // ✅ CORREGIDO: solo aplica si la cantidad es
-  // EXACTAMENTE igual a la del paquete
-  // ─────────────────────────────────────────────
   const getPaqueteAplicado = (cant) => {
     if (!tienePaquetes) return null;
     return paquetes.find((p) => p.cantidad === cant) || null;
@@ -73,13 +59,9 @@ export default function Comprar() {
 
   const paqueteAplicado = getPaqueteAplicado(cantidad);
 
-  // ─────────────────────────────────────────────
-  // Countdown
-  // ─────────────────────────────────────────────
   useEffect(() => {
     if (!rifa?.fecha_sorteo) return;
     const targetDate = new Date(rifa.fecha_sorteo).getTime();
-
     const update = () => {
       const diff = targetDate - Date.now();
       if (diff <= 0) {
@@ -93,15 +75,11 @@ export default function Comprar() {
         segs: String(Math.floor((diff / 1000) % 60)).padStart(2, "0"),
       });
     };
-
     update();
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
   }, [rifa]);
 
-  // ─────────────────────────────────────────────
-  // Handlers
-  // ─────────────────────────────────────────────
   const handleCantidadChange = (e) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value >= cantidadMinima) {
@@ -180,7 +158,6 @@ export default function Comprar() {
             </div>
           </div>
         </div>
-
         <div className="sorteo-status-right">
           <div className="sorteo-status-header">
             <span className="sorteo-status-title">Estado del Sorteo</span>
@@ -195,8 +172,7 @@ export default function Comprar() {
             </div>
           </div>
           <p className="sorteo-status-note">
-            ¡Casi agotado! Solo queda el {Math.max(0, 100 - (rifa.porcentaje || 0))}% de los
-            boletos disponibles.
+            ¡Casi agotado! Solo queda el {Math.max(0, 100 - (rifa.porcentaje || 0))}% de los boletos disponibles.
           </p>
         </div>
       </section>
@@ -226,24 +202,21 @@ export default function Comprar() {
               >
                 {esPopular && <div className="paquete-popular">POPULAR</div>}
 
+                {/* ✅ Solo precio y cantidad — sin texto extra */}
                 <div className="paquete-precio">
                   ${paquete.precio.toLocaleString()}
                 </div>
 
-                <div className="paquete-sub">{paquete.cantidad} números</div>
-
-                <div className="paquete-features">
-                  <div className="feature">✅ {paquete.cantidad} números aleatorios</div>
-                  <div className="feature">✅ Correo confirmación</div>
-                  <div className="feature">✅ Participación inmediata</div>
-
-                  {/* ✅ Solo muestra gratis en la card de ese paquete exacto */}
-                  {tienePaquetes && paquete.gratis > 0 && (
-                    <div className="feature feature-gratis">
-                      🎁 +{paquete.gratis} número{paquete.gratis > 1 ? "s" : ""} gratis
-                    </div>
-                  )}
+                <div className="paquete-sub">
+                  {paquete.cantidad} números
                 </div>
+
+                {/* Solo mostrar gratis si aplica */}
+                {tienePaquetes && paquete.gratis > 0 && (
+                  <div className="feature-gratis">
+                    🎁 +{paquete.gratis} gratis
+                  </div>
+                )}
               </div>
             );
           })}
@@ -266,7 +239,6 @@ export default function Comprar() {
           <small>Disponibles: {disponibles}</small>
         </div>
 
-        {/* ✅ CORREGIDO: solo muestra si la cantidad coincide EXACTAMENTE con un paquete */}
         {tienePaquetes && paqueteAplicado && (
           <div className="paquete-aplicado-preview">
             🎁 Comprando exactamente {cantidad} números recibirás{" "}
