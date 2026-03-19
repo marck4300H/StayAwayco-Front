@@ -9,15 +9,22 @@ export default function CrearRifa() {
   const [cantidadNumeros, setCantidadNumeros] = useState("10000");
   const [precioUnitario, setPrecioUnitario] = useState("1000");
   const [cantidadMinima, setCantidadMinima] = useState("5");
-  
-  // ✅ NUEVO: Estados para paquetes promocionales
+  const [fechaSorteo, setFechaSorteo] = useState("");
+
+  // Paquetes promocionales
   const [usarPromociones, setUsarPromociones] = useState(false);
   const [paquete1, setPaquete1] = useState({ cantidad_compra: "", numeros_gratis: "" });
   const [paquete2, setPaquete2] = useState({ cantidad_compra: "", numeros_gratis: "" });
   const [paquete3, setPaquete3] = useState({ cantidad_compra: "", numeros_gratis: "" });
-  
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Convierte el valor del datetime-local a ISO 8601 con zona horaria
+  const toISO = (localDatetime) => {
+    if (!localDatetime) return null;
+    return new Date(localDatetime).toISOString();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +33,15 @@ export default function CrearRifa() {
     if (!imagen) {
       setMessage("⚠️ Selecciona una imagen.");
       return;
+    }
+
+    // Validar que la fecha sea futura si se ingresó
+    if (fechaSorteo) {
+      const fechaSeleccionada = new Date(fechaSorteo);
+      if (fechaSeleccionada <= new Date()) {
+        setMessage("❌ La fecha del sorteo debe ser una fecha futura.");
+        return;
+      }
     }
 
     try {
@@ -44,85 +60,59 @@ export default function CrearRifa() {
       formData.append("cantidad_minima", cantidadMinima);
       formData.append("imagen", imagen);
 
-      // ✅ NUEVO: Agregar paquetes promocionales si están activados
+      // Fecha sorteo: solo si se ingresó
+      if (fechaSorteo) {
+        formData.append("fecha_sorteo", toISO(fechaSorteo));
+      }
+
+      // Paquetes promocionales
       if (usarPromociones) {
         const paquetesPromocion = {};
-        
-        // Validar y agregar paquete 1
+
         if (paquete1.cantidad_compra && paquete1.numeros_gratis) {
-          const cantidadCompra = parseInt(paquete1.cantidad_compra);
-          const numerosGratis = parseInt(paquete1.numeros_gratis);
-          
-          if (cantidadCompra > 0 && numerosGratis > 0) {
-            paquetesPromocion.paquete1 = {
-              cantidad_compra: cantidadCompra,
-              numeros_gratis: numerosGratis
-            };
-          }
+          const c = parseInt(paquete1.cantidad_compra);
+          const g = parseInt(paquete1.numeros_gratis);
+          if (c > 0 && g > 0) paquetesPromocion.paquete1 = { cantidad_compra: c, numeros_gratis: g };
         }
-        
-        // Validar y agregar paquete 2
         if (paquete2.cantidad_compra && paquete2.numeros_gratis) {
-          const cantidadCompra = parseInt(paquete2.cantidad_compra);
-          const numerosGratis = parseInt(paquete2.numeros_gratis);
-          
-          if (cantidadCompra > 0 && numerosGratis > 0) {
-            paquetesPromocion.paquete2 = {
-              cantidad_compra: cantidadCompra,
-              numeros_gratis: numerosGratis
-            };
-          }
+          const c = parseInt(paquete2.cantidad_compra);
+          const g = parseInt(paquete2.numeros_gratis);
+          if (c > 0 && g > 0) paquetesPromocion.paquete2 = { cantidad_compra: c, numeros_gratis: g };
         }
-        
-        // Validar y agregar paquete 3
         if (paquete3.cantidad_compra && paquete3.numeros_gratis) {
-          const cantidadCompra = parseInt(paquete3.cantidad_compra);
-          const numerosGratis = parseInt(paquete3.numeros_gratis);
-          
-          if (cantidadCompra > 0 && numerosGratis > 0) {
-            paquetesPromocion.paquete3 = {
-              cantidad_compra: cantidadCompra,
-              numeros_gratis: numerosGratis
-            };
-          }
+          const c = parseInt(paquete3.cantidad_compra);
+          const g = parseInt(paquete3.numeros_gratis);
+          if (c > 0 && g > 0) paquetesPromocion.paquete3 = { cantidad_compra: c, numeros_gratis: g };
         }
-        
-        // Solo enviar si hay al menos un paquete configurado
+
         if (Object.keys(paquetesPromocion).length > 0) {
           formData.append("paquetes_promocion", JSON.stringify(paquetesPromocion));
-          console.log("📦 Paquetes promocionales:", paquetesPromocion);
         }
       }
 
-      console.log("📤 Enviando datos para crear rifa...");
       const res = await fetch(`${API_URL}/rifas/crear`, {
         method: "POST",
-        headers: { 
-          Authorization: `Bearer ${token}` 
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        console.error("❌ Error del servidor:", data);
         setMessage(`❌ ${data.message || `Error ${res.status}: No se pudo crear la rifa`}`);
-        if (res.status === 401) {
-          localStorage.removeItem("token");
-        }
+        if (res.status === 401) localStorage.removeItem("token");
         return;
       }
 
       if (data.success) {
         setMessage("✅ Rifa creada con éxito");
-        // Limpiar formulario
         setTitulo("");
         setDescripcion("");
         setImagen(null);
         setCantidadNumeros("10000");
         setPrecioUnitario("1000");
         setCantidadMinima("5");
+        setFechaSorteo("");
         setUsarPromociones(false);
         setPaquete1({ cantidad_compra: "", numeros_gratis: "" });
         setPaquete2({ cantidad_compra: "", numeros_gratis: "" });
@@ -207,7 +197,37 @@ export default function CrearRifa() {
           className="admin-input admin-file-input"
         />
 
-        {/* ✅ NUEVO: Sección de Paquetes Promocionales */}
+        {/* ✅ NUEVO: Fecha del Sorteo */}
+        <div className="admin-fecha-section">
+          <label className="admin-label">📅 Fecha y Hora del Sorteo (Opcional)</label>
+          <input
+            type="datetime-local"
+            value={fechaSorteo}
+            onChange={(e) => setFechaSorteo(e.target.value)}
+            min={new Date(Date.now() + 60000).toISOString().slice(0, 16)}
+            className="admin-input"
+          />
+          <p className="admin-help-text">
+            Si no defines una fecha, la rifa quedará sin fecha programada. Puedes agregarla después editando la rifa.
+          </p>
+          {fechaSorteo && (
+            <p className="admin-fecha-preview">
+              📅 Sorteo programado para:{" "}
+              <strong>
+                {new Date(fechaSorteo).toLocaleString("es-CO", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </strong>
+            </p>
+          )}
+        </div>
+
+        {/* Paquetes Promocionales */}
         <div className="admin-promociones-section">
           <div className="admin-promociones-header">
             <label className="admin-label">
@@ -236,7 +256,7 @@ export default function CrearRifa() {
                       type="number"
                       placeholder="15"
                       value={paquete1.cantidad_compra}
-                      onChange={(e) => setPaquete1({...paquete1, cantidad_compra: e.target.value})}
+                      onChange={(e) => setPaquete1({ ...paquete1, cantidad_compra: e.target.value })}
                       min="1"
                       className="admin-input-small"
                     />
@@ -247,7 +267,7 @@ export default function CrearRifa() {
                       type="number"
                       placeholder="1"
                       value={paquete1.numeros_gratis}
-                      onChange={(e) => setPaquete1({...paquete1, numeros_gratis: e.target.value})}
+                      onChange={(e) => setPaquete1({ ...paquete1, numeros_gratis: e.target.value })}
                       min="1"
                       className="admin-input-small"
                     />
@@ -255,7 +275,7 @@ export default function CrearRifa() {
                 </div>
                 {paquete1.cantidad_compra && paquete1.numeros_gratis && (
                   <p className="admin-paquete-preview">
-                    Vista previa: Compra {paquete1.cantidad_compra} → Obtén {paquete1.numeros_gratis} gratis
+                    Compra {paquete1.cantidad_compra} → Obtén {paquete1.numeros_gratis} gratis
                   </p>
                 )}
               </div>
@@ -270,7 +290,7 @@ export default function CrearRifa() {
                       type="number"
                       placeholder="25"
                       value={paquete2.cantidad_compra}
-                      onChange={(e) => setPaquete2({...paquete2, cantidad_compra: e.target.value})}
+                      onChange={(e) => setPaquete2({ ...paquete2, cantidad_compra: e.target.value })}
                       min="1"
                       className="admin-input-small"
                     />
@@ -281,7 +301,7 @@ export default function CrearRifa() {
                       type="number"
                       placeholder="2"
                       value={paquete2.numeros_gratis}
-                      onChange={(e) => setPaquete2({...paquete2, numeros_gratis: e.target.value})}
+                      onChange={(e) => setPaquete2({ ...paquete2, numeros_gratis: e.target.value })}
                       min="1"
                       className="admin-input-small"
                     />
@@ -289,7 +309,7 @@ export default function CrearRifa() {
                 </div>
                 {paquete2.cantidad_compra && paquete2.numeros_gratis && (
                   <p className="admin-paquete-preview">
-                    Vista previa: Compra {paquete2.cantidad_compra} → Obtén {paquete2.numeros_gratis} gratis
+                    Compra {paquete2.cantidad_compra} → Obtén {paquete2.numeros_gratis} gratis
                   </p>
                 )}
               </div>
@@ -304,7 +324,7 @@ export default function CrearRifa() {
                       type="number"
                       placeholder="40"
                       value={paquete3.cantidad_compra}
-                      onChange={(e) => setPaquete3({...paquete3, cantidad_compra: e.target.value})}
+                      onChange={(e) => setPaquete3({ ...paquete3, cantidad_compra: e.target.value })}
                       min="1"
                       className="admin-input-small"
                     />
@@ -315,7 +335,7 @@ export default function CrearRifa() {
                       type="number"
                       placeholder="3"
                       value={paquete3.numeros_gratis}
-                      onChange={(e) => setPaquete3({...paquete3, numeros_gratis: e.target.value})}
+                      onChange={(e) => setPaquete3({ ...paquete3, numeros_gratis: e.target.value })}
                       min="1"
                       className="admin-input-small"
                     />
@@ -323,7 +343,7 @@ export default function CrearRifa() {
                 </div>
                 {paquete3.cantidad_compra && paquete3.numeros_gratis && (
                   <p className="admin-paquete-preview">
-                    Vista previa: Compra {paquete3.cantidad_compra} → Obtén {paquete3.numeros_gratis} gratis
+                    Compra {paquete3.cantidad_compra} → Obtén {paquete3.numeros_gratis} gratis
                   </p>
                 )}
               </div>
@@ -331,15 +351,11 @@ export default function CrearRifa() {
           )}
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="admin-button"
-        >
+        <button type="submit" disabled={loading} className="admin-button">
           {loading ? "🔄 Creando Rifa..." : "🎯 Crear Rifa"}
         </button>
       </form>
-      
+
       {message && (
         <div className={`admin-message ${message.includes("✅") ? "success" : "error"}`}>
           {message}
