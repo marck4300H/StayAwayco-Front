@@ -14,6 +14,7 @@ export default function AdminDashboard() {
         <Link to="eliminar" className="admin-nav-link">Eliminar Rifa</Link>
         <Link to="asignar-numeros" className="admin-nav-link">🎯 Asignar Números</Link>
         <Link to="sortear-rifa" className="admin-nav-link">🎲 Sortear Rifa</Link>
+        <Link to="registrar-usuario" className="admin-nav-link">📋 Registrar Usuario</Link>
       </nav>
 
       {/* Contenido dinámico */}

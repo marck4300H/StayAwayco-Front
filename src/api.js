@@ -69,3 +69,15 @@ export const obtenerGanador = async (rifaId, token) => {
   });
   return res.json();
 };
+// ========== REGISTRO MANUAL DE USUARIO ==========
+export const registrarUsuarioManual = async (datos, token) => {
+  const res = await fetch(`${API_URL}/admin/registrar-usuario`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(datos),
+  });
+  return res.json();
+};

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { asignarNumerosManual, API_URL } from "../api";
 import "../styles/asignarNumeros.css";
 
 export default function AsignarNumeros() {
+  const location = useLocation();
+
   const [rifas, setRifas] = useState([]);
   const [rifaSeleccionada, setRifaSeleccionada] = useState(null);
-  const [numeroDocumento, setNumeroDocumento] = useState("");
+  // ✅ Único cambio: se inicializa con el documento prellenado si viene desde RegistrarUsuario
+  const [numeroDocumento, setNumeroDocumento] = useState(
+    location.state?.documento_prellenado || ""
+  );
   const [cantidad, setCantidad] = useState("");
   const [notasAdmin, setNotasAdmin] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,11 +26,13 @@ export default function AsignarNumeros() {
     try {
       const res = await fetch(`${API_URL}/rifas/`);
       if (!res.ok) throw new Error("Error al obtener las rifas");
-      
+
       const data = await res.json();
-      
+
       if (data.success && data.rifas) {
-        const rifasActivas = data.rifas.filter(rifa => rifa.estado === "activa" || !rifa.estado);
+        const rifasActivas = data.rifas.filter(
+          (rifa) => rifa.estado === "activa" || !rifa.estado
+        );
         setRifas(rifasActivas);
       } else {
         mostrarMensaje("error", "Error al cargar las rifas");
@@ -58,8 +66,8 @@ export default function AsignarNumeros() {
 
     const confirmar = window.confirm(
       `¿Confirmas asignar ${cantidadNum} números al usuario con documento ${numeroDocumento}?\n\n` +
-      `Rifa: ${rifaSeleccionada.titulo}\n` +
-      `Total: $${total.toLocaleString("es-CO")}`
+        `Rifa: ${rifaSeleccionada.titulo}\n` +
+        `Total: $${total.toLocaleString("es-CO")}`
     );
 
     if (!confirmar) return;
@@ -130,9 +138,16 @@ export default function AsignarNumeros() {
 
             <div className="exito-seccion">
               <h3>Detalles</h3>
-              <p className="exito-dato">Cantidad: {resultado.cantidad_asignada} números</p>
-              <p className="exito-dato">Total: ${resultado.valor_total.toLocaleString("es-CO")}</p>
-              <p className="exito-subdato">Precio unitario: ${resultado.precio_unitario.toLocaleString("es-CO")}</p>
+              <p className="exito-dato">
+                Cantidad: {resultado.cantidad_asignada} números
+              </p>
+              <p className="exito-dato">
+                Total: ${resultado.valor_total.toLocaleString("es-CO")}
+              </p>
+              <p className="exito-subdato">
+                Precio unitario: $
+                {resultado.precio_unitario.toLocaleString("es-CO")}
+              </p>
             </div>
           </div>
 
@@ -148,19 +163,27 @@ export default function AsignarNumeros() {
           </div>
 
           <div className="exito-referencia">
-            <p><strong>Referencia:</strong> {resultado.referencia_transaccion}</p>
-            <p><strong>Asignado por:</strong> {resultado.asignado_por}</p>
-            <p><strong>Fecha:</strong> {new Date(resultado.fecha_asignacion).toLocaleString("es-CO")}</p>
+            <p>
+              <strong>Referencia:</strong> {resultado.referencia_transaccion}
+            </p>
+            <p>
+              <strong>Asignado por:</strong> {resultado.asignado_por}
+            </p>
+            <p>
+              <strong>Fecha:</strong>{" "}
+              {new Date(resultado.fecha_asignacion).toLocaleString("es-CO")}
+            </p>
           </div>
 
           <div className="exito-nota">
-            <p>📧 Se ha enviado un correo electrónico a <strong>{resultado.usuario.correo}</strong> con los detalles de la asignación.</p>
+            <p>
+              📧 Se ha enviado un correo electrónico a{" "}
+              <strong>{resultado.usuario.correo}</strong> con los detalles de
+              la asignación.
+            </p>
           </div>
 
-          <button 
-            onClick={handleNuevaAsignacion}
-            className="admin-button"
-          >
+          <button onClick={handleNuevaAsignacion} className="admin-button">
             Nueva Asignación
           </button>
         </div>
@@ -173,7 +196,8 @@ export default function AsignarNumeros() {
       <div className="admin-form-container">
         <h1 className="admin-form-title">🎯 Asignar Números Manualmente</h1>
         <p className="admin-form-subtitle">
-          Asigna números de rifa a un usuario que pagó directamente (efectivo, transferencia, etc.)
+          Asigna números de rifa a un usuario que pagó directamente (efectivo,
+          transferencia, etc.)
         </p>
 
         {mensaje.texto && (
@@ -189,7 +213,7 @@ export default function AsignarNumeros() {
               className="admin-input admin-select"
               value={rifaSeleccionada?.id || ""}
               onChange={(e) => {
-                const rifa = rifas.find(r => r.id === e.target.value);
+                const rifa = rifas.find((r) => r.id === e.target.value);
                 setRifaSeleccionada(rifa);
               }}
               required
@@ -197,7 +221,8 @@ export default function AsignarNumeros() {
               <option value="">Selecciona una rifa...</option>
               {rifas.map((rifa) => (
                 <option key={rifa.id} value={rifa.id}>
-                  {rifa.titulo} - ${rifa.precio_unitario.toLocaleString("es-CO")} c/u - Disponibles: {rifa.disponibles}
+                  {rifa.titulo} - ${rifa.precio_unitario.toLocaleString("es-CO")}{" "}
+                  c/u - Disponibles: {rifa.disponibles}
                 </option>
               ))}
             </select>
@@ -213,7 +238,9 @@ export default function AsignarNumeros() {
               onChange={(e) => setNumeroDocumento(e.target.value)}
               required
             />
-            <p className="campo-ayuda">El usuario debe estar registrado previamente en el sistema</p>
+            <p className="campo-ayuda">
+              El usuario debe estar registrado previamente en el sistema
+            </p>
           </div>
 
           <div className="form-group">
@@ -229,13 +256,21 @@ export default function AsignarNumeros() {
             />
             {rifaSeleccionada && cantidad > 0 && (
               <p className="precio-total">
-                Total a cobrar: <strong>${(rifaSeleccionada.precio_unitario * parseInt(cantidad)).toLocaleString("es-CO")}</strong>
+                Total a cobrar:{" "}
+                <strong>
+                  $
+                  {(
+                    rifaSeleccionada.precio_unitario * parseInt(cantidad)
+                  ).toLocaleString("es-CO")}
+                </strong>
               </p>
             )}
           </div>
 
           <div className="form-group">
-            <label className="admin-label">Notas u Observaciones (Opcional)</label>
+            <label className="admin-label">
+              Notas u Observaciones (Opcional)
+            </label>
             <textarea
               className="admin-input admin-textarea"
               placeholder="Ej: Pago recibido en efectivo - Validado por María"
@@ -248,7 +283,12 @@ export default function AsignarNumeros() {
           <button
             type="submit"
             className="admin-button"
-            disabled={loading || !rifaSeleccionada || !numeroDocumento.trim() || !cantidad}
+            disabled={
+              loading ||
+              !rifaSeleccionada ||
+              !numeroDocumento.trim() ||
+              !cantidad
+            }
           >
             {loading ? "Asignando Números... 🎲" : "Asignar Números 🎲"}
           </button>

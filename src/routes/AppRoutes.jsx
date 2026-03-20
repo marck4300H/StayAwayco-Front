@@ -22,6 +22,7 @@ import ResetPassword from "../pages/ResetPassword";
 import ForgotPassword from "../pages/ForgotPassword";
 import Contacto from "../pages/contacto";
 import ComoFunciona from "../pages/ComoFunciona";
+import RegistrarUsuario from "../pages/RegistrarUsuario";
 
 export default function AppRoutes() {
   return (
@@ -53,6 +54,7 @@ export default function AppRoutes() {
         <Route path="eliminar" element={<EliminarRifa />} />
         <Route path="asignar-numeros" element={<AsignarNumeros />} />
         <Route path="sortear-rifa" element={<SortearRifa />} />
+        <Route path="registrar-usuario" element={<RegistrarUsuario />} />
       </Route>
 
       {/* ✅ Redirección por defecto */}
