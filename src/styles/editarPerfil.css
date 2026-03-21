@@ -1,3 +1,5 @@
+/* ===== EDITAR PERFIL - PALETA AZUL STAYAWAY ===== */
+
 /* Fondo centrado y sin scroll horizontal */
 .editar-container {
   width: 100vw;
@@ -6,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f5f7fb 0%, #f8faff 100%);
   padding: 20px;
   overflow-x: hidden;
 }
@@ -14,73 +16,120 @@
 /* Título */
 .editar-container h2 {
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 800;
   margin-bottom: 25px;
-  color: #d4a017; /* el dorado que estás usando */
+  color: #0a369d;
   text-align: center;
+  letter-spacing: 0.5px;
 }
 
 /* Card/Formulario centrado */
 .editar-form {
-  width: 500px;        /* MÁS ANCHO */
+  width: 500px;
+  max-width: 100%;
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 30px 35px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  gap: 16px;
+  padding: 32px 32px;
+  border-radius: 20px;
+  box-shadow: 0 14px 40px rgba(10, 54, 157, 0.12);
+  border: 1px solid #cfdee7;
 }
 
 /* Labels */
 .editar-form label {
   font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: #4b5563;
 }
 
 /* Inputs */
-.editar-form input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #cccccc;
+.editar-form input,
+.editar-form select {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #cfdee7;
   font-size: 15px;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease,
+    background-color 0.25s ease;
   background-color: #ffffff;
-  color: #333;
+  color: #111827;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.editar-form input::placeholder {
+  color: #9ca3af;
 }
 
 .editar-form input:focus,
 .editar-form select:focus {
-  border-color: #d4af37;
-  box-shadow: 0 0 6px #d4af3744;
+  border-color: #4472ca;
+  box-shadow: 0 0 0 3px rgba(68, 114, 202, 0.25);
   outline: none;
+  background-color: #f9fbff;
 }
 
 /* Botón guardar */
 .btn-guardar {
-  margin-top: 10px;
-  padding: 12px;
-  background-color: #b89b2c;
+  margin-top: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, #0a369d 0%, #4472ca 100%);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 999px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: 600;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  box-shadow: 0 4px 12px rgba(184, 155, 44, 0.4);
+  font-weight: 700;
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 24px rgba(10, 54, 157, 0.3);
 }
 
 .btn-guardar:hover {
-  background-color: #8e7420;
+  background: linear-gradient(135deg, #4472ca 0%, #60a5fa 100%);
   transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(68, 114, 202, 0.4);
 }
 
+.btn-guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(10, 54, 157, 0.2);
+}
 
 /* Estilo para texto de cargando */
 .perfil-cargando {
   text-align: center;
-  font-size: 20px;
+  font-size: 1.1rem;
   padding-top: 40px;
+  color: #0a369d;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .editar-container {
+    padding: 16px;
+  }
+
+  .editar-form {
+    width: 100%;
+    padding: 28px 24px;
+  }
+
+  .editar-container h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .editar-container h2 {
+    font-size: 22px;
+  }
+
+  .editar-form {
+    padding: 24px 20px;
+  }
 }
