@@ -76,13 +76,13 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
+  border: 1.5px dashed #4472CA;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.281);
 }
 
 .paquete-card:hover {
@@ -233,13 +233,39 @@
 
 .cantidad-input {
   flex: 1;
-  padding: 12px 16px;
-  border: 2px solid #CFDEE7;
-  border-radius: 12px;
-  font-size: 1.1rem;
+  min-width: 20px;
+  height: 32px;
+  padding: 12px 42px 12px 16px;
+  border: 2px solid #111111;
+  border-radius: 18px;
+  color: #000000;
+  background-color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 200;
   text-align: center;
-  max-width: 120px;
+  line-height: 1;
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
+
+.cantidad-input:hover,
+.cantidad-input:focus {
+  border-color: #111111;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(68, 114, 202, 0.15);
+}
+
+/* Hace más visible el espacio de los controles en navegadores WebKit */
+.cantidad-input::-webkit-outer-spin-button,
+.cantidad-input::-webkit-inner-spin-button {
+  opacity: 1;
+  height: 30px;
+  margin: 0;
+  cursor: pointer;
+}
+
 
 .total-preview {
   font-weight: 700;

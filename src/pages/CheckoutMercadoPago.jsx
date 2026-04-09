@@ -3,6 +3,140 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../api";
 import "../styles/checkout.css";
 
+const departamentosColombia = [
+  "Amazonas",
+  "Antioquia",
+  "Arauca",
+  "Atlántico",
+  "Bolívar",
+  "Boyacá",
+  "Caldas",
+  "Caquetá",
+  "Casanare",
+  "Cauca",
+  "Cesar",
+  "Chocó",
+  "Córdoba",
+  "Cundinamarca",
+  "Guainía",
+  "Guaviare",
+  "Huila",
+  "La Guajira",
+  "Magdalena",
+  "Meta",
+  "Nariño",
+  "Norte de Santander",
+  "Putumayo",
+  "Quindío",
+  "Risaralda",
+  "San Andrés y Providencia",
+  "Santander",
+  "Sucre",
+  "Tolima",
+  "Valle del Cauca",
+  "Vaupés",
+  "Vichada"
+];
+
+const municipiosPorDepartamento = {
+  Amazonas: ["Leticia", "Puerto Nariño"],
+  Antioquia: [
+    "Medellín",
+    "Bello",
+    "Itagüí",
+    "Envigado",
+    "Sabaneta",
+    "Rionegro",
+    "La Ceja",
+    "Apartadó",
+    "Turbo",
+    "Santa Fe de Antioquia"
+  ],
+  Arauca: ["Arauca", "Arauquita", "Saravena", "Tame"],
+  Atlántico: [
+    "Barranquilla",
+    "Soledad",
+    "Malambo",
+    "Sabanalarga",
+    "Galapa",
+    "Puerto Colombia",
+    "Baranoa",
+    "Santo Tomás"
+  ],
+  Bolívar: [
+    "Cartagena",
+    "Magangué",
+    "Turbaco",
+    "Arjona",
+    "El Carmen de Bolívar",
+    "Mompós"
+  ],
+  Boyacá: [
+    "Tunja",
+    "Duitama",
+    "Sogamoso",
+    "Chiquinquirá",
+    "Paipa",
+    "Villa de Leyva"
+  ],
+  Caldas: ["Manizales", "La Dorada", "Chinchiná", "Villamaría", "Riosucio"],
+  Caquetá: ["Florencia", "San Vicente del Caguán", "Morelia", "Belén de los Andaquíes"],
+  Casanare: ["Yopal", "Aguazul", "Villanueva", "Monterrey", "Paz de Ariporo"],
+  Cauca: ["Popayán", "Santander de Quilichao", "Puerto Tejada", "Patía", "Piendamó"],
+  Cesar: ["Valledupar", "Aguachica", "Codazzi", "Bosconia", "Curumaní"],
+  Chocó: ["Quibdó", "Istmina", "Condoto", "Tadó", "Bahía Solano"],
+  Córdoba: ["Montería", "Cereté", "Lorica", "Sahagún", "Planeta Rica"],
+  Cundinamarca: [
+    "Bogotá",
+    "Soacha",
+    "Chía",
+    "Zipaquirá",
+    "Facatativá",
+    "Mosquera",
+    "Madrid",
+    "Funza",
+    "Fusagasugá",
+    "Girardot",
+    "Cajicá"
+  ],
+  Guainía: ["Inírida"],
+  Guaviare: ["San José del Guaviare", "Calamar", "El Retorno"],
+  Huila: ["Neiva", "Pitalito", "Garzón", "La Plata", "Campoalegre"],
+  "La Guajira": ["Riohacha", "Maicao", "Uribia", "San Juan del Cesar", "Fonseca"],
+  Magdalena: ["Santa Marta", "Ciénaga", "Fundación", "Aracataca", "El Banco"],
+  Meta: ["Villavicencio", "Acacías", "Granada", "Puerto López", "Restrepo"],
+  Nariño: ["Pasto", "Ipiales", "Tumaco", "Túquerres", "La Unión"],
+  "Norte de Santander": ["Cúcuta", "Ocaña", "Villa del Rosario", "Los Patios", "Pamplona"],
+  Putumayo: ["Mocoa", "Puerto Asís", "Orito", "Sibundoy", "Valle del Guamuez"],
+  Quindío: ["Armenia", "Calarcá", "La Tebaida", "Montenegro", "Quimbaya"],
+  Risaralda: ["Pereira", "Dosquebradas", "Santa Rosa de Cabal", "La Virginia"],
+  "San Andrés y Providencia": ["San Andrés", "Providencia"],
+  Santander: [
+    "Bucaramanga",
+    "Floridablanca",
+    "Girón",
+    "Piedecuesta",
+    "Barrancabermeja",
+    "San Gil",
+    "Socorro"
+  ],
+  Sucre: ["Sincelejo", "Corozal", "Sampués", "San Marcos", "Tolú"],
+  Tolima: ["Ibagué", "Espinal", "Melgar", "Honda", "Líbano"],
+  "Valle del Cauca": [
+    "Cali",
+    "Palmira",
+    "Buenaventura",
+    "Tuluá",
+    "Buga",
+    "Cartago",
+    "Jamundí",
+    "Yumbo",
+    "Candelaria"
+  ],
+  Vaupés: ["Mitú"],
+  Vichada: ["Puerto Carreño"]
+};
+
 export default function CheckoutMercadoPago() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,18 +154,21 @@ export default function CheckoutMercadoPago() {
     tipo_documento: "CC",
     numero_documento: "",
     direccion: "",
-    ciudad: "",
+    municipio: "",
     departamento: ""
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
-    setUsuario({
-      ...usuario,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    setUsuario((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "departamento" ? { municipio: "" } : {})
+    }));
   };
 
   const validarFormulario = () => {
@@ -39,16 +176,29 @@ export default function CheckoutMercadoPago() {
       setError("El nombre es obligatorio");
       return false;
     }
+
     if (!usuario.apellidos.trim()) {
       setError("Los apellidos son obligatorios");
       return false;
     }
+
     if (!usuario.correo_electronico.trim() || !/\S+@\S+\.\S+/.test(usuario.correo_electronico)) {
       setError("Ingresa un correo electrónico válido");
       return false;
     }
+
     if (!usuario.numero_documento.trim()) {
       setError("El número de documento es obligatorio");
+      return false;
+    }
+
+    if (!usuario.departamento.trim()) {
+      setError("El departamento es obligatorio");
+      return false;
+    }
+
+    if (!usuario.municipio.trim()) {
+      setError("El municipio es obligatorio");
       return false;
     }
 
@@ -62,16 +212,16 @@ export default function CheckoutMercadoPago() {
 
   const handlePagar = async () => {
     setError("");
-    
+
     if (!validarFormulario()) {
       return;
     }
 
     try {
       setLoading(true);
-      
+
       const total = cantidad * precioUnitario;
-      
+
       console.log("📤 Enviando datos al backend:", {
         rifaId: rifa.id,
         cantidad: cantidad,
@@ -104,23 +254,25 @@ export default function CheckoutMercadoPago() {
       if (data.success && data.init_point) {
         console.log("🔗 Redirigiendo a Mercado Pago:", data.init_point);
         console.log("📦 Datos de la transacción:", data.transaccion);
-        
-        sessionStorage.setItem('ultimaTransaccion', JSON.stringify({
-          referencia: data.transaccion.referencia,
-          rifaId: rifa.id,
-          rifaTitulo: rifa.titulo,
-          cantidad: cantidad,
-          total: total,
-          precioUnitario: precioUnitario,
-          cantidadMinima: cantidadMinima,
-          correo: usuario.correo_electronico
-        }));
+
+        sessionStorage.setItem(
+          "ultimaTransaccion",
+          JSON.stringify({
+            referencia: data.transaccion.referencia,
+            rifaId: rifa.id,
+            rifaTitulo: rifa.titulo,
+            cantidad: cantidad,
+            total: total,
+            precioUnitario: precioUnitario,
+            cantidadMinima: cantidadMinima,
+            correo: usuario.correo_electronico
+          })
+        );
 
         window.location.href = data.init_point;
       } else {
         throw new Error("No se pudo generar el link de pago");
       }
-
     } catch (err) {
       console.error("❌ Error en el pago:", err);
       setError(err.message || "Error al procesar el pago");
@@ -143,11 +295,13 @@ export default function CheckoutMercadoPago() {
   }
 
   const total = cantidad * precioUnitario;
+  const municipiosDisponibles =
+    municipiosPorDepartamento[usuario.departamento] || [];
 
   return (
     <div className="checkout-container">
       <h1>Finalizar Compra</h1>
-      
+
       {error && <div className="error-message">{error}</div>}
 
       <div className="checkout-layout">
@@ -173,7 +327,7 @@ export default function CheckoutMercadoPago() {
           </div>
 
           <div className="modificar-cantidad">
-            <button 
+            <button
               onClick={() => navigate(-1)}
               className="btn-modificar"
             >
@@ -188,7 +342,7 @@ export default function CheckoutMercadoPago() {
           <p className="form-info-secundario">
             Si ya tienes cuenta, se actualizarán tus datos. Si no, tu cuenta se creará automáticamente.
           </p>
-          
+
           <div className="form-grid">
             <div className="form-group">
               <label>Nombres *</label>
@@ -276,38 +430,55 @@ export default function CheckoutMercadoPago() {
             </div>
 
             <div className="form-group">
-              <label>Ciudad</label>
-              <input
-                type="text"
-                name="ciudad"
-                value={usuario.ciudad}
-                onChange={handleInputChange}
-                placeholder="Bogotá"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Departamento</label>
-              <input
-                type="text"
+              <label>Departamento *</label>
+              <select
                 name="departamento"
                 value={usuario.departamento}
                 onChange={handleInputChange}
-                placeholder="Cundinamarca"
-              />
+                required
+              >
+                <option value="">Selecciona un departamento</option>
+                {departamentosColombia.map((departamento) => (
+                  <option key={departamento} value={departamento}>
+                    {departamento}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Municipio *</label>
+              <select
+                name="municipio"
+                value={usuario.municipio}
+                onChange={handleInputChange}
+                required
+                disabled={!usuario.departamento}
+              >
+                <option value="">
+                  {usuario.departamento
+                    ? "Selecciona un municipio"
+                    : "Primero elige un departamento"}
+                </option>
+                {municipiosDisponibles.map((municipio) => (
+                  <option key={municipio} value={municipio}>
+                    {municipio}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
           <div className="acciones-checkout">
-            <button 
+            <button
               onClick={handlePagar}
               disabled={loading || cantidad < cantidadMinima}
               className="btn-pagar"
             >
               {loading ? "Procesando..." : `Pagar $${total.toLocaleString()}`}
             </button>
-            
-            <button 
+
+            <button
               onClick={() => navigate(-1)}
               disabled={loading}
               className="btn-cancelar"
