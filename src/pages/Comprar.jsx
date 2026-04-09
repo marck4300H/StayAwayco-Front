@@ -8,14 +8,17 @@ export default function Comprar() {
   const rifa = location.state?.rifa;
 
   const precioUnitario = rifa?.precio_unitario || 1000;
-  const cantidadMinima = rifa?.cantidad_minima || 5;
+  const cantidadMinima = rifa?.cantidad_minima || 50;
   const disponibles = rifa?.disponibles || 0;
 
-  const [cantidad, setCantidad] = useState(cantidadMinima);
+  const [cantidad, setCantidad] = useState(String(cantidadMinima));
   const [error, setError] = useState("");
 
   const [timeLeft, setTimeLeft] = useState({
-    dias: "00", horas: "00", mins: "00", segs: "00",
+    dias: "00",
+    horas: "00",
+    mins: "00",
+    segs: "00",
   });
 
   const tienePaquetes = !!rifa?.paquetes_promocion;
@@ -24,6 +27,7 @@ export default function Comprar() {
     if (tienePaquetes) {
       const paquetesRaw = rifa.paquetes_promocion;
       const lista = [];
+
       ["paquete1", "paquete2", "paquete3"].forEach((key) => {
         const p = paquetesRaw[key];
         if (p && p.cantidad_compra > 0 && p.numeros_gratis > 0) {
@@ -34,6 +38,7 @@ export default function Comprar() {
           });
         }
       });
+
       lista.sort((a, b) => a.cantidad - b.cantidad);
       return lista;
     }
@@ -57,17 +62,22 @@ export default function Comprar() {
     return paquetes.find((p) => p.cantidad === cant) || null;
   };
 
-  const paqueteAplicado = getPaqueteAplicado(cantidad);
+  const cantidadNumero = Number(cantidad) || 0;
+  const paqueteAplicado = getPaqueteAplicado(cantidadNumero);
 
   useEffect(() => {
     if (!rifa?.fecha_sorteo) return;
+
     const targetDate = new Date(rifa.fecha_sorteo).getTime();
+
     const update = () => {
       const diff = targetDate - Date.now();
+
       if (diff <= 0) {
         setTimeLeft({ dias: "00", horas: "00", mins: "00", segs: "00" });
         return;
       }
+
       setTimeLeft({
         dias: String(Math.floor(diff / 86400000)).padStart(2, "0"),
         horas: String(Math.floor((diff / 3600000) % 24)).padStart(2, "0"),
@@ -75,39 +85,79 @@ export default function Comprar() {
         segs: String(Math.floor((diff / 1000) % 60)).padStart(2, "0"),
       });
     };
+
     update();
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
   }, [rifa]);
 
   const handleCantidadChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= cantidadMinima) {
+    const value = e.target.value;
+
+    if (value === "") {
+      setCantidad("");
+      setError("");
+      return;
+    }
+
+    if (/^\d+$/.test(value)) {
       setCantidad(value);
       setError("");
-    } else {
-      setError(`La cantidad mínima es ${cantidadMinima} números.`);
     }
+  };
+
+  const handleCantidadBlur = () => {
+    if (cantidad === "") {
+      setCantidad(String(cantidadMinima));
+      setError(`La cantidad mínima es ${cantidadMinima} números.`);
+      return;
+    }
+
+    const value = Number(cantidad);
+
+    if (value < cantidadMinima) {
+      setCantidad(String(cantidadMinima));
+      setError(`La cantidad mínima es ${cantidadMinima} números.`);
+      return;
+    }
+
+    if (value > disponibles && disponibles > 0) {
+      setCantidad(String(disponibles));
+      setError(`Solo hay ${disponibles} números disponibles.`);
+      return;
+    }
+
+    setError("");
   };
 
   const handlePaqueteClick = (cantidadPaquete) => {
     if (cantidadPaquete <= disponibles) {
-      setCantidad(cantidadPaquete);
+      setCantidad(String(cantidadPaquete));
       setError("");
     }
   };
 
   const handleContinuar = () => {
     setError("");
-    if (cantidad < cantidadMinima) {
+
+    const cantidadFinal = Number(cantidad);
+
+    if (!cantidad || isNaN(cantidadFinal)) {
       setError(`La cantidad mínima es ${cantidadMinima} números.`);
       return;
     }
-    if (cantidad > disponibles) {
+
+    if (cantidadFinal < cantidadMinima) {
+      setError(`La cantidad mínima es ${cantidadMinima} números.`);
+      return;
+    }
+
+    if (cantidadFinal > disponibles) {
       setError(`Solo hay ${disponibles} números disponibles.`);
       return;
     }
-    navigate("/checkout", { state: { rifa, cantidad } });
+
+    navigate("/checkout", { state: { rifa, cantidad: cantidadFinal } });
   };
 
   if (!rifa) {
@@ -119,18 +169,23 @@ export default function Comprar() {
     );
   }
 
-  const total = cantidad * precioUnitario;
+  const total = cantidadNumero * precioUnitario;
 
   return (
     <div className="comprar-container">
       {/* Header rifa */}
       <div className="rifa-header">
-        <img src={rifa.imagen_url} alt={rifa.titulo} className="rifa-img-header" />
+        <img
+          src={rifa.imagen_url}
+          alt={rifa.titulo}
+          className="rifa-img-header"
+        />
         <div className="rifa-info-header">
           <h1 className="rifa-titulo">{rifa.titulo}</h1>
           <p className="rifa-desc-header">{rifa.descripcion}</p>
           <div className="rifa-stats-header">
-            Precio: ${precioUnitario.toLocaleString()} c/u | Mín: {cantidadMinima} números
+            Precio: ${precioUnitario.toLocaleString()} c/u | Mín:{" "}
+            {cantidadMinima} números
           </div>
         </div>
       </div>
@@ -158,10 +213,13 @@ export default function Comprar() {
             </div>
           </div>
         </div>
+
         <div className="sorteo-status-right">
           <div className="sorteo-status-header">
             <span className="sorteo-status-title">Estado del Sorteo</span>
-            <span className="sorteo-status-percent">{rifa.porcentaje || 0}%</span>
+            <span className="sorteo-status-percent">
+              {rifa.porcentaje || 0}%
+            </span>
           </div>
           <div className="sorteo-status-bar-wrapper">
             <div className="sorteo-status-bar">
@@ -182,33 +240,32 @@ export default function Comprar() {
 
         {tienePaquetes && (
           <div className="paquetes-promo-banner">
-            🎁 <strong>¡Esta rifa tiene números gratis!</strong> Compra exactamente un paquete y recibe números adicionales sin costo.
+            🎁 <strong>¡Esta rifa tiene números gratis!</strong> Compra
+            exactamente un paquete y recibe números adicionales sin costo.
           </div>
         )}
 
         <div className="paquetes-grid">
           {paquetes.map((paquete, index) => {
             const esPopular = index === indexPopular;
-            const estaActivo = cantidad === paquete.cantidad;
+            const estaActivo = cantidadNumero === paquete.cantidad;
 
             return (
               <div
                 key={index}
-                className={`paquete-card ${esPopular ? "popular" : ""} ${estaActivo ? "active" : ""}`}
+                className={`paquete-card ${esPopular ? "popular" : ""} ${
+                  estaActivo ? "active" : ""
+                }`}
                 onClick={() => handlePaqueteClick(paquete.cantidad)}
               >
                 {esPopular && <div className="paquete-popular">POPULAR</div>}
 
-                {/* ✅ Solo precio y cantidad — sin texto extra */}
                 <div className="paquete-precio">
                   ${paquete.precio.toLocaleString()}
                 </div>
 
-                <div className="paquete-sub">
-                  {paquete.cantidad} números
-                </div>
+                <div className="paquete-sub">{paquete.cantidad} números</div>
 
-                {/* Solo mostrar gratis si aplica */}
                 {tienePaquetes && paquete.gratis > 0 && (
                   <div className="feature-gratis">
                     🎁 +{paquete.gratis} gratis
@@ -228,16 +285,19 @@ export default function Comprar() {
             type="number"
             value={cantidad}
             onChange={handleCantidadChange}
+            onBlur={handleCantidadBlur}
             min={cantidadMinima}
             max={disponibles}
             className="cantidad-input"
           />
-          <span className="total-preview">Total: ${total.toLocaleString()}</span>
+          <span className="total-preview">
+            Total: ${total.toLocaleString()}
+          </span>
         </div>
 
         {tienePaquetes && paqueteAplicado && (
           <div className="paquete-aplicado-preview">
-            🎁 Comprando exactamente {cantidad} números recibirás{" "}
+            🎁 Comprando exactamente {cantidadNumero} números recibirás{" "}
             <strong>+{paqueteAplicado.gratis} gratis</strong>
           </div>
         )}
@@ -248,7 +308,11 @@ export default function Comprar() {
         <button
           className="btn-comprar-principal"
           onClick={handleContinuar}
-          disabled={cantidad < cantidadMinima || cantidad > disponibles}
+          disabled={
+            !cantidad ||
+            cantidadNumero < cantidadMinima ||
+            cantidadNumero > disponibles
+          }
         >
           Continuar al Pago — ${total.toLocaleString()}
         </button>
