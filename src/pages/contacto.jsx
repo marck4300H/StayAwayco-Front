@@ -31,15 +31,15 @@ const Contacto = () => {
 
           <div className="contacto-item">
             <span className="contacto-label">Correo electrónico</span>
-            <a href="mailto:contacto@stayaway.co" className="contacto-value">
-              contacto@stayaway.co
+            <a href="mailto:stayaway.col@gmail.com" className="contacto-value">
+              stayaway.col@gmail.com
             </a>
           </div>
 
           <div className="contacto-item">
             <span className="contacto-label">Ubicación</span>
             <p className="contacto-value">
-              Viges, Valle del Cauca, Colombia
+              Vijes, Valle del Cauca, Colombia
             </p>
           </div>
 

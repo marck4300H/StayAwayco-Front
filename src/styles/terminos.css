@@ -1,0 +1,319 @@
+/* ===== TÉRMINOS Y CONDICIONES — STAYAWAY RIFAS ===== */
+
+.terminos-container {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fb;
+  font-family: inherit;
+}
+
+/* ── HERO ── */
+.terminos-hero {
+  background: linear-gradient(135deg, #0a369d 0%, #4472ca 100%);
+  padding: 56px 20px 48px;
+  text-align: center;
+}
+
+.terminos-hero-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.terminos-hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 16px;
+}
+
+.terminos-hero-titulo {
+  font-size: clamp(26px, 5vw, 42px);
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+
+.terminos-hero-subtitulo {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 20px;
+}
+
+.terminos-hero-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.terminos-sep {
+  opacity: 0.5;
+}
+
+/* ── AVISO IMPORTANTE ── */
+.terminos-aviso {
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  padding: 16px 20px;
+}
+
+.terminos-aviso-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.terminos-aviso-icono {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.terminos-aviso p {
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+  max-width: 100%;
+}
+
+.terminos-aviso strong {
+  color: #78350f;
+}
+
+/* ── ÍNDICE ── */
+.terminos-indice-wrapper {
+  max-width: 860px;
+  margin: 32px auto 0;
+  padding: 0 20px;
+}
+
+.terminos-indice {
+  background: #ffffff;
+  border: 1px solid #cfdee7;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 16px rgba(10, 54, 157, 0.07);
+}
+
+.terminos-indice-titulo {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #0a369d;
+  margin-bottom: 14px;
+}
+
+.terminos-indice ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 6px 24px;
+  padding: 0;
+  margin: 0;
+}
+
+.terminos-indice ul li a {
+  font-size: 14px;
+  color: #374151;
+  text-decoration: none;
+  display: block;
+  padding: 5px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  font-weight: 500;
+}
+
+.terminos-indice ul li a:hover {
+  color: #0a369d;
+  border-bottom-color: #cfdee7;
+}
+
+/* ── SECCIONES ACORDEÓN ── */
+.terminos-secciones {
+  max-width: 860px;
+  margin: 28px auto 40px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.terminos-seccion {
+  background: #ffffff;
+  border: 1.5px solid #cfdee7;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(10, 54, 157, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  scroll-margin-top: 80px;
+}
+
+.terminos-seccion.abierta {
+  border-color: #4472ca;
+  box-shadow: 0 6px 24px rgba(10, 54, 157, 0.1);
+}
+
+.terminos-seccion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease;
+}
+
+.terminos-seccion-header:hover {
+  background: #f0f4ff;
+}
+
+.terminos-seccion.abierta .terminos-seccion-header {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8effe 100%);
+  border-bottom: 1px solid #cfdee7;
+}
+
+.terminos-seccion-icono {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.terminos-seccion-titulo {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0a369d;
+  line-height: 1.3;
+}
+
+.terminos-chevron {
+  font-size: 11px;
+  color: #4472ca;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.terminos-chevron.girado {
+  transform: rotate(180deg);
+}
+
+/* ── Cuerpo del acordeón ── */
+.terminos-seccion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.terminos-seccion-body.visible {
+  max-height: 1200px;
+}
+
+.terminos-seccion-contenido {
+  padding: 22px 26px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.terminos-seccion-contenido p {
+  font-size: 14.5px;
+  color: #374151;
+  line-height: 1.75;
+  max-width: 100%;
+}
+
+.terminos-bullet {
+  padding-left: 12px;
+  border-left: 3px solid #cfdee7;
+  color: #4b5563 !important;
+  font-size: 14px !important;
+}
+
+.terminos-subseccion {
+  font-weight: 700 !important;
+  color: #0a369d !important;
+  font-size: 14px !important;
+  margin-top: 8px;
+}
+
+/* ── FOOTER ── */
+.terminos-footer {
+  background: linear-gradient(135deg, #0a369d 0%, #4472ca 100%);
+  padding: 40px 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.terminos-footer-inner {
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+.terminos-footer-logo {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.terminos-footer-texto {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.terminos-footer-legal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .terminos-hero {
+    padding: 40px 16px 36px;
+  }
+
+  .terminos-indice ul {
+    grid-template-columns: 1fr;
+  }
+
+  .terminos-seccion-header {
+    padding: 14px 16px;
+  }
+
+  .terminos-seccion-contenido {
+    padding: 16px 18px 20px;
+  }
+
+  .terminos-hero-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .terminos-sep {
+    display: none;
+  }
+}

@@ -23,6 +23,7 @@ import ForgotPassword from "../pages/ForgotPassword";
 import Contacto from "../pages/contacto";
 import ComoFunciona from "../pages/ComoFunciona";
 import RegistrarUsuario from "../pages/RegistrarUsuario";
+import TerminosCondiciones from "../pages/TerminosCondiciones";
 
 export default function AppRoutes() {
   return (
@@ -43,6 +44,7 @@ export default function AppRoutes() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/como-funciona" element={<ComoFunciona />} />
+        <Route path="/terminos" element={<TerminosCondiciones />} />
       </Route>
 
       {/* ✅ Rutas de administrador (fuera del Layout) */}
