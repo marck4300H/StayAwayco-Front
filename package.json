@@ -13,7 +13,11 @@
     "@mercadopago/sdk-js": "^0.0.3",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
+<<<<<<< HEAD
     "lucide-react": "^1.7.0",
+=======
+    "jspdf": "^4.2.1",
+>>>>>>> fca2d80ef741556b45f98aa229a4e8b3275d3cb7
     "mercadopago": "^2.10.0",
     "multer": "^2.0.2",
     "react": "^19.2.0",

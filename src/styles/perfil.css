@@ -252,3 +252,58 @@
     font-size: 0.9rem;
   }
 }
+/* ── Cabecera del grupo rifa ── */
+.rifa-grupo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* ── Texto de números ocultos ── */
+.rifa-info-ocultos {
+  color: #6c757d;
+  font-weight: normal;
+  font-size: 0.88rem;
+}
+
+/* ── Botón Ver todos / colapsar ── */
+.btn-ver-todos {
+  margin-top: 12px;
+  background: none;
+  border: 1.5px solid #4472CA;
+  color: #4472CA;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.btn-ver-todos:hover {
+  background: #4472CA;
+  color: #fff;
+}
+
+/* ── Botón descargar PDF ── */
+.btn-descargar-pdf {
+  background: #0A369D;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, opacity 0.18s;
+  white-space: nowrap;
+}
+.btn-descargar-pdf:hover {
+  background: #4472CA;
+}
+.btn-descargar-pdf:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

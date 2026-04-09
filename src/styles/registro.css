@@ -1,6 +1,5 @@
 /* ===== REGISTRO CON NUEVA PALETA AZUL (MATCH LOGIN) ===== */
 
-/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -14,25 +13,23 @@ body {
   background: #f5f7fb;
 }
 
-/* Contenedor principal */
 .register-container {
   width: 100vw;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #f8faff 0%, #CFDEE7 100%);
+  background: linear-gradient(135deg, #f8faff 0%, #cfdee7 100%);
   padding: 20px;
 }
 
-/* Tarjeta */
 .register-card {
   width: 440px;
   max-width: 100%;
   padding: 32px;
   border-radius: 20px;
   background: #ffffff;
-  border: 1px solid #CFDEE7;
+  border: 1px solid #cfdee7;
   box-shadow: 0 14px 40px rgba(10, 54, 157, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -42,23 +39,27 @@ body {
   box-shadow: 0 22px 60px rgba(10, 54, 157, 0.2);
 }
 
-/* Título */
 .register-title {
   text-align: center;
   font-size: 26px;
-  margin-bottom: 24px;
-  color: #0A369D;
+  margin-bottom: 6px;
+  color: #0a369d;
   font-weight: 800;
 }
 
-/* Formulario */
+.register-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
 .register-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-/* Campos */
 .register-field {
   display: flex;
   flex-direction: column;
@@ -75,31 +76,71 @@ body {
 .register-field select {
   padding: 12px;
   border-radius: 12px;
-  border: 1.5px solid #CFDEE7;
+  border: 1.5px solid #cfdee7;
   background: #ffffff;
   font-size: 15px;
   transition: border-color 0.25s ease, box-shadow 0.25s ease,
     background-color 0.25s ease;
   color: #111827;
+  width: 100%;
 }
 
 .register-field input::placeholder {
   color: #9ca3af;
 }
 
-/* Focus */
 .register-field input:focus,
 .register-field select:focus {
-  border-color: #4472CA;
+  border-color: #4472ca;
   box-shadow: 0 0 0 3px rgba(68, 114, 202, 0.25);
   outline: none;
   background-color: #f9fbff;
 }
 
-/* Botón */
+/* ── Wrapper contraseña ── */
+.register-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.register-password-wrapper input {
+  padding-right: 44px;
+}
+
+/* ── Botón ojito ── */
+.register-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+  line-height: 0;
+}
+
+.register-eye-btn:hover {
+  color: #4472ca;
+}
+
+.register-eye-btn svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+/* ── Botón submit ── */
 .register-button {
   padding: 12px;
-  background: linear-gradient(135deg, #0A369D 0%, #4472CA 100%);
+  background: linear-gradient(135deg, #0a369d 0%, #4472ca 100%);
   color: #ffffff;
   border: none;
   border-radius: 999px;
@@ -107,18 +148,23 @@ body {
   font-weight: 700;
   cursor: pointer;
   margin-top: 6px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease,
-    background 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   box-shadow: 0 10px 24px rgba(10, 54, 157, 0.3);
 }
 
 .register-button:hover {
-  background: linear-gradient(135deg, #4472CA 0%, #60a5fa 100%);
+  background: linear-gradient(135deg, #4472ca 0%, #60a5fa 100%);
   transform: translateY(-2px);
   box-shadow: 0 14px 32px rgba(68, 114, 202, 0.4);
 }
 
-/* Select visible (para el tipo de documento) */
+.register-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Select ── */
 .select-visible {
   background-color: #ffffff;
   color: #111827;
@@ -129,7 +175,7 @@ body {
   color: #000000;
 }
 
-/* Responsive */
+/* ── Responsive ── */
 @media (max-width: 480px) {
   .register-card {
     width: 100%;
