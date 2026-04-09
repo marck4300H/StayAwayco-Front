@@ -401,7 +401,6 @@ export default function CheckoutMercadoPago() {
               >
                 <option value="CC">Cédula de Ciudadanía</option>
                 <option value="CE">Cédula de Extranjería</option>
-                <option value="TI">Tarjeta de Identidad</option>
                 <option value="PA">Pasaporte</option>
               </select>
             </div>

@@ -264,12 +264,6 @@ export default function Home() {
                 />
               </div>
             </div>
-
-            <p className="sorteo-status-note">
-              ¡Casi agotado! Solo queda el{" "}
-              {Math.max(0, 100 - (rifas[0].porcentaje || 0))}% de los boletos
-              disponibles.
-            </p>
           </div>
         </section>
       )}

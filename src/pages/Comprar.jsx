@@ -171,9 +171,6 @@ export default function Comprar() {
               />
             </div>
           </div>
-          <p className="sorteo-status-note">
-            ¡Casi agotado! Solo queda el {Math.max(0, 100 - (rifa.porcentaje || 0))}% de los boletos disponibles.
-          </p>
         </div>
       </section>
 
@@ -236,7 +233,6 @@ export default function Comprar() {
             className="cantidad-input"
           />
           <span className="total-preview">Total: ${total.toLocaleString()}</span>
-          <small>Disponibles: {disponibles}</small>
         </div>
 
         {tienePaquetes && paqueteAplicado && (
