@@ -2,17 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/comprar.css";
 
+
 export default function Comprar() {
   const navigate = useNavigate();
   const location = useLocation();
   const rifa = location.state?.rifa;
 
+
   const precioUnitario = rifa?.precio_unitario || 1000;
   const cantidadMinima = rifa?.cantidad_minima || 50;
   const disponibles = rifa?.disponibles || 0;
 
+
   const [cantidad, setCantidad] = useState(String(cantidadMinima));
   const [error, setError] = useState("");
+
 
   const [timeLeft, setTimeLeft] = useState({
     dias: "00",
@@ -21,7 +25,9 @@ export default function Comprar() {
     segs: "00",
   });
 
+
   const tienePaquetes = !!rifa?.paquetes_promocion;
+
 
   const buildPaquetes = () => {
     if (tienePaquetes) {
@@ -54,16 +60,27 @@ export default function Comprar() {
     }));
   };
 
+
   const paquetes = buildPaquetes();
   const indexPopular = 1;
+
 
   const getPaqueteAplicado = (cant) => {
     if (!tienePaquetes) return null;
     return paquetes.find((p) => p.cantidad === cant) || null;
   };
 
+
   const cantidadNumero = Number(cantidad) || 0;
   const paqueteAplicado = getPaqueteAplicado(cantidadNumero);
+
+  // ✅ Lógica del botón: deshabilitado si no cumple mínimo o supera disponibles
+  const botonDeshabilitado =
+    !cantidad ||
+    cantidadNumero <= 0 ||
+    cantidadNumero < cantidadMinima ||
+    (disponibles > 0 && cantidadNumero > disponibles);
+
 
   useEffect(() => {
     if (!rifa?.fecha_sorteo) return;
@@ -91,6 +108,7 @@ export default function Comprar() {
     return () => clearInterval(id);
   }, [rifa]);
 
+
   const handleCantidadChange = (e) => {
     const value = e.target.value;
 
@@ -101,34 +119,32 @@ export default function Comprar() {
     }
 
     if (/^\d+$/.test(value)) {
+      const num = Number(value);
+      if (num < 0) return;
       setCantidad(value);
       setError("");
     }
   };
 
+
   const handleCantidadBlur = () => {
+    // Al salir del input vacío restaura el mínimo
     if (cantidad === "") {
       setCantidad(String(cantidadMinima));
-      setError(`La cantidad mínima es ${cantidadMinima} números.`);
+      setError("");
       return;
     }
 
+    // Al superar disponibles muestra error informativo pero no corrige
     const value = Number(cantidad);
-
-    if (value < cantidadMinima) {
-      setCantidad(String(cantidadMinima));
-      setError(`La cantidad mínima es ${cantidadMinima} números.`);
-      return;
-    }
-
     if (value > disponibles && disponibles > 0) {
-      setCantidad(String(disponibles));
       setError(`Solo hay ${disponibles} números disponibles.`);
       return;
     }
 
     setError("");
   };
+
 
   const handlePaqueteClick = (cantidadPaquete) => {
     if (cantidadPaquete <= disponibles) {
@@ -137,28 +153,12 @@ export default function Comprar() {
     }
   };
 
+
   const handleContinuar = () => {
-    setError("");
-
     const cantidadFinal = Number(cantidad);
-
-    if (!cantidad || isNaN(cantidadFinal)) {
-      setError(`La cantidad mínima es ${cantidadMinima} números.`);
-      return;
-    }
-
-    if (cantidadFinal < cantidadMinima) {
-      setError(`La cantidad mínima es ${cantidadMinima} números.`);
-      return;
-    }
-
-    if (cantidadFinal > disponibles) {
-      setError(`Solo hay ${disponibles} números disponibles.`);
-      return;
-    }
-
     navigate("/checkout", { state: { rifa, cantidad: cantidadFinal } });
   };
+
 
   if (!rifa) {
     return (
@@ -169,7 +169,9 @@ export default function Comprar() {
     );
   }
 
+
   const total = cantidadNumero * precioUnitario;
+
 
   return (
     <div className="comprar-container">
@@ -189,6 +191,7 @@ export default function Comprar() {
           </div>
         </div>
       </div>
+
 
       {/* Bloque estado del sorteo */}
       <section className="sorteo-status comprar-status">
@@ -232,7 +235,9 @@ export default function Comprar() {
         </div>
       </section>
 
+
       {error && <div className="error-message">{error}</div>}
+
 
       {/* ─── PAQUETES ─── */}
       <section className="paquetes-section">
@@ -277,6 +282,7 @@ export default function Comprar() {
         </div>
       </section>
 
+
       {/* Cantidad personalizada */}
       <div className="cantidad-personalizada">
         <label>O cantidad personalizada (mín {cantidadMinima})</label>
@@ -286,8 +292,6 @@ export default function Comprar() {
             value={cantidad}
             onChange={handleCantidadChange}
             onBlur={handleCantidadBlur}
-            min={cantidadMinima}
-            max={disponibles}
             className="cantidad-input"
           />
           <span className="total-preview">
@@ -303,20 +307,21 @@ export default function Comprar() {
         )}
       </div>
 
+
       {/* Botón continuar */}
       <div className="acciones-comprar">
+        {/* ✅ Botón deshabilitado reactivamente según la cantidad */}
         <button
           className="btn-comprar-principal"
           onClick={handleContinuar}
-          disabled={
-            !cantidad ||
-            cantidadNumero < cantidadMinima ||
-            cantidadNumero > disponibles
-          }
+          disabled={botonDeshabilitado}
         >
-          Continuar al Pago — ${total.toLocaleString()}
+          {botonDeshabilitado
+            ? `Mínimo ${cantidadMinima} números`
+            : `Continuar al Pago — $${total.toLocaleString()}`}
         </button>
       </div>
+
 
       {/* Trust section */}
       <section className="trust-section">
