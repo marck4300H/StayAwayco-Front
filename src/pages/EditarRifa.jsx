@@ -68,17 +68,23 @@ export default function EditarRifa() {
     }
   };
 
+  // Convierte un ISO del backend a formato YYYY-MM-DDTHH:mm en hora colombiana
+  // para que el input datetime-local lo muestre correctamente
   const isoToLocal = (isoString) => {
     if (!isoString) return "";
     const date = new Date(isoString);
-    const offset = date.getTimezoneOffset();
-    const local = new Date(date.getTime() - offset * 60000);
-    return local.toISOString().slice(0, 16);
-  };
-
-  const toISO = (localDatetime) => {
-    if (!localDatetime) return null;
-    return new Date(localDatetime).toISOString();
+    // Convertir a string en zona Colombia y luego extraer los componentes
+    const partes = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Bogota",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(date);
+    const get = (type) => partes.find((p) => p.type === type)?.value || "00";
+    return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
   };
 
   const isoToDate = (isoString) => {
@@ -185,7 +191,9 @@ export default function EditarRifa() {
       if (borrarFecha) {
         formData.append("fecha_sorteo", "null");
       } else if (fechaSorteo) {
-        formData.append("fecha_sorteo", toISO(fechaSorteo));
+        // Enviar el valor del input datetime-local directamente (ej: "2026-05-20T20:00")
+        // El backend lo interpretará como hora colombiana (UTC-5)
+        formData.append("fecha_sorteo", fechaSorteo);
       }
 
       // Sorteo
@@ -374,6 +382,7 @@ export default function EditarRifa() {
                           📅 Sorteo programado para:{" "}
                           <strong>
                             {new Date(fechaSorteo).toLocaleString("es-CO", {
+                              timeZone: "America/Bogota",
                               weekday: "long",
                               year: "numeric",
                               month: "long",

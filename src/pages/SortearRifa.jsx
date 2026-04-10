@@ -163,7 +163,9 @@ export default function SortearRifa() {
       const datos = {
         rifa_id: datosDesierto.rifa_id,
         numero_sorteado: datosDesierto.numero_sorteado,
-        nueva_fecha_sorteo: new Date(nuevaFechaSorteo).toISOString(),
+        // Enviar el valor del input datetime-local directamente (ej: "2026-05-20T20:00")
+        // El backend lo interpretará como hora colombiana (UTC-5)
+        nueva_fecha_sorteo: nuevaFechaSorteo,
         loteria_referencia: datosDesierto.loteria_referencia || undefined,
       };
 
@@ -242,7 +244,7 @@ export default function SortearRifa() {
               <div className="info-item">
                 <span className="info-label">Fecha de sorteo:</span>
                 <span className="info-valor">
-                  {new Date(rifa.fecha_sorteo).toLocaleString("es-CO")}
+                  {new Date(rifa.fecha_sorteo).toLocaleString("es-CO", { timeZone: "America/Bogota" })}
                 </span>
               </div>
             </div>
@@ -310,6 +312,7 @@ export default function SortearRifa() {
               <h3>📅 Nueva Fecha de Sorteo</h3>
               <p className="fecha-destacada">
                 {new Date(nueva_fecha_sorteo).toLocaleString("es-CO", {
+                  timeZone: "America/Bogota",
                   weekday: "long",
                   year: "numeric",
                   month: "long",

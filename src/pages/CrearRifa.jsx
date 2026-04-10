@@ -45,10 +45,7 @@ export default function CrearRifa() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const toISO = (localDatetime) => {
-    if (!localDatetime) return null;
-    return new Date(localDatetime).toISOString();
-  };
+
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -108,7 +105,9 @@ export default function CrearRifa() {
         formData.append("imagen_boleta_url", form.imagenBoleta);
       }
       if (form.fechaSorteo) {
-        formData.append("fecha_sorteo", toISO(form.fechaSorteo));
+        // Enviar el valor del input datetime-local directamente (ej: "2026-05-20T20:00")
+        // El backend lo interpretará como hora colombiana (UTC-5)
+        formData.append("fecha_sorteo", form.fechaSorteo);
       }
 
       // Sorteo
@@ -287,6 +286,7 @@ export default function CrearRifa() {
                 📅 Sorteo programado para:{" "}
                 <strong>
                   {new Date(form.fechaSorteo).toLocaleString("es-CO", {
+                    timeZone: "America/Bogota",
                     weekday: "long",
                     year: "numeric",
                     month: "long",
