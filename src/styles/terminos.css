@@ -1,16 +1,17 @@
-/* ===== TÉRMINOS Y CONDICIONES — STAYAWAY RIFAS ===== */
+/* ===== TÉRMINOS Y CONDICIONES — STAYAWAY ===== */
 
 .terminos-container {
   width: 100%;
   min-height: 100vh;
   background: #f5f7fb;
   font-family: inherit;
+  margin-top: -80px; /* Elimina el espacio del layout para integrar el hero con el navbar */
 }
 
 /* ── HERO ── */
 .terminos-hero {
   background: linear-gradient(135deg, #0a369d 0%, #4472ca 100%);
-  padding: 56px 20px 48px;
+  padding: 120px 20px 48px; /* Aumentado el padding superior para compensar el margin negativo */
   text-align: center;
 }
 

@@ -138,7 +138,7 @@ export default function Comprar() {
     // Al superar disponibles muestra error informativo pero no corrige
     const value = Number(cantidad);
     if (value > disponibles && disponibles > 0) {
-      setError(`Solo hay ${disponibles} números disponibles.`);
+      setError(`Solo hay ${disponibles} calcas disponibles.`);
       return;
     }
 
@@ -163,7 +163,7 @@ export default function Comprar() {
   if (!rifa) {
     return (
       <div className="comprar-container">
-        <p>No se ha seleccionado ninguna rifa.</p>
+        <p>No se ha seleccionado ninguna actividad.</p>
         <button onClick={() => navigate(-1)}>Volver</button>
       </div>
     );
@@ -187,7 +187,7 @@ export default function Comprar() {
           <p className="rifa-desc-header">{rifa.descripcion}</p>
           <div className="rifa-stats-header">
             Precio: ${precioUnitario.toLocaleString()} c/u | Mín:{" "}
-            {cantidadMinima} números
+            {cantidadMinima} calcas
           </div>
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function Comprar() {
 
         <div className="sorteo-status-right">
           <div className="sorteo-status-header">
-            <span className="sorteo-status-title">Estado del Sorteo</span>
+            <span className="sorteo-status-title">Estado de la Actividad</span>
             <span className="sorteo-status-percent">
               {rifa.porcentaje || 0}%
             </span>
@@ -245,8 +245,8 @@ export default function Comprar() {
 
         {tienePaquetes && (
           <div className="paquetes-promo-banner">
-            🎁 <strong>¡Esta rifa tiene números gratis!</strong> Compra
-            exactamente un paquete y recibe números adicionales sin costo.
+            🎁 <strong>¡Esta actividad tiene calcas gratis!</strong> Compra
+            exactamente un paquete y recibe calcas adicionales sin costo.
           </div>
         )}
 
@@ -269,7 +269,7 @@ export default function Comprar() {
                   ${paquete.precio.toLocaleString()}
                 </div>
 
-                <div className="paquete-sub">{paquete.cantidad} números</div>
+                <div className="paquete-sub">{paquete.cantidad} calcas</div>
 
                 {tienePaquetes && paquete.gratis > 0 && (
                   <div className="feature-gratis">
@@ -301,7 +301,7 @@ export default function Comprar() {
 
         {tienePaquetes && paqueteAplicado && (
           <div className="paquete-aplicado-preview">
-            🎁 Comprando exactamente {cantidadNumero} números recibirás{" "}
+            🎁 Comprando exactamente {cantidadNumero} calcas recibirás{" "}
             <strong>+{paqueteAplicado.gratis} gratis</strong>
           </div>
         )}
@@ -317,7 +317,7 @@ export default function Comprar() {
           disabled={botonDeshabilitado}
         >
           {botonDeshabilitado
-            ? `Mínimo ${cantidadMinima} números`
+            ? `Mínimo ${cantidadMinima} calcas`
             : `Continuar al Pago — $${total.toLocaleString()}`}
         </button>
       </div>

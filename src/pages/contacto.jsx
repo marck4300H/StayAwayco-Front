@@ -1,15 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/contacto.css";
 
 const Contacto = () => {
+  const [formData, setFormData] = useState({
+    nombre: "",
+    correo: "",
+    asunto: "",
+    mensaje: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEnviarWhatsApp = () => {
+    const { nombre, correo, asunto, mensaje } = formData;
+    
+    if (!mensaje.trim()) {
+      alert("Por favor, escribe un mensaje antes de contactarnos.");
+      return;
+    }
+
+    const textoMensaje = `¡Hola StayAway!\nMi nombre es ${nombre || "un usuario"}.\nAsunto: ${asunto || "Consulta general"}\n\n${mensaje}${correo ? `\n\nMi correo es: ${correo}` : ""}`;
+    const encodedText = encodeURIComponent(textoMensaje);
+    const phoneNumber = "573136787040"; 
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
+    
+    window.open(whatsappUrl, "_blank");
+  };
+
   return (
     <div className="contacto-wrapper">
       <section className="contacto-hero">
         <h1 className="contacto-title">Hablemos 👋</h1>
         <p className="contacto-subtitle">
-          En <span>StayAway</span> nos especializamos en rifas reales y
+          En <span>StayAway</span> nos especializamos en actividades reales y
           transparentes para que puedas ganar premios increíbles de forma
-          segura desde el municipio de Viges, Valle del Cauca.
+          segura desde el municipio de Vijes, Valle del Cauca.
         </p>
       </section>
 
@@ -18,14 +45,14 @@ const Contacto = () => {
         <div className="contacto-info-card">
           <h2>Información de Contacto</h2>
           <p className="contacto-text">
-            Si tienes dudas sobre nuestras rifas, pagos, resultados o quieres
-            proponer una nueva rifa, estamos listos para ayudarte.
+            Si tienes dudas sobre nuestras actividades, pagos, resultados o quieres
+            proponer una nueva actividad, estamos listos para ayudarte.
           </p>
 
           <div className="contacto-item">
             <span className="contacto-label">Teléfono / WhatsApp</span>
-            <a href="tel:+573001112233" className="contacto-value">
-              +57 300 111 22 33
+            <a href="tel:+573136787040" className="contacto-value">
+              +57 313 678 70 40
             </a>
           </div>
 
@@ -74,49 +101,69 @@ const Contacto = () => {
           </div>
 
           <div className="contacto-badge">
-            Rifas reales · Premios verificados · Comunidad StayAway
+            Actividades reales · Premios verificados · Comunidad StayAway
           </div>
         </div>
 
-        {/* Columna derecha: formulario “dummy” */}
+        {/* Columna derecha: formulario WhatsApp */}
         <div className="contacto-form-card">
           <h2>Escríbenos un mensaje</h2>
           <p className="contacto-text">
-            Cuéntanos en qué podemos ayudarte y te responderemos lo antes
-            posible.
+            Cuéntanos en qué podemos ayudarte y te enviaremos al WhatsApp oficial para conectarnos al instante.
           </p>
 
-          <form className="contacto-form">
+          <form className="contacto-form" onSubmit={(e) => e.preventDefault()}>
             <div className="contacto-field">
               <label>Nombre completo</label>
-              <input type="text" placeholder="Tu nombre" />
+              <input 
+                type="text" 
+                name="nombre" 
+                value={formData.nombre} 
+                onChange={handleChange} 
+                placeholder="Tu nombre" 
+              />
             </div>
 
             <div className="contacto-field">
-              <label>Correo electrónico</label>
-              <input type="email" placeholder="tunombre@correo.com" />
+              <label>Correo electrónico (Opcional)</label>
+              <input 
+                type="email" 
+                name="correo" 
+                value={formData.correo} 
+                onChange={handleChange} 
+                placeholder="tunombre@correo.com" 
+              />
             </div>
 
             <div className="contacto-field">
               <label>Asunto</label>
-              <input type="text" placeholder="Ej: Duda sobre una rifa" />
-            </div>
-
-            <div className="contacto-field">
-              <label>Mensaje</label>
-              <textarea
-                rows="4"
-                placeholder="Escríbenos los detalles de tu consulta..."
+              <input 
+                type="text" 
+                name="asunto" 
+                value={formData.asunto} 
+                onChange={handleChange} 
+                placeholder="Ej: Duda sobre una actividad" 
               />
             </div>
 
-            <button type="button" className="contacto-button">
-              Enviar mensaje
+            <div className="contacto-field">
+              <label>Mensaje *</label>
+              <textarea
+                rows="4"
+                name="mensaje"
+                value={formData.mensaje}
+                onChange={handleChange}
+                placeholder="Escríbenos los detalles de tu consulta..."
+                required
+              />
+            </div>
+
+            <button type="button" onClick={handleEnviarWhatsApp} className="contacto-button" style={{ backgroundColor: "#25D366", borderColor: "#25D366", display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+              📞 Enviar por WhatsApp
             </button>
 
             <p className="contacto-note">
-              Al enviarnos un mensaje aceptas ser contactado por nuestro equipo
-              a través de los datos suministrados.
+              Al enviarnos un mensaje serás redirigido a WhatsApp para continuar la conversación con nuestro equipo de forma ágil y personalizada.
             </p>
           </form>
         </div>

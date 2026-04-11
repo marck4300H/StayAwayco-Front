@@ -5,10 +5,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  padding: 40px 20px 60px;
+  padding: 60px 40px;
   border-radius: 24px;
   background: linear-gradient(135deg, #f7f9fc 0%, #CFDEE7 100%);
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .hero-left {
@@ -45,7 +45,8 @@
 }
 
 .hero-title span {
-  color: #4472CA; /* acento */
+  color: #4472CA;
+  /* acento */
 }
 
 /* Texto */
@@ -114,12 +115,14 @@
   background: radial-gradient(circle at top, #92B4F4 0%, #0A369D 70%);
   object-fit: contain;
 }
+
 /* ===== ESTADO DEL SORTEO (COMPACTO) ===== */
 
 .sorteo-status {
-  margin: 0 auto 32px;
+  margin: 0 auto 0px;
   padding: 20px 24px;
-  max-width: 1270px;          /* más angosto */
+  max-width: 1270px;
+  /* más angosto */
   border-radius: 18px;
   background: #ffffff;
   box-shadow: 0 10px 35px rgba(10, 54, 157, 0.08);
@@ -195,7 +198,8 @@
 }
 
 .sorteo-status-bar-wrapper {
-  max-width: 500px;      /* barra más corta */
+  max-width: 500px;
+  /* barra más corta */
 }
 
 .sorteo-status-bar {
@@ -259,17 +263,34 @@
     justify-content: center;
   }
 }
-/* ===== HERO NUEVO ===== */
+
+/* ===== CONTENEDOR PRINCIPAL HOME ===== */
+.home-page {
+  margin-top: -80px;
+  /* Sube la página para empezar justo debajo del navbar */
+  padding-bottom: 20px;
+}
+
+.actividad-wrapper {
+  margin-bottom: 60px;
+  transition: opacity 0.3s ease;
+}
+
+.actividad-inactiva {
+  opacity: 0.7;
+}
 
 .hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  padding: 40px 20px 60px;
-  border-radius: 24px;
+  padding: 120px 20px 60px;
+  /* Padding top aumentado (80px navbar + 40px extra) */
+  border-radius: 0 0 40px 40px;
+  /* Bordes redondeados solo abajo */
   background: linear-gradient(135deg, #f7f9fc 0%, #CFDEE7 100%);
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .hero-left {
@@ -384,7 +405,7 @@
 /* ===== ESTADO DEL SORTEO (COMPACTO) ===== */
 
 .sorteo-status {
-  margin: 0 auto 32px;
+  margin: 0 auto 0px;
   padding: 20px 24px;
   max-width: 1270px;
   border-radius: 18px;

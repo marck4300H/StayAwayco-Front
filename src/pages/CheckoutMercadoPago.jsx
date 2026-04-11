@@ -146,6 +146,19 @@ export default function CheckoutMercadoPago() {
   const precioUnitario = rifa?.precio_unitario || 1000;
   const cantidadMinima = rifa?.cantidad_minima || 5;
 
+  const getPaqueteAplicado = (cant) => {
+    if (!rifa?.paquetes_promocion) return null;
+    let paquete = null;
+    ["paquete1", "paquete2", "paquete3"].forEach((key) => {
+      const p = rifa.paquetes_promocion[key];
+      if (p && p.cantidad_compra === cant && p.numeros_gratis > 0) {
+        paquete = p;
+      }
+    });
+    return paquete;
+  };
+  const paqueteAplicado = getPaqueteAplicado(cantidad);
+
   const [usuario, setUsuario] = useState({
     nombres: "",
     apellidos: "",
@@ -203,7 +216,7 @@ export default function CheckoutMercadoPago() {
     }
 
     if (cantidad < cantidadMinima) {
-      setError(`La cantidad mínima para esta rifa es ${cantidadMinima} números`);
+      setError(`La cantidad mínima para esta actividad es ${cantidadMinima} calcas`);
       return false;
     }
 
@@ -285,7 +298,7 @@ export default function CheckoutMercadoPago() {
     return (
       <div className="checkout-container">
         <div className="error-message">
-          No se ha seleccionado ninguna rifa.
+          No se ha seleccionado ninguna actividad.
         </div>
         <button onClick={() => navigate("/")} className="btn-volver">
           Volver al inicio
@@ -313,13 +326,17 @@ export default function CheckoutMercadoPago() {
               <h3>{rifa.titulo}</h3>
               <p>{rifa.descripcion}</p>
               <div className="compra-details">
-                <p><strong>Cantidad:</strong> {cantidad} números</p>
+                <p><strong>Cantidad:</strong> {cantidad} calcas</p>
                 <p><strong>Precio unitario:</strong> ${precioUnitario.toLocaleString()}</p>
-                <p><strong>Cantidad mínima:</strong> {cantidadMinima} números</p>
+                {paqueteAplicado && (
+                  <p style={{ color: "#2e7d32", backgroundColor: "#e8f5e9", padding: "4px 8px", borderRadius: "4px", display: "inline-block", margin: "4px 0" }}>
+                    🎁 <strong>Incluye {paqueteAplicado.numeros_gratis} calcas gratis</strong>
+                  </p>
+                )}
                 <p className="total"><strong>Total:</strong> ${total.toLocaleString()}</p>
                 {cantidad < cantidadMinima && (
                   <p className="advertencia-minima">
-                    ⚠️ La cantidad mínima para esta rifa es {cantidadMinima} números
+                    ⚠️ La cantidad mínima para esta actividad es {cantidadMinima} calcas
                   </p>
                 )}
               </div>

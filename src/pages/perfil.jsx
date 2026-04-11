@@ -38,7 +38,7 @@ const generarPDFNumeros = (usuario, nombreRifa, numerosUsuario) => {
       textColor(255, 255, 255);
       doc.setFontSize(32);
       doc.setFont("helvetica", "bold");
-      doc.text("StayAway Rifas", PW / 2, 70, { align: "center" });
+      doc.text("StayAway Actividades", PW / 2, 70, { align: "center" });
 
       doc.setFontSize(17);
       doc.setFont("helvetica", "normal");
@@ -99,7 +99,7 @@ const generarPDFNumeros = (usuario, nombreRifa, numerosUsuario) => {
       textColor(...colorAzulOscuro);
       doc.setFontSize(14);
       doc.setFont("helvetica", "bold");
-      doc.text("Tus Números de la Suerte", 50, currentY);
+      doc.text("Tus Calcas de la Suerte", 50, currentY);
 
       fill(...colorAzulMedio);
       doc.rect(50, currentY + 22, 495, 3, "F");
@@ -113,7 +113,7 @@ const generarPDFNumeros = (usuario, nombreRifa, numerosUsuario) => {
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
       doc.text(
-        `Total de números adquiridos: ${numerosUsuario.length}`,
+        `Total de calcas adquiridas: ${numerosUsuario.length}`,
         PW / 2, currentY + 19, { align: "center" }
       );
 
@@ -144,7 +144,7 @@ const generarPDFNumeros = (usuario, nombreRifa, numerosUsuario) => {
             doc.setFontSize(13);
             doc.setFont("helvetica", "bold");
             doc.text(
-              "StayAway Rifas — Tus Números (continuación)",
+              "StayAway Actividades — Tus Calcas (continuación)",
               PW / 2, 27, { align: "center" }
             );
             y = 65;
@@ -181,7 +181,7 @@ const generarPDFNumeros = (usuario, nombreRifa, numerosUsuario) => {
       textColor(255, 255, 255);
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
-      doc.text("StayAway Rifas", PW / 2, lastPageY + 20, { align: "center" });
+      doc.text("StayAway Actividades", PW / 2, lastPageY + 20, { align: "center" });
 
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
@@ -192,7 +192,7 @@ const generarPDFNumeros = (usuario, nombreRifa, numerosUsuario) => {
       );
 
       // Descarga
-      doc.save(`boletos-${nombreRifa.replace(/\s+/g, "-")}.pdf`);
+      doc.save(`calcas-${nombreRifa.replace(/\s+/g, "-")}.pdf`);
       resolve();
     } catch (error) {
       reject(error);
@@ -360,11 +360,11 @@ const Perfil = () => {
 
       {/* ── MIS NÚMEROS ── */}
       <div className="perfil-card">
-        <h3>Mis números comprados</h3>
+        <h3>Mis calcas compradas</h3>
 
         {Object.keys(numerosPorRifa).length === 0 ? (
           <p className="no-numeros">
-            No has comprado ningún número todavía. ¡Participa en una rifa!
+            No has comprado ninguna calca todavía. ¡Participa en una actividad!
           </p>
         ) : (
           Object.entries(numerosPorRifa).map(([nombreRifa, datosRifa], index) => {
@@ -384,14 +384,14 @@ const Perfil = () => {
                     className="btn-descargar-pdf"
                     onClick={() => handleDescargarPDF(nombreRifa, datosRifa.numeros)}
                     disabled={descargando[nombreRifa]}
-                    title="Descargar todos mis números en PDF"
+                    title="Descargar todas mis calcas en PDF"
                   >
                     {descargando[nombreRifa] ? "⏳ Generando..." : "📄 Descargar PDF"}
                   </button>
                 </div>
 
                 <p className="rifa-info">
-                  <strong>Números comprados: {total}</strong>
+                  <strong>Calcas compradas: {total}</strong>
                   {!estaExpandido && hayMas && (
                     <span className="rifa-info-ocultos">
                       {" "}— mostrando {NUMEROS_VISIBLES} de {total}
@@ -416,7 +416,7 @@ const Perfil = () => {
                   >
                     {estaExpandido
                       ? "▲ Ver menos"
-                      : `▼ Ver todos los números (${total})`}
+                      : `▼ Ver todas las calcas (${total})`}
                   </button>
                 )}
               </div>
