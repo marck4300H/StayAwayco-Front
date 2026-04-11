@@ -258,16 +258,18 @@ const Perfil = () => {
           return;
         }
 
-        // Agrupar y ordenar números por rifa
+        // Agrupar y ordenar números por rifa manteniendo los ceros (strings)
         const agrupado = {};
         (numerosData.numeros || []).forEach((item) => {
           const rifaNombre = item.titulo_rifa || "Rifa desconocida";
           if (!agrupado[rifaNombre]) agrupado[rifaNombre] = { numeros: [] };
-          agrupado[rifaNombre].numeros.push(Number(item.numero));
+          // Guardar como string para preservar los ceros (ej: "00005")
+          agrupado[rifaNombre].numeros.push(String(item.numero));
         });
 
         Object.keys(agrupado).forEach((rifaNombre) => {
-          agrupado[rifaNombre].numeros.sort((a, b) => a - b);
+          // Ordenar numéricamente pero conservando el formato string
+          agrupado[rifaNombre].numeros.sort((a, b) => Number(a) - Number(b));
         });
 
         setNumerosPorRifa(agrupado);
@@ -309,10 +311,7 @@ const Perfil = () => {
     }
   };
 
-  const formatearNumero = (numero) => {
-    if (numero >= 0 && numero <= 9999) return numero.toString().padStart(4, "0");
-    return numero.toString().padStart(5, "0");
-  };
+
 
   const toggleExpandido = (nombreRifa) => {
     setExpandido((prev) => ({ ...prev, [nombreRifa]: !prev[nombreRifa] }));
@@ -321,8 +320,8 @@ const Perfil = () => {
   const handleDescargarPDF = async (nombreRifa, numeros) => {
     setDescargando((prev) => ({ ...prev, [nombreRifa]: true }));
     try {
-      const numerosFormateados = numeros.map((n) => formatearNumero(n));
-      await generarPDFNumeros(usuario, nombreRifa, numerosFormateados);
+      // Los números ya vienen formateados en String desde la agrupación
+      await generarPDFNumeros(usuario, nombreRifa, numeros);
     } catch (err) {
       console.error("Error generando PDF:", err);
       alert("Ocurrió un error al generar el PDF. Intenta de nuevo.");
@@ -404,7 +403,7 @@ const Perfil = () => {
                 <div className="numeros-grid">
                   {numerosVisibles.map((numero, i) => (
                     <div key={i} className="numero-item">
-                      #{formatearNumero(numero)}
+                      #{numero}
                     </div>
                   ))}
                 </div>
