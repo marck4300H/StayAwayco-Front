@@ -259,8 +259,10 @@ export default function CheckoutMercadoPago() {
       });
 
       const data = await response.json();
+      console.log("📥 Respuesta del servidor:", data);
 
       if (!response.ok) {
+        console.error("❌ Error del servidor:", data);
         throw new Error(data.message || "Error al crear la orden de pago");
       }
 
@@ -418,7 +420,8 @@ export default function CheckoutMercadoPago() {
               >
                 <option value="CC">Cédula de Ciudadanía</option>
                 <option value="CE">Cédula de Extranjería</option>
-                <option value="PA">Pasaporte</option>
+                <option value="PAS">Pasaporte</option>
+                <option value="NIT">NIT</option>
               </select>
             </div>
 
