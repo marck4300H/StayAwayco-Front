@@ -123,9 +123,10 @@ const ComoFunciona = () => {
           </div>
           
           <div style={{ textAlign: 'center' }}>
-            <p style={{ color: '#4472ca', fontWeight: '800', margin: '0 0 15px 0', fontSize: '15px', textTransform: 'uppercase', letterSpacing: '2px' }}>Serie</p>
+            <p style={{ color: '#0a369d', fontWeight: '800', margin: '0 0 15px 0', fontSize: '15px', textTransform: 'uppercase', letterSpacing: '2px' }}>Serie</p>
             <p style={{ color: '#6b7280', fontSize: '32px', letterSpacing: '8px', margin: 0, fontWeight: '900' }}>
-              0 <span style={{ color: '#9ca3af', textDecoration: 'line-through' }}>X X</span>
+               <span style={{ color: '#9ca3af', textDecoration: 'line-through' }}>X X  </span> <span style={{ color: '#0a369d' }}>0</span>
+               
             </p>
           </div>
         </div>
